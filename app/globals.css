@@ -1,26 +1,417 @@
 @import "tailwindcss";
 
+/* =========================================================
+   GES design tokens
+   - Light, minimal, neutral zinc surface + emerald accent
+   - Light-only on purpose (admin panel). We force `color-scheme: light`
+     so user-agents do NOT apply OS-level dark-mode overrides to native
+     widgets (form controls, scrollbars, Canvas, ...).
+   ========================================================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Force the page to render in light mode regardless of system preference. */
+  color-scheme: light;
+
+  --background: #fafafa;
+  --foreground: #18181b;
+
+  /* Surface scale (zinc) */
+  --surface-0: #ffffff;
+  --surface-1: #fafafa;
+  --surface-2: #f4f4f5;
+  --surface-3: #e4e4e7;
+
+  /* Text */
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-tertiary: #71717a;
+  --text-muted: #a1a1aa;
+  --text-inverse: #ffffff;
+
+  /* Border */
+  --border-subtle: #f4f4f5;
+  --border-default: #e4e4e7;
+  --border-strong: #d4d4d8;
+
+  /* Accent (emerald) */
+  --accent-50: #ecfdf5;
+  --accent-100: #d1fae5;
+  --accent-200: #a7f3d0;
+  --accent-500: #10b981;
+  --accent-600: #059669;
+  --accent-700: #047857;
+  --accent-800: #065f46;
+
+  /* Semantic */
+  --danger-50: #fef2f2;
+  --danger-100: #fee2e2;
+  --danger-500: #ef4444;
+  --danger-600: #dc2626;
+  --danger-700: #b91c1c;
+
+  --warning-50: #fffbeb;
+  --warning-500: #f59e0b;
+  --warning-700: #b45309;
+
+  --info-50: #eff6ff;
+  --info-500: #3b82f6;
+  --info-700: #1d4ed8;
+
+  --success-50: #ecfdf5;
+  --success-500: #10b981;
+  --success-700: #047857;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 22px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(24, 24, 27, 0.04);
+  --shadow-sm: 0 1px 2px rgba(24, 24, 27, 0.05), 0 1px 3px rgba(24, 24, 27, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(24, 24, 27, 0.08), 0 2px 6px -2px rgba(24, 24, 27, 0.04);
+  --shadow-lg: 0 18px 40px -16px rgba(24, 24, 27, 0.18), 0 8px 18px -10px rgba(24, 24, 27, 0.08);
+
+  /* Focus ring */
+  --ring-accent: 0 0 0 4px rgba(16, 185, 129, 0.18);
+  --ring-danger: 0 0 0 4px rgba(239, 68, 68, 0.18);
+  --ring-neutral: 0 0 0 4px rgba(24, 24, 27, 0.08);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/*
+ * Tailwind v4 + Turbopack dev mode can intermittently miss arbitrary-value
+ * utilities such as `bg-[var(--surface-0)]` during HMR. The admin UI uses these
+ * tokens heavily, so we provide a stable CSS compatibility layer for every
+ * tokenized utility used by `components/ui` and the admin pages. Layout and
+ * spacing still come from Tailwind; colors, borders, shadows, and radii below
+ * remain stable even if the arbitrary utilities are not emitted in dev.
+ */
+@layer utilities {
+  [class~="bg-[var(--surface-0)]"] {
+    background-color: #ffffff;
+  }
+  [class~="bg-[var(--surface-0)]/85"] {
+    background-color: rgb(255 255 255 / 0.85);
+  }
+  [class~="bg-[var(--surface-1)]"] {
+    background-color: #fafafa;
+  }
+  [class~="bg-[var(--surface-2)]"] {
+    background-color: #f4f4f5;
+  }
+  [class~="bg-[var(--surface-3)]"] {
+    background-color: #e4e4e7;
+  }
+  [class~="bg-[var(--text-primary)]"] {
+    background-color: #18181b;
+  }
+  [class~="bg-[var(--accent-50)]"] {
+    background-color: #ecfdf5;
+  }
+  [class~="bg-[var(--accent-50)]/50"] {
+    background-color: rgb(236 253 245 / 0.5);
+  }
+  [class~="bg-[var(--accent-600)]"] {
+    background-color: #059669;
+  }
+  [class~="bg-[var(--danger-50)]"] {
+    background-color: #fef2f2;
+  }
+  [class~="bg-[var(--danger-100)]"] {
+    background-color: #fee2e2;
+  }
+  [class~="bg-[var(--danger-500)]"] {
+    background-color: #ef4444;
+  }
+  [class~="bg-[var(--danger-600)]"] {
+    background-color: #dc2626;
+  }
+  [class~="bg-[var(--success-50)]"] {
+    background-color: #ecfdf5;
+  }
+  [class~="bg-[var(--success-500)]"] {
+    background-color: #10b981;
+  }
+  [class~="bg-[var(--warning-50)]"] {
+    background-color: #fffbeb;
+  }
+  [class~="bg-[var(--warning-500)]"] {
+    background-color: #f59e0b;
+  }
+  [class~="bg-[var(--info-50)]"] {
+    background-color: #eff6ff;
+  }
+  [class~="bg-[var(--info-500)]"] {
+    background-color: #3b82f6;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  [class~="text-[var(--text-primary)]"] {
+    color: #18181b;
+  }
+  [class~="text-[var(--text-secondary)]"] {
+    color: #52525b;
+  }
+  [class~="text-[var(--text-tertiary)]"] {
+    color: #71717a;
+  }
+  [class~="text-[var(--text-muted)]"] {
+    color: #a1a1aa;
+  }
+  [class~="text-[var(--accent-600)]"] {
+    color: #059669;
+  }
+  [class~="text-[var(--accent-700)]"] {
+    color: #047857;
+  }
+  [class~="text-[var(--danger-500)]"] {
+    color: #ef4444;
+  }
+  [class~="text-[var(--danger-600)]"] {
+    color: #dc2626;
+  }
+  [class~="text-[var(--danger-700)]"] {
+    color: #b91c1c;
+  }
+  [class~="text-[var(--success-700)]"] {
+    color: #047857;
+  }
+  [class~="text-[var(--warning-700)]"] {
+    color: #b45309;
+  }
+  [class~="text-[var(--info-700)]"] {
+    color: #1d4ed8;
+  }
+
+  [class~="border-[var(--border-subtle)]"] {
+    border-color: #f4f4f5;
+  }
+  [class~="border-[var(--border-default)]"] {
+    border-color: #e4e4e7;
+  }
+  [class~="border-[var(--border-strong)]"] {
+    border-color: #d4d4d8;
+  }
+  [class~="border-[var(--accent-100)]"] {
+    border-color: #d1fae5;
+  }
+  [class~="border-[var(--accent-600)]"] {
+    border-color: #059669;
+  }
+  [class~="border-[var(--danger-100)]"] {
+    border-color: #fee2e2;
+  }
+  [class~="border-[var(--danger-500)]"] {
+    border-color: #ef4444;
+  }
+
+  [class~="rounded-[var(--radius-sm)]"] {
+    border-radius: 6px;
+  }
+  [class~="rounded-[var(--radius-md)]"] {
+    border-radius: 10px;
+  }
+  [class~="rounded-[var(--radius-lg)]"] {
+    border-radius: 14px;
+  }
+  [class~="rounded-[var(--radius-xl)]"] {
+    border-radius: 18px;
+  }
+  [class~="rounded-[var(--radius-2xl)]"] {
+    border-radius: 22px;
+  }
+
+  [class~="shadow-[var(--shadow-xs)]"] {
+    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.04);
+  }
+  [class~="shadow-[var(--shadow-sm)]"] {
+    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.05), 0 1px 3px rgba(24, 24, 27, 0.04);
+  }
+  [class~="shadow-[var(--shadow-md)]"] {
+    box-shadow: 0 4px 12px -2px rgba(24, 24, 27, 0.08), 0 2px 6px -2px rgba(24, 24, 27, 0.04);
+  }
+  [class~="shadow-[var(--shadow-lg)]"] {
+    box-shadow: 0 18px 40px -16px rgba(24, 24, 27, 0.18), 0 8px 18px -10px rgba(24, 24, 27, 0.08);
+  }
+
+  [class~="hover:bg-[var(--surface-1)]"]:hover {
+    background-color: #fafafa;
+  }
+  [class~="hover:bg-[var(--surface-2)]"]:hover {
+    background-color: #f4f4f5;
+  }
+  [class~="hover:bg-[var(--accent-50)]"]:hover {
+    background-color: #ecfdf5;
+  }
+  [class~="hover:bg-[var(--accent-700)]"]:hover {
+    background-color: #047857;
+  }
+  [class~="hover:bg-[var(--danger-50)]"]:hover {
+    background-color: #fef2f2;
+  }
+  [class~="hover:bg-[var(--danger-700)]"]:hover {
+    background-color: #b91c1c;
+  }
+  [class~="hover:text-[var(--text-primary)]"]:hover {
+    color: #18181b;
+  }
+  [class~="hover:text-[var(--text-secondary)]"]:hover {
+    color: #52525b;
+  }
+  [class~="hover:border-[var(--border-strong)]"]:hover {
+    border-color: #d4d4d8;
+  }
+
+  [class~="active:bg-[var(--accent-800)]"]:active {
+    background-color: #065f46;
+  }
+  [class~="disabled:bg-[var(--accent-600)]/40"]:disabled {
+    background-color: rgb(5 150 105 / 0.4);
+  }
+  [class~="disabled:bg-[var(--danger-600)]/40"]:disabled {
+    background-color: rgb(220 38 38 / 0.4);
+  }
+  [class~="disabled:text-[var(--text-muted)]"]:disabled {
+    color: #a1a1aa;
+  }
+
+  [class~="focus-visible:border-[var(--accent-600)]"]:focus-visible,
+  [class~="focus-within:border-[var(--accent-600)]"]:focus-within {
+    border-color: #059669;
+  }
+  [class~="focus-visible:border-[var(--danger-500)]"]:focus-visible,
+  [class~="focus-within:border-[var(--danger-500)]"]:focus-within {
+    border-color: #ef4444;
+  }
+  [class~="focus-visible:shadow-[var(--ring-accent)]"]:focus-visible,
+  [class~="focus-within:shadow-[var(--ring-accent)]"]:focus-within {
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18);
+  }
+  [class~="focus-visible:shadow-[var(--ring-danger)]"]:focus-visible,
+  [class~="focus-within:shadow-[var(--ring-danger)]"]:focus-within {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.18);
+  }
+  [class~="focus-visible:shadow-[var(--ring-neutral)]"]:focus-visible {
+    box-shadow: 0 0 0 4px rgba(24, 24, 27, 0.08);
+  }
+
+  .group:hover [class~="group-hover:text-[var(--text-secondary)]"] {
+    color: #52525b;
   }
 }
 
+/*
+ * NOTE: We intentionally do NOT register tokens via Tailwind v4 `@theme`/`@theme inline`.
+ * The whole UI consumes design tokens through arbitrary-value syntax (`bg-[var(--surface-0)]`),
+ * which only requires the CSS custom properties to be available on `:root`.
+ * Hex fallbacks below are duplicated on purpose so the page renders correctly
+ * even if a HMR step transiently fails to ship the `:root` variables.
+ */
+
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fafafa;
+  background-color: var(--background, #fafafa);
+  color: #18181b;
+  color: var(--foreground, #18181b);
+}
+
+body {
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+    "Segoe UI Emoji";
+  font-feature-settings: "cv11", "ss01", "ss03";
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+html {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide native number spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Scrollbar polish (WebKit) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+  background-clip: content-box;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Animations */
+@keyframes ges-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ges-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ges-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes ges-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ges-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
