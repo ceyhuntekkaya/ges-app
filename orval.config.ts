@@ -1,5 +1,7 @@
 import { defineConfig } from "orval";
 
+declare const process: { env: Record<string, string | undefined> };
+
 export default defineConfig({
   ges: {
     input: {
@@ -8,7 +10,9 @@ export default defineConfig({
       validation: false,
     },
     output: {
-      target: "./lib/api/generated.ts",
+      // Keep generated code in its own folder so `clean: true`
+      // doesn't delete hand-written helpers like `lib/api/errors.ts`.
+      target: "./lib/api/generated/index.ts",
       client: "fetch",
       mode: "single",
       clean: true,

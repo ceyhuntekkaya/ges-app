@@ -29,9 +29,15 @@ type IconName =
   | "globe"
   | "school"
   | "book"
+  | "map-pin"
+  | "clock"
+  | "calendar"
+  | "route"
+  | "users"
   | "arrow-up"
   | "arrow-down"
-  | "arrow-up-down";
+  | "arrow-up-down"
+  | "arrow-left";
 
 export interface IconProps extends React.SVGAttributes<SVGSVGElement> {
   name: IconName;
@@ -149,6 +155,41 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" />
     </>
   ),
+  "map-pin": (
+    <>
+      <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
+    </>
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6v6l4 2" />
+    </>
+  ),
+  calendar: (
+    <>
+      <path d="M8 2v4M16 2v4" />
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M3 10h18" />
+    </>
+  ),
+  route: (
+    <>
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="6" r="3" />
+      <path d="M6 15V9a3 3 0 0 1 3-3h6" />
+      <path d="M15 6h3" />
+    </>
+  ),
+  users: (
+    <>
+      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="8.5" cy="7" r="4" />
+      <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </>
+  ),
   "arrow-up": <path d="M12 19V5M5 12l7-7 7 7" />,
   "arrow-down": <path d="M12 5v14M19 12l-7 7-7-7" />,
   "arrow-up-down": (
@@ -157,6 +198,7 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M17 20V4M13 16l4 4 4-4" />
     </>
   ),
+  "arrow-left": <path d="M19 12H5M12 19l-7-7 7-7" />,
 };
 
 export function Icon({

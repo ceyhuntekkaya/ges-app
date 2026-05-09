@@ -1,14 +1,6 @@
-import { PageHeader } from "@/components/ui";
+import { AdminDocumentRequirementsClient } from "@/components/admin/docreq/AdminDocumentRequirementsClient";
 
 export default function AdminDocumentRequirementsPage() {
-  return (
-    <div className="space-y-5">
-      <PageHeader
-        eyebrow="Yönetim"
-        title="Evrak Gereksinimleri"
-        description="Bu ekran yakında eklenecek. Şimdilik başvurular ekranlarından devam edebilirsiniz."
-      />
-    </div>
-  );
+  return <AdminDocumentRequirementsClient />;
 }
 

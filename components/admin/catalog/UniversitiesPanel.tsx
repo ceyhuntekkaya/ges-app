@@ -21,13 +21,13 @@ import {
   adminCatalogUniversitiesDelete,
   adminCatalogUniversitiesList,
   adminCatalogUniversitiesUpdate,
-} from "@/lib/api/generated";
+} from "@/lib/api/generated/index";
 import type {
   AdminCatalogUniversitiesListParams,
   CountryDto,
   UniversityDto,
   UniversityUpsertRequestDto,
-} from "@/lib/api/generated";
+} from "@/lib/api/generated/index";
 import { humanizeApiError, humanizeStatus } from "@/lib/api/errors";
 
 const PAGE_SIZE_DEFAULT = 20;

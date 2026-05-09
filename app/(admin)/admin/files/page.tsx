@@ -1,14 +1,6 @@
-import { PageHeader } from "@/components/ui";
+import { AdminFilesClient } from "@/components/admin/files/AdminFilesClient";
 
 export default function AdminFilesPage() {
-  return (
-    <div className="space-y-5">
-      <PageHeader
-        eyebrow="Yönetim"
-        title="Dosyalar"
-        description="Bu ekran yakında eklenecek."
-      />
-    </div>
-  );
+  return <AdminFilesClient />;
 }
 

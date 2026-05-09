@@ -7,7 +7,7 @@ import {
   AdminLanguageCampApplicationsListStatus,
   type AdminLanguageCampApplicationsListParams,
   type LanguageCampApplicationListItemDto,
-} from "@/lib/api/generated";
+} from "@/lib/api/generated/index";
 import { Badge, Button, Icon, IconButton, PageHeader, Select, Table, useToast } from "@/components/ui";
 
 type StatusFilter = AdminLanguageCampApplicationsListStatus;
@@ -61,6 +61,11 @@ function categoryLabel(cat?: LanguageCampApplicationListItemDto["category"]) {
     default:
       return cat ?? "-";
   }
+}
+
+function fullName(r: Pick<LanguageCampApplicationListItemDto, "firstName" | "lastName">) {
+  const n = `${r.firstName ?? ""} ${r.lastName ?? ""}`.trim();
+  return n || "-";
 }
 
 const STATUS_OPTIONS = [
@@ -130,7 +135,10 @@ export function AdminLanguageCampApplicationsClient() {
       if (res.status >= 200 && res.status < 300) {
         const items = res.data?.items ?? [];
         const filtered = q
-          ? items.filter((x) => (x.id ?? "").toLowerCase().includes(q.toLowerCase()))
+          ? items.filter((x) => {
+              const hay = `${x.id ?? ""} ${x.firstName ?? ""} ${x.lastName ?? ""}`.toLowerCase();
+              return hay.includes(q.toLowerCase());
+            })
           : items;
         setData(filtered);
         setTotal(res.data?.totalItems ?? filtered.length);
@@ -172,7 +180,7 @@ export function AdminLanguageCampApplicationsClient() {
         title="Liste"
         searchable
         searchValue={q}
-        searchPlaceholder="ID ile ara…"
+        searchPlaceholder="Ad, soyad veya ID ile ara…"
         onSearchChange={(v) => setParam({ q: v || null, page: "0" })}
         toolbarActions={
           <div className="flex items-center gap-2">
@@ -196,13 +204,11 @@ export function AdminLanguageCampApplicationsClient() {
         rowKey={(row) => row.id ?? crypto.randomUUID()}
         columns={[
           {
-            key: "id",
-            header: "ID",
+            key: "fullName",
+            header: "Ad Soyad",
             sortable: true,
-            sortAccessor: (r) => r.id ?? "",
-            cell: (r) => (
-              <span className="font-mono text-xs text-[var(--text-primary)]">{r.id ?? "-"}</span>
-            ),
+            sortAccessor: (r) => fullName(r).toLowerCase(),
+            cell: (r) => <span className="text-[var(--text-primary)]">{fullName(r)}</span>,
             truncate: true,
           },
           {

@@ -226,18 +226,24 @@ export function Select<TValue extends string = string>({
           </span>
 
           {clearable && selected && !disabled ? (
-            <button
-              type="button"
+            <span
+              role="button"
               tabIndex={-1}
               aria-label="Temizle"
+              onMouseDown={(e) => {
+                // Prevent trigger button focus/click toggling.
+                e.preventDefault();
+                e.stopPropagation();
+              }}
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 onChange?.(null);
               }}
               className="flex h-5 w-5 items-center justify-center rounded-full text-[var(--text-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text-secondary)]"
             >
               <Icon name="x" size={12} />
-            </button>
+            </span>
           ) : null}
 
           <Icon

@@ -1,61 +1,62 @@
-function safeStringify(x: unknown): string {
-  try {
-    if (typeof x === "string") return x;
-    if (x instanceof Error) return x.message || String(x);
-    return JSON.stringify(x);
-  } catch {
-    return String(x);
+export function humanizeStatus(status: number): string {
+  if (status >= 200 && status < 300) return "Başarılı.";
+  switch (status) {
+    case 0:
+      return "Ağ hatası (status 0).";
+    case 400:
+      return "Geçersiz istek (400).";
+    case 401:
+      return "Oturum gerekli / yetkisiz (401).";
+    case 403:
+      return "Bu işlem için yetkiniz yok (403).";
+    case 404:
+      return "Kayıt bulunamadı (404).";
+    case 409:
+      return "Çakışma oluştu (409).";
+    case 413:
+      return "İstek çok büyük (413).";
+    case 415:
+      return "Desteklenmeyen içerik tipi (415).";
+    case 422:
+      return "Doğrulama hatası (422).";
+    case 429:
+      return "Çok fazla istek (429).";
+    case 500:
+      return "Sunucu hatası (500).";
+    case 502:
+      return "Ağ geçidi hatası (502).";
+    case 503:
+      return "Servis geçici olarak kullanılamıyor (503).";
+    case 504:
+      return "Zaman aşımı (504).";
+    default:
+      if (status >= 500) return `Sunucu hatası (${status}).`;
+      if (status >= 400) return `İstek başarısız (${status}).`;
+      return `Beklenmeyen durum (${status}).`;
   }
 }
 
-export function humanizeStatus(status?: number): string {
-  if (!status) return "İstek başarısız.";
-  if (status >= 200 && status < 300) return "Başarılı.";
-
-  switch (status) {
-    case 400:
-      return "Geçersiz istek.";
-    case 401:
-      return "Oturum gerekli. Lütfen tekrar giriş yapın.";
-    case 403:
-      return "Bu işlem için yetkiniz yok.";
-    case 404:
-      return "Kayıt bulunamadı.";
-    case 409:
-      return "Çakışma: kayıt zaten mevcut olabilir.";
-    case 413:
-      return "Dosya çok büyük.";
-    case 415:
-      return "Desteklenmeyen içerik türü.";
-    case 422:
-      return "Doğrulama hatası.";
-    case 429:
-      return "Çok fazla istek. Lütfen tekrar deneyin.";
-    case 500:
-      return "Sunucu hatası.";
-    case 502:
-      return "Ağ geçidi hatası (backend erişilemiyor).";
-    case 503:
-      return "Servis geçici olarak kullanılamıyor.";
-    default:
-      return `İstek başarısız (HTTP ${status}).`;
-  }
+function isRecord(x: unknown): x is Record<string, unknown> {
+  return typeof x === "object" && x !== null;
 }
 
 export function humanizeApiError(err: unknown): string {
-  if (!err) return "Bilinmeyen hata.";
-  if (typeof err === "string") return err;
-  if (err instanceof Error) return err.message || "Beklenmeyen hata.";
+  // Common cases: fetch() rejects (TypeError), manual throw new Error(msg), etc.
+  if (typeof err === "string") return err || "Beklenmeyen hata.";
+  if (err instanceof Error) {
+    const msg = err.message?.trim();
+    return msg || "Beklenmeyen hata.";
+  }
 
-  // Next/Fetch often throws TypeError on network errors
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const anyErr = err as any;
-  const msg =
-    anyErr?.message ??
-    anyErr?.error ??
-    anyErr?.toString?.() ??
-    safeStringify(err);
+  // Some libs throw `{ status, data }` style objects; support that defensively.
+  if (isRecord(err)) {
+    const status = err.status;
+    if (typeof status === "number") return humanizeStatus(status);
 
-  return typeof msg === "string" && msg.trim() ? msg : "Beklenmeyen hata.";
+    const message = err.message;
+    if (typeof message === "string" && message.trim()) return message.trim();
+  }
+
+  return "Beklenmeyen hata.";
 }
 

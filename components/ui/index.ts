@@ -25,6 +25,18 @@ export type { CheckboxProps } from "./Checkbox";
 export { Input } from "./Input";
 export type { InputProps, InputSize } from "./Input";
 
+export { Textarea } from "./Textarea";
+export type { TextareaProps, TextareaSize } from "./Textarea";
+
+export { HtmlEditor } from "./HtmlEditor";
+export type { HtmlEditorMode, HtmlEditorProps, HtmlEditorSize } from "./HtmlEditor";
+
+export { FileUploadInput } from "./FileUploadInput";
+export type { FileUploadInputProps } from "./FileUploadInput";
+
+export { FilePreview } from "./FilePreview";
+export type { FilePreviewProps } from "./FilePreview";
+
 export { Select } from "./Select";
 export type { SelectOption, SelectProps, SelectSize } from "./Select";
 

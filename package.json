@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "api:gen": "orval --config ./orval.config.ts"
+    "api:gen": "npx --no-install orval --config ./orval.config.ts"
   },
   "dependencies": {
     "next": "16.2.5",

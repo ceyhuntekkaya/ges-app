@@ -19,12 +19,12 @@ import {
   adminCatalogDepartmentsDelete,
   adminCatalogDepartmentsList,
   adminCatalogDepartmentsUpdate,
-} from "@/lib/api/generated";
+} from "@/lib/api/generated/index";
 import type {
   AdminCatalogDepartmentsListParams,
   DepartmentDto,
   DepartmentUpsertRequestDto,
-} from "@/lib/api/generated";
+} from "@/lib/api/generated/index";
 import { humanizeApiError, humanizeStatus } from "@/lib/api/errors";
 
 const PAGE_SIZE_DEFAULT = 50;

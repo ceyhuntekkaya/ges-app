@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { t } from "@/lib/i18n/dict";
+import { FilePreview } from "@/components/ui";
 
 type ChecklistItem = {
   requirement: {
@@ -211,6 +212,22 @@ export function UniversityApplicationDocumentsClient({
                           {it.file?.originalFilename ? (
                             <div className="mt-2 text-xs text-zinc-600">
                               {it.file.originalFilename} ({formatBytes(it.file.sizeBytes)})
+                            </div>
+                          ) : null}
+
+                          {it.applicationDocumentId ? (
+                            <div className="mt-3 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 p-2">
+                              <div className="aspect-[16/9] w-full">
+                                <FilePreview
+                                  url={`/api/proxy/v1/portal/application-documents/${it.applicationDocumentId}/file`}
+                                  contentType={it.file?.contentType ?? null}
+                                  filename={it.file?.originalFilename ?? null}
+                                  className="rounded-md"
+                                  openInNewTabLabel={
+                                    (it.file?.contentType ?? "").toLowerCase() === "application/pdf" ? "PDF'yi yeni sekmede aç" : "Dosyayı yeni sekmede aç"
+                                  }
+                                />
+                              </div>
                             </div>
                           ) : null}
                         </div>

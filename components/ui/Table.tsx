@@ -103,6 +103,21 @@ const ALIGN: Record<NonNullable<TableColumn<unknown>["align"]>, string> = {
   right: "text-right",
 };
 
+function seededPct(seed: number, min = 40, max = 90) {
+  // Deterministic pseudo-random in [0, 1)
+  const x = Math.sin(seed * 999) * 10000;
+  const f = x - Math.floor(x);
+  return min + f * (max - min);
+}
+
+function columnSeed(key: string) {
+  let h = 0;
+  for (let i = 0; i < key.length; i += 1) {
+    h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  }
+  return h;
+}
+
 export function Table<TRow>({
   columns,
   data,
@@ -354,7 +369,11 @@ export function Table<TRow>({
                         key={col.key}
                         className={cn(cellPad, col.hideOnMobile && "hidden sm:table-cell")}
                       >
-                        <Skeleton height={12} width={`${40 + Math.random() * 50}%`} shape="text" />
+                        <Skeleton
+                          height="12px"
+                          width={`${seededPct((ridx + 1) * 1000 + (columnSeed(col.key) % 997)).toFixed(2)}%`}
+                          shape="text"
+                        />
                       </td>
                     ))}
                     {rowActions ? (

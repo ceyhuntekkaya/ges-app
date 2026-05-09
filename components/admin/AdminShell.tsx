@@ -13,6 +13,8 @@ const navItems: NavItem[] = [
   { href: "/admin/catalog", label: "Katalog", icon: "school" },
   { href: "/admin/university-applications", label: "Üniversite Başvuruları", icon: "book" },
   { href: "/admin/language-camp-applications", label: "Dil Kampı Başvuruları", icon: "globe" },
+  { href: "/admin/language-camp-projects", label: "Dil Kampı Projeleri", icon: "globe" },
+  { href: "/admin/companies", label: "Şirketler", icon: "copy" },
   { href: "/admin/document-requirements", label: "Evrak Gereksinimleri", icon: "filter" },
   { href: "/admin/files", label: "Dosyalar", icon: "save" },
   { href: "/admin/reports", label: "Raporlar", icon: "arrow-up-down" },

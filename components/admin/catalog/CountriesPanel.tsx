@@ -18,12 +18,12 @@ import {
   adminCatalogCountriesDelete,
   adminCatalogCountriesList,
   adminCatalogCountriesUpdate,
-} from "@/lib/api/generated";
+} from "@/lib/api/generated/index";
 import type {
   AdminCatalogCountriesListParams,
   CountryDto,
   CountryUpsertRequestDto,
-} from "@/lib/api/generated";
+} from "@/lib/api/generated/index";
 import { humanizeApiError, humanizeStatus } from "@/lib/api/errors";
 
 const PAGE_SIZE_DEFAULT = 50;
