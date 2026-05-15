@@ -84,6 +84,8 @@ export function Select<TValue extends string = string>({
   const popoverRef = React.useRef<HTMLDivElement>(null);
   const searchRef = React.useRef<HTMLInputElement>(null);
   const optionRefs = React.useRef<Array<HTMLLIElement | null>>([]);
+  const onSearchRef = React.useRef(onSearch);
+  onSearchRef.current = onSearch;
 
   const selected = React.useMemo(
     () => (value ? options.find((o) => o.value === value) ?? null : null),
@@ -140,12 +142,14 @@ export function Select<TValue extends string = string>({
     setActiveIdx(0);
   }, [query, options.length]);
 
-  // External search debounce.
+  // External search debounce (onSearch ref: parent often passes inline fn; dep'de tutulursa sonsuz tetiklenir).
   React.useEffect(() => {
-    if (!onSearch) return;
-    const t = setTimeout(() => onSearch(query), 250);
+    if (!onSearchRef.current) return;
+    const t = setTimeout(() => {
+      onSearchRef.current?.(query);
+    }, 250);
     return () => clearTimeout(t);
-  }, [query, onSearch]);
+  }, [query]);
 
   // Scroll active option into view.
   React.useEffect(() => {

@@ -166,13 +166,18 @@ export function AdminUniversityApplicationsClient() {
         title="Üniversite Başvuruları"
         description="Tüm üniversite başvurularını listeleyin, filtreleyin ve hızlıca kontrol edin."
         actions={
-          <Button
-            variant="secondary"
-            leftIcon={<Icon name="arrow-up-down" size={16} />}
-            onClick={() => router.refresh()}
-          >
-            Yenile
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="primary" leftIcon={<Icon name="plus" size={16} />} onClick={() => router.push("/admin/university-applications/new")}>
+              Yeni
+            </Button>
+            <Button
+              variant="secondary"
+              leftIcon={<Icon name="arrow-up-down" size={16} />}
+              onClick={() => router.refresh()}
+            >
+              Yenile
+            </Button>
+          </div>
         }
       />
 
@@ -202,6 +207,10 @@ export function AdminUniversityApplicationsClient() {
         loading={loading}
         data={data}
         rowKey={(row) => row.id ?? crypto.randomUUID()}
+        onRowClick={(r) => {
+          if (!r.id) return;
+          router.push(`/admin/university-applications/${encodeURIComponent(r.id)}`);
+        }}
         columns={[
           {
             key: "fullName",

@@ -88,14 +88,14 @@ export function Modal({
       />
       <div
         className={cn(
-          "relative w-full overflow-hidden rounded-[var(--radius-2xl)] bg-[var(--surface-0)] shadow-[var(--shadow-lg)]",
+          "relative flex max-h-[min(85vh,900px)] w-full flex-col overflow-hidden rounded-[var(--radius-2xl)] bg-[var(--surface-0)] shadow-[var(--shadow-lg)]",
           SIZES[size],
           className,
         )}
         style={{ animation: "ges-scale-in 160ms ease-out" }}
       >
         {(title || !hideCloseButton) && (
-          <div className="flex items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-6 py-4">
+          <div className="flex shrink-0 items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-6 py-4">
             <div className="min-w-0 flex-1">
               {title ? (
                 <h2
@@ -123,10 +123,10 @@ export function Modal({
           </div>
         )}
 
-        <div className="px-6 py-5">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 py-5">{children}</div>
 
         {footer ? (
-          <div className="flex items-center justify-end gap-2 border-t border-[var(--border-subtle)] bg-[var(--surface-1)] px-6 py-3">
+          <div className="flex shrink-0 items-center justify-end gap-2 border-t border-[var(--border-subtle)] bg-[var(--surface-1)] px-6 py-3">
             {footer}
           </div>
         ) : null}

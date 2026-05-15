@@ -52,7 +52,7 @@ export function AdminShell({
   return (
     <div className="min-h-[100svh] bg-[var(--surface-1)]">
       <div className="sticky top-0 z-30 border-b border-[var(--border-default)] bg-[var(--surface-0)]/85 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between gap-3 px-4 lg:px-6">
+        <div className="flex h-14 w-full items-center justify-between gap-3 px-4 lg:px-6">
           <div className="flex items-center gap-3">
             <IconButton
               aria-label="Menü"
@@ -81,7 +81,7 @@ export function AdminShell({
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-5 px-4 py-5 lg:grid-cols-[260px_1fr] lg:px-6">
+      <div className="grid w-full grid-cols-1 gap-5 px-4 py-5 lg:grid-cols-[260px_1fr] lg:px-6">
         <aside
           className={[
             "rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--surface-0)] p-3 shadow-[var(--shadow-xs)] lg:sticky lg:top-[5.25rem] lg:h-[calc(100svh-7rem)]",

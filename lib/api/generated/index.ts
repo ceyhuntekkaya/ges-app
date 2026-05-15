@@ -4,6 +4,198 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
+export interface UniversityApplicationStringListItemUpsertRequestDto {
+  /** @minLength 1 */
+  value: string;
+}
+
+export interface PortfolioSectionDto {
+  id?: string;
+  name?: string;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type UniversityApplicationDetailDtoStatus = typeof UniversityApplicationDetailDtoStatus[keyof typeof UniversityApplicationDetailDtoStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationDetailDtoStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  IN_REVIEW: 'IN_REVIEW',
+  MISSING_DOCUMENTS: 'MISSING_DOCUMENTS',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export type UniversityApplicationDetailDtoEducationLevel = typeof UniversityApplicationDetailDtoEducationLevel[keyof typeof UniversityApplicationDetailDtoEducationLevel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationDetailDtoEducationLevel = {
+  BACHELOR: 'BACHELOR',
+  MASTER: 'MASTER',
+  PHD: 'PHD',
+} as const;
+
+export type UniversityApplicationDetailDtoStartTermSeason = typeof UniversityApplicationDetailDtoStartTermSeason[keyof typeof UniversityApplicationDetailDtoStartTermSeason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationDetailDtoStartTermSeason = {
+  FALL: 'FALL',
+  SPRING: 'SPRING',
+} as const;
+
+export type UniversityApplicationDetailDtoAccommodationType = typeof UniversityApplicationDetailDtoAccommodationType[keyof typeof UniversityApplicationDetailDtoAccommodationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationDetailDtoAccommodationType = {
+  CAMPUS_DORM: 'CAMPUS_DORM',
+  PRIVATE: 'PRIVATE',
+  ROOMMATE: 'ROOMMATE',
+} as const;
+
+export interface UniversityApplicationDetailDto {
+  id?: string;
+  applicantUserId?: string;
+  applicantEmail?: string;
+  status?: UniversityApplicationDetailDtoStatus;
+  educationLevel?: UniversityApplicationDetailDtoEducationLevel;
+  firstName?: string;
+  lastName?: string;
+  birthDate?: string;
+  phone?: string;
+  nationality?: string;
+  address?: string;
+  currentSchool?: string;
+  student?: boolean;
+  classLevel?: string;
+  referencePerson?: string;
+  consultancy?: boolean;
+  followerPerson?: string;
+  departmentPreferences?: string[];
+  countryPreferences?: string[];
+  universityPreferences?: string[];
+  startTermSeason?: UniversityApplicationDetailDtoStartTermSeason;
+  startYear?: number;
+  yearlyBudgetMin?: number;
+  yearlyBudgetMax?: number;
+  scholarshipRequested?: boolean;
+  scholarshipType?: string;
+  accommodationType?: UniversityApplicationDetailDtoAccommodationType;
+  priceAmount?: number;
+  priceCurrency?: string;
+  notes?: string;
+  preferencesCompletedAt?: string;
+  applicationNotes?: UniversityApplicationNoteDto[];
+  meetings?: UniversityApplicationMeetingDto[];
+  tasks?: UniversityApplicationTaskDto[];
+  documents?: UniversityApplicationDocumentDto[];
+  portfolioSections?: UniversityApplicationPortfolioSectionDto[];
+  payments?: UniversityApplicationPaymentDto[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface UniversityApplicationDocumentDto {
+  id?: string;
+  required?: boolean;
+  documentName?: string;
+  documentDescription?: string;
+  documentUrl?: string;
+  uploadedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface UniversityApplicationMeetingDto {
+  id?: string;
+  person?: string;
+  meetingAt?: string;
+  meetingNote?: string;
+  meetingResult?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface UniversityApplicationNoteDto {
+  id?: string;
+  writtenBy?: string;
+  writtenAt?: string;
+  todoText?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface UniversityApplicationPaymentDto {
+  id?: string;
+  paymentAt?: string;
+  amount?: number;
+  currency?: string;
+  receivedBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type UniversityApplicationPortfolioFileDtoType = typeof UniversityApplicationPortfolioFileDtoType[keyof typeof UniversityApplicationPortfolioFileDtoType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationPortfolioFileDtoType = {
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO',
+  AUDIO: 'AUDIO',
+  PDF: 'PDF',
+  OTHER: 'OTHER',
+} as const;
+
+export interface UniversityApplicationPortfolioFileDto {
+  id?: string;
+  type?: UniversityApplicationPortfolioFileDtoType;
+  name?: string;
+  description?: string;
+  fileUrl?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface UniversityApplicationPortfolioSectionDto {
+  id?: string;
+  required?: boolean;
+  sortOrder?: number;
+  portfolioSectionId?: string;
+  portfolioSection?: PortfolioSectionDto;
+  sectionNameOverride?: string;
+  sectionDescriptionOverride?: string;
+  files?: UniversityApplicationPortfolioFileDto[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type UniversityApplicationTaskDtoStatus = typeof UniversityApplicationTaskDtoStatus[keyof typeof UniversityApplicationTaskDtoStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationTaskDtoStatus = {
+  PENDING: 'PENDING',
+  DONE: 'DONE',
+} as const;
+
+export interface UniversityApplicationTaskDto {
+  id?: string;
+  scheduledAt?: string;
+  withWhom?: string;
+  whatToDo?: string;
+  status?: UniversityApplicationTaskDtoStatus;
+  performedByUser?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface CompanyUpsertRequestDto {
   /**
    * @minLength 0
@@ -425,14 +617,20 @@ export const ApplicationPaymentPreference = {
 
 export interface Application {
   category: ApplicationCategory;
-  startDate?: string;
-  endDate?: string;
   accommodationType?: ApplicationAccommodationType;
   visaNeeded?: boolean;
   visaFollowByGes?: boolean;
   emergencyContact?: EmergencyContact;
   paymentPreference?: ApplicationPaymentPreference;
   companyCode?: string;
+  isItSelf?: boolean;
+  numberOfApplicant?: number;
+  under18?: boolean;
+  parentFullName?: string;
+  parentPhoneNumber?: string;
+  parentEmailAddress?: string;
+  parentRelationship?: string;
+  userNotes?: string;
   kvkkAccepted?: boolean;
   invoiceAddress?: Address;
 }
@@ -467,66 +665,80 @@ export interface UniversityApplicationCreateRequestDto {
   educationLevel: UniversityApplicationCreateRequestDtoEducationLevel;
 }
 
-export type UniversityApplicationDetailDtoStatus = typeof UniversityApplicationDetailDtoStatus[keyof typeof UniversityApplicationDetailDtoStatus];
+export type UniversityApplicationTaskUpsertRequestDtoStatus = typeof UniversityApplicationTaskUpsertRequestDtoStatus[keyof typeof UniversityApplicationTaskUpsertRequestDtoStatus];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UniversityApplicationDetailDtoStatus = {
-  DRAFT: 'DRAFT',
-  SUBMITTED: 'SUBMITTED',
-  IN_REVIEW: 'IN_REVIEW',
-  MISSING_DOCUMENTS: 'MISSING_DOCUMENTS',
-  COMPLETED: 'COMPLETED',
-  REJECTED: 'REJECTED',
+export const UniversityApplicationTaskUpsertRequestDtoStatus = {
+  PENDING: 'PENDING',
+  DONE: 'DONE',
 } as const;
 
-export type UniversityApplicationDetailDtoEducationLevel = typeof UniversityApplicationDetailDtoEducationLevel[keyof typeof UniversityApplicationDetailDtoEducationLevel];
+export interface UniversityApplicationTaskUpsertRequestDto {
+  scheduledAt: string;
+  /** @minLength 1 */
+  withWhom: string;
+  /** @minLength 1 */
+  whatToDo: string;
+  status?: UniversityApplicationTaskUpsertRequestDtoStatus;
+}
+
+export interface UniversityApplicationPortfolioSectionUpsertRequestDto {
+  portfolioSectionId?: string;
+  required: boolean;
+  sortOrder: number;
+  sectionNameOverride?: string;
+  sectionDescriptionOverride?: string;
+}
+
+export type UniversityApplicationPortfolioFileUpsertRequestDtoType = typeof UniversityApplicationPortfolioFileUpsertRequestDtoType[keyof typeof UniversityApplicationPortfolioFileUpsertRequestDtoType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UniversityApplicationDetailDtoEducationLevel = {
-  BACHELOR: 'BACHELOR',
-  MASTER: 'MASTER',
-  PHD: 'PHD',
+export const UniversityApplicationPortfolioFileUpsertRequestDtoType = {
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO',
+  AUDIO: 'AUDIO',
+  PDF: 'PDF',
+  OTHER: 'OTHER',
 } as const;
 
-export type UniversityApplicationDetailDtoStartTermSeason = typeof UniversityApplicationDetailDtoStartTermSeason[keyof typeof UniversityApplicationDetailDtoStartTermSeason];
+export interface UniversityApplicationPortfolioFileUpsertRequestDto {
+  type: UniversityApplicationPortfolioFileUpsertRequestDtoType;
+  /** @minLength 1 */
+  name: string;
+  description?: string;
+  /** @minLength 1 */
+  fileUrl: string;
+}
 
+export interface UniversityApplicationPaymentUpsertRequestDto {
+  paymentAt: string;
+  amount: number;
+  /** @minLength 1 */
+  currency: string;
+  receivedBy?: string;
+}
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UniversityApplicationDetailDtoStartTermSeason = {
-  FALL: 'FALL',
-  SPRING: 'SPRING',
-} as const;
+export interface UniversityApplicationNoteCreateRequestDto {
+  /** @minLength 1 */
+  todoText: string;
+}
 
-export type UniversityApplicationDetailDtoAccommodationType = typeof UniversityApplicationDetailDtoAccommodationType[keyof typeof UniversityApplicationDetailDtoAccommodationType];
+export interface UniversityApplicationMeetingUpsertRequestDto {
+  /** @minLength 1 */
+  person: string;
+  meetingAt: string;
+  meetingNote?: string;
+  meetingResult?: string;
+}
 
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UniversityApplicationDetailDtoAccommodationType = {
-  CAMPUS_DORM: 'CAMPUS_DORM',
-  PRIVATE: 'PRIVATE',
-  ROOMMATE: 'ROOMMATE',
-} as const;
-
-export interface UniversityApplicationDetailDto {
-  id?: string;
-  status?: UniversityApplicationDetailDtoStatus;
-  educationLevel?: UniversityApplicationDetailDtoEducationLevel;
-  departmentPreferences?: string[];
-  countryPreferences?: string[];
-  universityPreferences?: string[];
-  startTermSeason?: UniversityApplicationDetailDtoStartTermSeason;
-  startYear?: number;
-  yearlyBudgetMin?: number;
-  yearlyBudgetMax?: number;
-  scholarshipRequested?: boolean;
-  scholarshipType?: string;
-  accommodationType?: UniversityApplicationDetailDtoAccommodationType;
-  notes?: string;
-  preferencesCompletedAt?: string;
-  createdAt?: string;
-  updatedAt?: string;
+export interface UniversityApplicationDocumentUpsertRequestDto {
+  required?: boolean;
+  /** @minLength 1 */
+  documentName: string;
+  documentDescription?: string;
+  documentUrl?: string;
 }
 
 export interface LanguageCampVisaFormUpsertRequestDto {
@@ -583,6 +795,18 @@ export const LanguageCampApplicationCreateRequestDtoCategory = {
 
 export interface LanguageCampApplicationCreateRequestDto {
   category: LanguageCampApplicationCreateRequestDtoCategory;
+  firstName?: string;
+  lastName?: string;
+  birthDate?: string;
+  phone?: string;
+  isItSelf?: boolean;
+  numberOfApplicant?: number;
+  under18?: boolean;
+  parentFullName?: string;
+  parentPhoneNumber?: string;
+  parentEmailAddress?: string;
+  parentRelationship?: string;
+  userNotes?: string;
 }
 
 export type LanguageCampApplicationDetailDtoStatus = typeof LanguageCampApplicationDetailDtoStatus[keyof typeof LanguageCampApplicationDetailDtoStatus];
@@ -632,8 +856,6 @@ export interface LanguageCampApplicationDetailDto {
   status?: LanguageCampApplicationDetailDtoStatus;
   category?: LanguageCampApplicationDetailDtoCategory;
   programId?: string;
-  startDate?: string;
-  endDate?: string;
   accommodationType?: LanguageCampApplicationDetailDtoAccommodationType;
   visaNeeded?: boolean;
   visaFollowByGes?: boolean;
@@ -642,6 +864,18 @@ export interface LanguageCampApplicationDetailDto {
   kvkkAcceptedAt?: string;
   companyId?: string;
   company?: CompanyDto;
+  firstName?: string;
+  lastName?: string;
+  birthDate?: string;
+  phone?: string;
+  isItSelf?: boolean;
+  numberOfApplicant?: number;
+  under18?: boolean;
+  parentFullName?: string;
+  parentPhoneNumber?: string;
+  parentEmailAddress?: string;
+  parentRelationship?: string;
+  userNotes?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -656,6 +890,8 @@ export const StoredFileDtoPurpose = {
   VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
   VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
   UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
+  UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
+  UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
   OTHER: 'OTHER',
 } as const;
 
@@ -782,6 +1018,102 @@ export interface LoginRequestDto {
   password: string;
 }
 
+export type UniversityApplicationAdminCreateRequestDtoEducationLevel = typeof UniversityApplicationAdminCreateRequestDtoEducationLevel[keyof typeof UniversityApplicationAdminCreateRequestDtoEducationLevel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationAdminCreateRequestDtoEducationLevel = {
+  BACHELOR: 'BACHELOR',
+  MASTER: 'MASTER',
+  PHD: 'PHD',
+} as const;
+
+export type UniversityApplicationAdminCreateRequestDtoStatus = typeof UniversityApplicationAdminCreateRequestDtoStatus[keyof typeof UniversityApplicationAdminCreateRequestDtoStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationAdminCreateRequestDtoStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  IN_REVIEW: 'IN_REVIEW',
+  MISSING_DOCUMENTS: 'MISSING_DOCUMENTS',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export interface UniversityApplicationAdminCreateRequestDto {
+  applicantUserId?: string;
+  newApplicant?: UniversityApplicationNewApplicantRequestDto;
+  educationLevel: UniversityApplicationAdminCreateRequestDtoEducationLevel;
+  status?: UniversityApplicationAdminCreateRequestDtoStatus;
+  initialSnapshot?: UniversityApplicationUpdateRequestDto;
+}
+
+export interface UniversityApplicationNewApplicantRequestDto {
+  /** @minLength 1 */
+  email: string;
+  /**
+   * @minLength 8
+   * @maxLength 72
+   */
+  password: string;
+}
+
+export type UniversityApplicationUpdateRequestDtoEducationLevel = typeof UniversityApplicationUpdateRequestDtoEducationLevel[keyof typeof UniversityApplicationUpdateRequestDtoEducationLevel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationUpdateRequestDtoEducationLevel = {
+  BACHELOR: 'BACHELOR',
+  MASTER: 'MASTER',
+  PHD: 'PHD',
+} as const;
+
+export type UniversityApplicationUpdateRequestDtoStartTermSeason = typeof UniversityApplicationUpdateRequestDtoStartTermSeason[keyof typeof UniversityApplicationUpdateRequestDtoStartTermSeason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationUpdateRequestDtoStartTermSeason = {
+  FALL: 'FALL',
+  SPRING: 'SPRING',
+} as const;
+
+export type UniversityApplicationUpdateRequestDtoAccommodationType = typeof UniversityApplicationUpdateRequestDtoAccommodationType[keyof typeof UniversityApplicationUpdateRequestDtoAccommodationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationUpdateRequestDtoAccommodationType = {
+  CAMPUS_DORM: 'CAMPUS_DORM',
+  PRIVATE: 'PRIVATE',
+  ROOMMATE: 'ROOMMATE',
+} as const;
+
+export interface UniversityApplicationUpdateRequestDto {
+  firstName?: string;
+  lastName?: string;
+  birthDate?: string;
+  phone?: string;
+  nationality?: string;
+  address?: string;
+  currentSchool?: string;
+  student?: boolean;
+  classLevel?: string;
+  referencePerson?: string;
+  consultancy?: boolean;
+  followerPerson?: string;
+  educationLevel?: UniversityApplicationUpdateRequestDtoEducationLevel;
+  startTermSeason?: UniversityApplicationUpdateRequestDtoStartTermSeason;
+  startYear?: number;
+  yearlyBudgetMin?: number;
+  yearlyBudgetMax?: number;
+  scholarshipRequested?: boolean;
+  scholarshipType?: string;
+  accommodationType?: UniversityApplicationUpdateRequestDtoAccommodationType;
+  priceAmount?: number;
+  priceCurrency?: string;
+  notes?: string;
+}
+
 export type LanguageCampProjectCreateRequestDtoProjectStatus = typeof LanguageCampProjectCreateRequestDtoProjectStatus[keyof typeof LanguageCampProjectCreateRequestDtoProjectStatus];
 
 
@@ -873,56 +1205,9 @@ export interface LanguageCampProjectCreateRequestDto {
   individual?: boolean;
 }
 
-export type UniversityApplicationUpdateRequestDtoEducationLevel = typeof UniversityApplicationUpdateRequestDtoEducationLevel[keyof typeof UniversityApplicationUpdateRequestDtoEducationLevel];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UniversityApplicationUpdateRequestDtoEducationLevel = {
-  BACHELOR: 'BACHELOR',
-  MASTER: 'MASTER',
-  PHD: 'PHD',
-} as const;
-
-export type UniversityApplicationUpdateRequestDtoStartTermSeason = typeof UniversityApplicationUpdateRequestDtoStartTermSeason[keyof typeof UniversityApplicationUpdateRequestDtoStartTermSeason];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UniversityApplicationUpdateRequestDtoStartTermSeason = {
-  FALL: 'FALL',
-  SPRING: 'SPRING',
-} as const;
-
-export type UniversityApplicationUpdateRequestDtoAccommodationType = typeof UniversityApplicationUpdateRequestDtoAccommodationType[keyof typeof UniversityApplicationUpdateRequestDtoAccommodationType];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const UniversityApplicationUpdateRequestDtoAccommodationType = {
-  CAMPUS_DORM: 'CAMPUS_DORM',
-  PRIVATE: 'PRIVATE',
-  ROOMMATE: 'ROOMMATE',
-} as const;
-
-export interface UniversityApplicationUpdateRequestDto {
-  educationLevel?: UniversityApplicationUpdateRequestDtoEducationLevel;
-  /**
-   * @minItems 0
-   * @maxItems 3
-   */
-  departmentPreferences?: string[];
-  /**
-   * @minItems 0
-   * @maxItems 5
-   */
-  countryPreferences?: string[];
-  universityPreferences?: string[];
-  startTermSeason?: UniversityApplicationUpdateRequestDtoStartTermSeason;
-  startYear?: number;
-  yearlyBudgetMin?: number;
-  yearlyBudgetMax?: number;
-  scholarshipRequested?: boolean;
-  scholarshipType?: string;
-  accommodationType?: UniversityApplicationUpdateRequestDtoAccommodationType;
-  notes?: string;
+export interface UniversityApplicationNoteUpdateRequestDto {
+  /** @minLength 1 */
+  todoText: string;
 }
 
 export type LanguageCampApplicationUpdateRequestDtoCategory = typeof LanguageCampApplicationUpdateRequestDtoCategory[keyof typeof LanguageCampApplicationUpdateRequestDtoCategory];
@@ -957,14 +1242,24 @@ export const LanguageCampApplicationUpdateRequestDtoPaymentPreference = {
 export interface LanguageCampApplicationUpdateRequestDto {
   category?: LanguageCampApplicationUpdateRequestDtoCategory;
   programId?: string;
-  startDate?: string;
-  endDate?: string;
   accommodationType?: LanguageCampApplicationUpdateRequestDtoAccommodationType;
   visaNeeded?: boolean;
   visaFollowByGes?: boolean;
   emergencyContact?: EmergencyContact;
   paymentPreference?: LanguageCampApplicationUpdateRequestDtoPaymentPreference;
   companyCode?: string;
+  firstName?: string;
+  lastName?: string;
+  birthDate?: string;
+  phone?: string;
+  isItSelf?: boolean;
+  numberOfApplicant?: number;
+  under18?: boolean;
+  parentFullName?: string;
+  parentPhoneNumber?: string;
+  parentEmailAddress?: string;
+  parentRelationship?: string;
+  userNotes?: string;
 }
 
 export type ApplicationStatusChangeRequestDtoStatus = typeof ApplicationStatusChangeRequestDtoStatus[keyof typeof ApplicationStatusChangeRequestDtoStatus];
@@ -1231,6 +1526,110 @@ export interface MeDto {
   status?: MeDtoStatus;
 }
 
+export interface PageDtoUserAccountAdminListItemDto {
+  items?: UserAccountAdminListItemDto[];
+  page?: number;
+  size?: number;
+  totalItems?: number;
+  totalPages?: number;
+}
+
+export type UserAccountAdminListItemDtoRole = typeof UserAccountAdminListItemDtoRole[keyof typeof UserAccountAdminListItemDtoRole];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UserAccountAdminListItemDtoRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+} as const;
+
+export type UserAccountAdminListItemDtoStatus = typeof UserAccountAdminListItemDtoStatus[keyof typeof UserAccountAdminListItemDtoStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UserAccountAdminListItemDtoStatus = {
+  ACTIVE: 'ACTIVE',
+  DISABLED: 'DISABLED',
+  LOCKED: 'LOCKED',
+} as const;
+
+export interface UserAccountAdminListItemDto {
+  id?: string;
+  email?: string;
+  applicantFirstName?: string;
+  applicantLastName?: string;
+  role?: UserAccountAdminListItemDtoRole;
+  status?: UserAccountAdminListItemDtoStatus;
+  createdAt?: string;
+}
+
+export type UserAccountAdminDetailDtoRole = typeof UserAccountAdminDetailDtoRole[keyof typeof UserAccountAdminDetailDtoRole];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UserAccountAdminDetailDtoRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+} as const;
+
+export type UserAccountAdminDetailDtoStatus = typeof UserAccountAdminDetailDtoStatus[keyof typeof UserAccountAdminDetailDtoStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UserAccountAdminDetailDtoStatus = {
+  ACTIVE: 'ACTIVE',
+  DISABLED: 'DISABLED',
+  LOCKED: 'LOCKED',
+} as const;
+
+export interface UserAccountAdminDetailDto {
+  id?: string;
+  email?: string;
+  role?: UserAccountAdminDetailDtoRole;
+  status?: UserAccountAdminDetailDtoStatus;
+  createdAt?: string;
+  applicantFirstName?: string;
+  applicantLastName?: string;
+  birthDate?: string;
+  phone?: string;
+  nationality?: string;
+  address?: string;
+}
+
+export interface PendingTaskListItemDto {
+  applicationId?: string;
+  applicantFirstName?: string;
+  applicantLastName?: string;
+  followerPerson?: string;
+  taskId?: string;
+  scheduledAt?: string;
+  withWhom?: string;
+  whatToDo?: string;
+  taskCreatedAt?: string;
+  taskUpdatedAt?: string;
+}
+
+export type UniversityApplicationByStatusListItemDtoStatus = typeof UniversityApplicationByStatusListItemDtoStatus[keyof typeof UniversityApplicationByStatusListItemDtoStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const UniversityApplicationByStatusListItemDtoStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  IN_REVIEW: 'IN_REVIEW',
+  MISSING_DOCUMENTS: 'MISSING_DOCUMENTS',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export interface UniversityApplicationByStatusListItemDto {
+  id?: string;
+  applicantFirstName?: string;
+  applicantLastName?: string;
+  followerPerson?: string;
+  status?: UniversityApplicationByStatusListItemDtoStatus;
+}
+
 export type LanguageCampProjectListItemDtoProjectStatus = typeof LanguageCampProjectListItemDtoProjectStatus[keyof typeof LanguageCampProjectListItemDtoProjectStatus];
 
 
@@ -1312,6 +1711,8 @@ export const PortalFilesUploadPurpose = {
   VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
   VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
   UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
+  UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
+  UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
   OTHER: 'OTHER',
 } as const;
 
@@ -1325,9 +1726,73 @@ page?: number;
 size?: number;
 };
 
+export type AdminUniversityApplicationsListParams = {
+page?: number;
+size?: number;
+status?: AdminUniversityApplicationsListStatus;
+};
+
+export type AdminUniversityApplicationsListStatus = typeof AdminUniversityApplicationsListStatus[keyof typeof AdminUniversityApplicationsListStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const AdminUniversityApplicationsListStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  IN_REVIEW: 'IN_REVIEW',
+  MISSING_DOCUMENTS: 'MISSING_DOCUMENTS',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
+} as const;
+
 export type AdminLanguageCampProjectsListParams = {
 page?: number;
 size?: number;
+};
+
+export type AdminFilesListParams = {
+page?: number;
+size?: number;
+q?: string;
+purpose?: AdminFilesListPurpose;
+};
+
+export type AdminFilesListPurpose = typeof AdminFilesListPurpose[keyof typeof AdminFilesListPurpose];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const AdminFilesListPurpose = {
+  PROJECT_MEDIA: 'PROJECT_MEDIA',
+  LANGUAGE_CAMP_GUARDIAN_CONSENT: 'LANGUAGE_CAMP_GUARDIAN_CONSENT',
+  VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
+  VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
+  UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
+  UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
+  UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
+  OTHER: 'OTHER',
+} as const;
+
+export type AdminFilesUploadParams = {
+purpose?: AdminFilesUploadPurpose;
+};
+
+export type AdminFilesUploadPurpose = typeof AdminFilesUploadPurpose[keyof typeof AdminFilesUploadPurpose];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const AdminFilesUploadPurpose = {
+  PROJECT_MEDIA: 'PROJECT_MEDIA',
+  LANGUAGE_CAMP_GUARDIAN_CONSENT: 'LANGUAGE_CAMP_GUARDIAN_CONSENT',
+  VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
+  VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
+  UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
+  UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
+  UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
+  OTHER: 'OTHER',
+} as const;
+
+export type AdminFilesUploadBody = {
+  file: Blob;
 };
 
 export type AdminDocumentRequirementsListParams = {
@@ -1491,17 +1956,31 @@ export const PortalApplicationDocumentChecklistGetScope = {
   UNIVERSITY_REFERENCE: 'UNIVERSITY_REFERENCE',
 } as const;
 
-export type AdminUniversityApplicationsListParams = {
+export type AdminUsersListParams = {
 page?: number;
 size?: number;
-status?: AdminUniversityApplicationsListStatus;
+role?: AdminUsersListRole;
+q?: string;
 };
 
-export type AdminUniversityApplicationsListStatus = typeof AdminUniversityApplicationsListStatus[keyof typeof AdminUniversityApplicationsListStatus];
+export type AdminUsersListRole = typeof AdminUsersListRole[keyof typeof AdminUsersListRole];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const AdminUniversityApplicationsListStatus = {
+export const AdminUsersListRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+} as const;
+
+export type AdminUniversityApplicationsByStatusParams = {
+status: AdminUniversityApplicationsByStatusStatus;
+};
+
+export type AdminUniversityApplicationsByStatusStatus = typeof AdminUniversityApplicationsByStatusStatus[keyof typeof AdminUniversityApplicationsByStatusStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const AdminUniversityApplicationsByStatusStatus = {
   DRAFT: 'DRAFT',
   SUBMITTED: 'SUBMITTED',
   IN_REVIEW: 'IN_REVIEW',
@@ -1567,26 +2046,6 @@ export const AdminLanguageCampApplicationsListStatus = {
   REJECTED: 'REJECTED',
 } as const;
 
-export type AdminFilesListParams = {
-page?: number;
-size?: number;
-q?: string;
-purpose?: AdminFilesListPurpose;
-};
-
-export type AdminFilesListPurpose = typeof AdminFilesListPurpose[keyof typeof AdminFilesListPurpose];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const AdminFilesListPurpose = {
-  PROJECT_MEDIA: 'PROJECT_MEDIA',
-  LANGUAGE_CAMP_GUARDIAN_CONSENT: 'LANGUAGE_CAMP_GUARDIAN_CONSENT',
-  VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
-  VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
-  UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
-  OTHER: 'OTHER',
-} as const;
-
 export type AdminApplicationDocumentsListParams = {
 scope: AdminApplicationDocumentsListScope;
 applicationId: string;
@@ -1604,6 +2063,258 @@ export const AdminApplicationDocumentsListScope = {
   UNIVERSITY_APPLICATION: 'UNIVERSITY_APPLICATION',
   UNIVERSITY_REFERENCE: 'UNIVERSITY_REFERENCE',
 } as const;
+
+export type portalUniversityApplicationsUniversityPreferencesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsUniversityPreferencesUpdateResponseSuccess = (portalUniversityApplicationsUniversityPreferencesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsUniversityPreferencesUpdateResponse = (portalUniversityApplicationsUniversityPreferencesUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsUniversityPreferencesUpdateUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/university-preferences/${index}`
+}
+
+export const portalUniversityApplicationsUniversityPreferencesUpdate = async (id: string,
+    index: number,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsUniversityPreferencesUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsUniversityPreferencesUpdateUrl(id,index),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsUniversityPreferencesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsUniversityPreferencesUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsUniversityPreferencesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsUniversityPreferencesDeleteResponseSuccess = (portalUniversityApplicationsUniversityPreferencesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsUniversityPreferencesDeleteResponse = (portalUniversityApplicationsUniversityPreferencesDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsUniversityPreferencesDeleteUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/university-preferences/${index}`
+}
+
+export const portalUniversityApplicationsUniversityPreferencesDelete = async (id: string,
+    index: number, options?: RequestInit): Promise<portalUniversityApplicationsUniversityPreferencesDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsUniversityPreferencesDeleteUrl(id,index),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsUniversityPreferencesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsUniversityPreferencesDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsDepartmentPreferencesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsDepartmentPreferencesUpdateResponseSuccess = (portalUniversityApplicationsDepartmentPreferencesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsDepartmentPreferencesUpdateResponse = (portalUniversityApplicationsDepartmentPreferencesUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsDepartmentPreferencesUpdateUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/department-preferences/${index}`
+}
+
+export const portalUniversityApplicationsDepartmentPreferencesUpdate = async (id: string,
+    index: number,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsDepartmentPreferencesUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsDepartmentPreferencesUpdateUrl(id,index),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsDepartmentPreferencesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsDepartmentPreferencesUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsDepartmentPreferencesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsDepartmentPreferencesDeleteResponseSuccess = (portalUniversityApplicationsDepartmentPreferencesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsDepartmentPreferencesDeleteResponse = (portalUniversityApplicationsDepartmentPreferencesDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsDepartmentPreferencesDeleteUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/department-preferences/${index}`
+}
+
+export const portalUniversityApplicationsDepartmentPreferencesDelete = async (id: string,
+    index: number, options?: RequestInit): Promise<portalUniversityApplicationsDepartmentPreferencesDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsDepartmentPreferencesDeleteUrl(id,index),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsDepartmentPreferencesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsDepartmentPreferencesDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsCountryPreferencesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsCountryPreferencesUpdateResponseSuccess = (portalUniversityApplicationsCountryPreferencesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsCountryPreferencesUpdateResponse = (portalUniversityApplicationsCountryPreferencesUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsCountryPreferencesUpdateUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/country-preferences/${index}`
+}
+
+export const portalUniversityApplicationsCountryPreferencesUpdate = async (id: string,
+    index: number,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsCountryPreferencesUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsCountryPreferencesUpdateUrl(id,index),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsCountryPreferencesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsCountryPreferencesUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsCountryPreferencesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsCountryPreferencesDeleteResponseSuccess = (portalUniversityApplicationsCountryPreferencesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsCountryPreferencesDeleteResponse = (portalUniversityApplicationsCountryPreferencesDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsCountryPreferencesDeleteUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/country-preferences/${index}`
+}
+
+export const portalUniversityApplicationsCountryPreferencesDelete = async (id: string,
+    index: number, options?: RequestInit): Promise<portalUniversityApplicationsCountryPreferencesDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsCountryPreferencesDeleteUrl(id,index),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsCountryPreferencesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsCountryPreferencesDeleteResponse
+}
+
+
 
 export type portalCompaniesGetResponse200 = {
   data: CompanyDto
@@ -1720,6 +2431,258 @@ export const portalCompaniesDelete = async (id: string, options?: RequestInit): 
   
   const data: portalCompaniesDeleteResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as portalCompaniesDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsUniversityPreferencesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsUniversityPreferencesUpdateResponseSuccess = (adminUniversityApplicationsUniversityPreferencesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsUniversityPreferencesUpdateResponse = (adminUniversityApplicationsUniversityPreferencesUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsUniversityPreferencesUpdateUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/university-preferences/${index}`
+}
+
+export const adminUniversityApplicationsUniversityPreferencesUpdate = async (id: string,
+    index: number,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsUniversityPreferencesUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsUniversityPreferencesUpdateUrl(id,index),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsUniversityPreferencesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsUniversityPreferencesUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsUniversityPreferencesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsUniversityPreferencesDeleteResponseSuccess = (adminUniversityApplicationsUniversityPreferencesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsUniversityPreferencesDeleteResponse = (adminUniversityApplicationsUniversityPreferencesDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsUniversityPreferencesDeleteUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/university-preferences/${index}`
+}
+
+export const adminUniversityApplicationsUniversityPreferencesDelete = async (id: string,
+    index: number, options?: RequestInit): Promise<adminUniversityApplicationsUniversityPreferencesDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsUniversityPreferencesDeleteUrl(id,index),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsUniversityPreferencesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsUniversityPreferencesDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsDepartmentPreferencesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsDepartmentPreferencesUpdateResponseSuccess = (adminUniversityApplicationsDepartmentPreferencesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsDepartmentPreferencesUpdateResponse = (adminUniversityApplicationsDepartmentPreferencesUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsDepartmentPreferencesUpdateUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/department-preferences/${index}`
+}
+
+export const adminUniversityApplicationsDepartmentPreferencesUpdate = async (id: string,
+    index: number,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsDepartmentPreferencesUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsDepartmentPreferencesUpdateUrl(id,index),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsDepartmentPreferencesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsDepartmentPreferencesUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsDepartmentPreferencesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsDepartmentPreferencesDeleteResponseSuccess = (adminUniversityApplicationsDepartmentPreferencesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsDepartmentPreferencesDeleteResponse = (adminUniversityApplicationsDepartmentPreferencesDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsDepartmentPreferencesDeleteUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/department-preferences/${index}`
+}
+
+export const adminUniversityApplicationsDepartmentPreferencesDelete = async (id: string,
+    index: number, options?: RequestInit): Promise<adminUniversityApplicationsDepartmentPreferencesDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsDepartmentPreferencesDeleteUrl(id,index),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsDepartmentPreferencesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsDepartmentPreferencesDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsCountryPreferencesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsCountryPreferencesUpdateResponseSuccess = (adminUniversityApplicationsCountryPreferencesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsCountryPreferencesUpdateResponse = (adminUniversityApplicationsCountryPreferencesUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsCountryPreferencesUpdateUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/country-preferences/${index}`
+}
+
+export const adminUniversityApplicationsCountryPreferencesUpdate = async (id: string,
+    index: number,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsCountryPreferencesUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsCountryPreferencesUpdateUrl(id,index),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsCountryPreferencesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsCountryPreferencesUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsCountryPreferencesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsCountryPreferencesDeleteResponseSuccess = (adminUniversityApplicationsCountryPreferencesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsCountryPreferencesDeleteResponse = (adminUniversityApplicationsCountryPreferencesDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsCountryPreferencesDeleteUrl = (id: string,
+    index: number,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/country-preferences/${index}`
+}
+
+export const adminUniversityApplicationsCountryPreferencesDelete = async (id: string,
+    index: number, options?: RequestInit): Promise<adminUniversityApplicationsCountryPreferencesDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsCountryPreferencesDeleteUrl(id,index),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsCountryPreferencesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsCountryPreferencesDeleteResponse
 }
 
 
@@ -2566,6 +3529,88 @@ export const portalUniversityApplicationsCreateDraft = async (universityApplicat
 
 
 
+export type portalUniversityApplicationsUniversityPreferencesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsUniversityPreferencesAddResponseSuccess = (portalUniversityApplicationsUniversityPreferencesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsUniversityPreferencesAddResponse = (portalUniversityApplicationsUniversityPreferencesAddResponseSuccess)
+
+export const getPortalUniversityApplicationsUniversityPreferencesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/university-preferences`
+}
+
+export const portalUniversityApplicationsUniversityPreferencesAdd = async (id: string,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsUniversityPreferencesAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsUniversityPreferencesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsUniversityPreferencesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsUniversityPreferencesAddResponse
+}
+
+
+
+export type portalUniversityApplicationsTasksAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsTasksAddResponseSuccess = (portalUniversityApplicationsTasksAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsTasksAddResponse = (portalUniversityApplicationsTasksAddResponseSuccess)
+
+export const getPortalUniversityApplicationsTasksAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/tasks`
+}
+
+export const portalUniversityApplicationsTasksAdd = async (id: string,
+    universityApplicationTaskUpsertRequestDto: UniversityApplicationTaskUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsTasksAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsTasksAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationTaskUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsTasksAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsTasksAddResponse
+}
+
+
+
 export type portalUniversityApplicationsSubmitResponse200 = {
   data: UniversityApplicationDetailDto
   status: 200
@@ -2601,6 +3646,336 @@ export const portalUniversityApplicationsSubmit = async (id: string, options?: R
   
   const data: portalUniversityApplicationsSubmitResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsSubmitResponse
+}
+
+
+
+export type portalUniversityApplicationsPortfolioSectionsAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPortfolioSectionsAddResponseSuccess = (portalUniversityApplicationsPortfolioSectionsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPortfolioSectionsAddResponse = (portalUniversityApplicationsPortfolioSectionsAddResponseSuccess)
+
+export const getPortalUniversityApplicationsPortfolioSectionsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/portfolio-sections`
+}
+
+export const portalUniversityApplicationsPortfolioSectionsAdd = async (id: string,
+    universityApplicationPortfolioSectionUpsertRequestDto: UniversityApplicationPortfolioSectionUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsPortfolioSectionsAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPortfolioSectionsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPortfolioSectionUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPortfolioSectionsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPortfolioSectionsAddResponse
+}
+
+
+
+export type portalUniversityApplicationsPortfolioFilesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPortfolioFilesAddResponseSuccess = (portalUniversityApplicationsPortfolioFilesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPortfolioFilesAddResponse = (portalUniversityApplicationsPortfolioFilesAddResponseSuccess)
+
+export const getPortalUniversityApplicationsPortfolioFilesAddUrl = (id: string,
+    sectionId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/portfolio-sections/${sectionId}/files`
+}
+
+export const portalUniversityApplicationsPortfolioFilesAdd = async (id: string,
+    sectionId: string,
+    universityApplicationPortfolioFileUpsertRequestDto: UniversityApplicationPortfolioFileUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsPortfolioFilesAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPortfolioFilesAddUrl(id,sectionId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPortfolioFileUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPortfolioFilesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPortfolioFilesAddResponse
+}
+
+
+
+export type portalUniversityApplicationsPaymentsAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPaymentsAddResponseSuccess = (portalUniversityApplicationsPaymentsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPaymentsAddResponse = (portalUniversityApplicationsPaymentsAddResponseSuccess)
+
+export const getPortalUniversityApplicationsPaymentsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/payments`
+}
+
+export const portalUniversityApplicationsPaymentsAdd = async (id: string,
+    universityApplicationPaymentUpsertRequestDto: UniversityApplicationPaymentUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsPaymentsAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPaymentsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPaymentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPaymentsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPaymentsAddResponse
+}
+
+
+
+export type portalUniversityApplicationsNotesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsNotesAddResponseSuccess = (portalUniversityApplicationsNotesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsNotesAddResponse = (portalUniversityApplicationsNotesAddResponseSuccess)
+
+export const getPortalUniversityApplicationsNotesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/notes`
+}
+
+export const portalUniversityApplicationsNotesAdd = async (id: string,
+    universityApplicationNoteCreateRequestDto: UniversityApplicationNoteCreateRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsNotesAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsNotesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationNoteCreateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsNotesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsNotesAddResponse
+}
+
+
+
+export type portalUniversityApplicationsMeetingsAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsMeetingsAddResponseSuccess = (portalUniversityApplicationsMeetingsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsMeetingsAddResponse = (portalUniversityApplicationsMeetingsAddResponseSuccess)
+
+export const getPortalUniversityApplicationsMeetingsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/meetings`
+}
+
+export const portalUniversityApplicationsMeetingsAdd = async (id: string,
+    universityApplicationMeetingUpsertRequestDto: UniversityApplicationMeetingUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsMeetingsAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsMeetingsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationMeetingUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsMeetingsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsMeetingsAddResponse
+}
+
+
+
+export type portalUniversityApplicationsDocumentsAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsDocumentsAddResponseSuccess = (portalUniversityApplicationsDocumentsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsDocumentsAddResponse = (portalUniversityApplicationsDocumentsAddResponseSuccess)
+
+export const getPortalUniversityApplicationsDocumentsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/documents`
+}
+
+export const portalUniversityApplicationsDocumentsAdd = async (id: string,
+    universityApplicationDocumentUpsertRequestDto: UniversityApplicationDocumentUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsDocumentsAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsDocumentsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationDocumentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsDocumentsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsDocumentsAddResponse
+}
+
+
+
+export type portalUniversityApplicationsDepartmentPreferencesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsDepartmentPreferencesAddResponseSuccess = (portalUniversityApplicationsDepartmentPreferencesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsDepartmentPreferencesAddResponse = (portalUniversityApplicationsDepartmentPreferencesAddResponseSuccess)
+
+export const getPortalUniversityApplicationsDepartmentPreferencesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/department-preferences`
+}
+
+export const portalUniversityApplicationsDepartmentPreferencesAdd = async (id: string,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsDepartmentPreferencesAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsDepartmentPreferencesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsDepartmentPreferencesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsDepartmentPreferencesAddResponse
+}
+
+
+
+export type portalUniversityApplicationsCountryPreferencesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsCountryPreferencesAddResponseSuccess = (portalUniversityApplicationsCountryPreferencesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsCountryPreferencesAddResponse = (portalUniversityApplicationsCountryPreferencesAddResponseSuccess)
+
+export const getPortalUniversityApplicationsCountryPreferencesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/country-preferences`
+}
+
+export const portalUniversityApplicationsCountryPreferencesAdd = async (id: string,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsCountryPreferencesAddResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsCountryPreferencesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsCountryPreferencesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsCountryPreferencesAddResponse
 }
 
 
@@ -3192,6 +4567,504 @@ export const authLogin = async (loginRequestDto: LoginRequestDto, options?: Requ
 
 
 
+export type adminUniversityApplicationsListResponse200 = {
+  data: PageDtoUniversityApplicationListItemDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsListResponseSuccess = (adminUniversityApplicationsListResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsListResponse = (adminUniversityApplicationsListResponseSuccess)
+
+export const getAdminUniversityApplicationsListUrl = (params?: AdminUniversityApplicationsListParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/admin/university-applications?${stringifiedParams}` : `/v1/admin/university-applications`
+}
+
+export const adminUniversityApplicationsList = async (params?: AdminUniversityApplicationsListParams, options?: RequestInit): Promise<adminUniversityApplicationsListResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsListResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsListResponse
+}
+
+
+
+export type adminUniversityApplicationsCreateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsCreateResponseSuccess = (adminUniversityApplicationsCreateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsCreateResponse = (adminUniversityApplicationsCreateResponseSuccess)
+
+export const getAdminUniversityApplicationsCreateUrl = () => {
+
+
+  
+
+  return `/v1/admin/university-applications`
+}
+
+export const adminUniversityApplicationsCreate = async (universityApplicationAdminCreateRequestDto: UniversityApplicationAdminCreateRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsCreateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsCreateUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationAdminCreateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsCreateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsCreateResponse
+}
+
+
+
+export type adminUniversityApplicationsUniversityPreferencesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsUniversityPreferencesAddResponseSuccess = (adminUniversityApplicationsUniversityPreferencesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsUniversityPreferencesAddResponse = (adminUniversityApplicationsUniversityPreferencesAddResponseSuccess)
+
+export const getAdminUniversityApplicationsUniversityPreferencesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/university-preferences`
+}
+
+export const adminUniversityApplicationsUniversityPreferencesAdd = async (id: string,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsUniversityPreferencesAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsUniversityPreferencesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsUniversityPreferencesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsUniversityPreferencesAddResponse
+}
+
+
+
+export type adminUniversityApplicationsTasksAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsTasksAddResponseSuccess = (adminUniversityApplicationsTasksAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsTasksAddResponse = (adminUniversityApplicationsTasksAddResponseSuccess)
+
+export const getAdminUniversityApplicationsTasksAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/tasks`
+}
+
+export const adminUniversityApplicationsTasksAdd = async (id: string,
+    universityApplicationTaskUpsertRequestDto: UniversityApplicationTaskUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsTasksAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsTasksAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationTaskUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsTasksAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsTasksAddResponse
+}
+
+
+
+export type adminUniversityApplicationsPortfolioSectionsAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPortfolioSectionsAddResponseSuccess = (adminUniversityApplicationsPortfolioSectionsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPortfolioSectionsAddResponse = (adminUniversityApplicationsPortfolioSectionsAddResponseSuccess)
+
+export const getAdminUniversityApplicationsPortfolioSectionsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/portfolio-sections`
+}
+
+export const adminUniversityApplicationsPortfolioSectionsAdd = async (id: string,
+    universityApplicationPortfolioSectionUpsertRequestDto: UniversityApplicationPortfolioSectionUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsPortfolioSectionsAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPortfolioSectionsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPortfolioSectionUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPortfolioSectionsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPortfolioSectionsAddResponse
+}
+
+
+
+export type adminUniversityApplicationsPortfolioFilesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPortfolioFilesAddResponseSuccess = (adminUniversityApplicationsPortfolioFilesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPortfolioFilesAddResponse = (adminUniversityApplicationsPortfolioFilesAddResponseSuccess)
+
+export const getAdminUniversityApplicationsPortfolioFilesAddUrl = (id: string,
+    sectionId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/portfolio-sections/${sectionId}/files`
+}
+
+export const adminUniversityApplicationsPortfolioFilesAdd = async (id: string,
+    sectionId: string,
+    universityApplicationPortfolioFileUpsertRequestDto: UniversityApplicationPortfolioFileUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsPortfolioFilesAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPortfolioFilesAddUrl(id,sectionId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPortfolioFileUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPortfolioFilesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPortfolioFilesAddResponse
+}
+
+
+
+export type adminUniversityApplicationsPaymentsAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPaymentsAddResponseSuccess = (adminUniversityApplicationsPaymentsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPaymentsAddResponse = (adminUniversityApplicationsPaymentsAddResponseSuccess)
+
+export const getAdminUniversityApplicationsPaymentsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/payments`
+}
+
+export const adminUniversityApplicationsPaymentsAdd = async (id: string,
+    universityApplicationPaymentUpsertRequestDto: UniversityApplicationPaymentUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsPaymentsAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPaymentsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPaymentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPaymentsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPaymentsAddResponse
+}
+
+
+
+export type adminUniversityApplicationsNotesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsNotesAddResponseSuccess = (adminUniversityApplicationsNotesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsNotesAddResponse = (adminUniversityApplicationsNotesAddResponseSuccess)
+
+export const getAdminUniversityApplicationsNotesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/notes`
+}
+
+export const adminUniversityApplicationsNotesAdd = async (id: string,
+    universityApplicationNoteCreateRequestDto: UniversityApplicationNoteCreateRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsNotesAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsNotesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationNoteCreateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsNotesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsNotesAddResponse
+}
+
+
+
+export type adminUniversityApplicationsMeetingsAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsMeetingsAddResponseSuccess = (adminUniversityApplicationsMeetingsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsMeetingsAddResponse = (adminUniversityApplicationsMeetingsAddResponseSuccess)
+
+export const getAdminUniversityApplicationsMeetingsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/meetings`
+}
+
+export const adminUniversityApplicationsMeetingsAdd = async (id: string,
+    universityApplicationMeetingUpsertRequestDto: UniversityApplicationMeetingUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsMeetingsAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsMeetingsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationMeetingUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsMeetingsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsMeetingsAddResponse
+}
+
+
+
+export type adminUniversityApplicationsDocumentsAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsDocumentsAddResponseSuccess = (adminUniversityApplicationsDocumentsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsDocumentsAddResponse = (adminUniversityApplicationsDocumentsAddResponseSuccess)
+
+export const getAdminUniversityApplicationsDocumentsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/documents`
+}
+
+export const adminUniversityApplicationsDocumentsAdd = async (id: string,
+    universityApplicationDocumentUpsertRequestDto: UniversityApplicationDocumentUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsDocumentsAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsDocumentsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationDocumentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsDocumentsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsDocumentsAddResponse
+}
+
+
+
+export type adminUniversityApplicationsDepartmentPreferencesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsDepartmentPreferencesAddResponseSuccess = (adminUniversityApplicationsDepartmentPreferencesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsDepartmentPreferencesAddResponse = (adminUniversityApplicationsDepartmentPreferencesAddResponseSuccess)
+
+export const getAdminUniversityApplicationsDepartmentPreferencesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/department-preferences`
+}
+
+export const adminUniversityApplicationsDepartmentPreferencesAdd = async (id: string,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsDepartmentPreferencesAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsDepartmentPreferencesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsDepartmentPreferencesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsDepartmentPreferencesAddResponse
+}
+
+
+
+export type adminUniversityApplicationsCountryPreferencesAddResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsCountryPreferencesAddResponseSuccess = (adminUniversityApplicationsCountryPreferencesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsCountryPreferencesAddResponse = (adminUniversityApplicationsCountryPreferencesAddResponseSuccess)
+
+export const getAdminUniversityApplicationsCountryPreferencesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/country-preferences`
+}
+
+export const adminUniversityApplicationsCountryPreferencesAdd = async (id: string,
+    universityApplicationStringListItemUpsertRequestDto: UniversityApplicationStringListItemUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsCountryPreferencesAddResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsCountryPreferencesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationStringListItemUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsCountryPreferencesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsCountryPreferencesAddResponse
+}
+
+
+
 export type adminLanguageCampProjectsListResponse200 = {
   data: PageDtoLanguageCampProjectListItemDto
   status: 200
@@ -3274,6 +5147,102 @@ export const adminLanguageCampProjectsCreate = async (languageCampProjectCreateR
   
   const data: adminLanguageCampProjectsCreateResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as adminLanguageCampProjectsCreateResponse
+}
+
+
+
+export type adminFilesListResponse200 = {
+  data: PageDtoStoredFileDto
+  status: 200
+}
+    
+export type adminFilesListResponseSuccess = (adminFilesListResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminFilesListResponse = (adminFilesListResponseSuccess)
+
+export const getAdminFilesListUrl = (params?: AdminFilesListParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/admin/files?${stringifiedParams}` : `/v1/admin/files`
+}
+
+export const adminFilesList = async (params?: AdminFilesListParams, options?: RequestInit): Promise<adminFilesListResponse> => {
+  
+  const res = await fetch(getAdminFilesListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminFilesListResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminFilesListResponse
+}
+
+
+
+export type adminFilesUploadResponse200 = {
+  data: StoredFileDto
+  status: 200
+}
+    
+export type adminFilesUploadResponseSuccess = (adminFilesUploadResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminFilesUploadResponse = (adminFilesUploadResponseSuccess)
+
+export const getAdminFilesUploadUrl = (params?: AdminFilesUploadParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/admin/files?${stringifiedParams}` : `/v1/admin/files`
+}
+
+export const adminFilesUpload = async (adminFilesUploadBody: AdminFilesUploadBody,
+    params?: AdminFilesUploadParams, options?: RequestInit): Promise<adminFilesUploadResponse> => {
+    const formData = new FormData();
+formData.append(`file`, adminFilesUploadBody.file)
+
+  const res = await fetch(getAdminFilesUploadUrl(params),
+  {      
+    ...options,
+    method: 'POST'
+    ,
+    body: 
+      formData,
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminFilesUploadResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminFilesUploadResponse
 }
 
 
@@ -3874,6 +5843,598 @@ export const portalUniversityApplicationsUpdateDraft = async (id: string,
 
 
 
+export type portalUniversityApplicationsTasksDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsTasksDeleteResponseSuccess = (portalUniversityApplicationsTasksDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsTasksDeleteResponse = (portalUniversityApplicationsTasksDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsTasksDeleteUrl = (id: string,
+    taskId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/tasks/${taskId}`
+}
+
+export const portalUniversityApplicationsTasksDelete = async (id: string,
+    taskId: string, options?: RequestInit): Promise<portalUniversityApplicationsTasksDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsTasksDeleteUrl(id,taskId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsTasksDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsTasksDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsTasksUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsTasksUpdateResponseSuccess = (portalUniversityApplicationsTasksUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsTasksUpdateResponse = (portalUniversityApplicationsTasksUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsTasksUpdateUrl = (id: string,
+    taskId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/tasks/${taskId}`
+}
+
+export const portalUniversityApplicationsTasksUpdate = async (id: string,
+    taskId: string,
+    universityApplicationTaskUpsertRequestDto: UniversityApplicationTaskUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsTasksUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsTasksUpdateUrl(id,taskId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationTaskUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsTasksUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsTasksUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsPortfolioSectionsDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPortfolioSectionsDeleteResponseSuccess = (portalUniversityApplicationsPortfolioSectionsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPortfolioSectionsDeleteResponse = (portalUniversityApplicationsPortfolioSectionsDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsPortfolioSectionsDeleteUrl = (id: string,
+    sectionId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/portfolio-sections/${sectionId}`
+}
+
+export const portalUniversityApplicationsPortfolioSectionsDelete = async (id: string,
+    sectionId: string, options?: RequestInit): Promise<portalUniversityApplicationsPortfolioSectionsDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPortfolioSectionsDeleteUrl(id,sectionId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPortfolioSectionsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPortfolioSectionsDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsPortfolioSectionsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPortfolioSectionsUpdateResponseSuccess = (portalUniversityApplicationsPortfolioSectionsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPortfolioSectionsUpdateResponse = (portalUniversityApplicationsPortfolioSectionsUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsPortfolioSectionsUpdateUrl = (id: string,
+    sectionId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/portfolio-sections/${sectionId}`
+}
+
+export const portalUniversityApplicationsPortfolioSectionsUpdate = async (id: string,
+    sectionId: string,
+    universityApplicationPortfolioSectionUpsertRequestDto: UniversityApplicationPortfolioSectionUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsPortfolioSectionsUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPortfolioSectionsUpdateUrl(id,sectionId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPortfolioSectionUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPortfolioSectionsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPortfolioSectionsUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsPortfolioFilesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPortfolioFilesDeleteResponseSuccess = (portalUniversityApplicationsPortfolioFilesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPortfolioFilesDeleteResponse = (portalUniversityApplicationsPortfolioFilesDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsPortfolioFilesDeleteUrl = (id: string,
+    sectionId: string,
+    fileId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/portfolio-sections/${sectionId}/files/${fileId}`
+}
+
+export const portalUniversityApplicationsPortfolioFilesDelete = async (id: string,
+    sectionId: string,
+    fileId: string, options?: RequestInit): Promise<portalUniversityApplicationsPortfolioFilesDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPortfolioFilesDeleteUrl(id,sectionId,fileId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPortfolioFilesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPortfolioFilesDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsPortfolioFilesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPortfolioFilesUpdateResponseSuccess = (portalUniversityApplicationsPortfolioFilesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPortfolioFilesUpdateResponse = (portalUniversityApplicationsPortfolioFilesUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsPortfolioFilesUpdateUrl = (id: string,
+    sectionId: string,
+    fileId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/portfolio-sections/${sectionId}/files/${fileId}`
+}
+
+export const portalUniversityApplicationsPortfolioFilesUpdate = async (id: string,
+    sectionId: string,
+    fileId: string,
+    universityApplicationPortfolioFileUpsertRequestDto: UniversityApplicationPortfolioFileUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsPortfolioFilesUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPortfolioFilesUpdateUrl(id,sectionId,fileId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPortfolioFileUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPortfolioFilesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPortfolioFilesUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsPaymentsDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPaymentsDeleteResponseSuccess = (portalUniversityApplicationsPaymentsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPaymentsDeleteResponse = (portalUniversityApplicationsPaymentsDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsPaymentsDeleteUrl = (id: string,
+    paymentId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/payments/${paymentId}`
+}
+
+export const portalUniversityApplicationsPaymentsDelete = async (id: string,
+    paymentId: string, options?: RequestInit): Promise<portalUniversityApplicationsPaymentsDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPaymentsDeleteUrl(id,paymentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPaymentsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPaymentsDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsPaymentsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsPaymentsUpdateResponseSuccess = (portalUniversityApplicationsPaymentsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsPaymentsUpdateResponse = (portalUniversityApplicationsPaymentsUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsPaymentsUpdateUrl = (id: string,
+    paymentId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/payments/${paymentId}`
+}
+
+export const portalUniversityApplicationsPaymentsUpdate = async (id: string,
+    paymentId: string,
+    universityApplicationPaymentUpsertRequestDto: UniversityApplicationPaymentUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsPaymentsUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsPaymentsUpdateUrl(id,paymentId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPaymentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsPaymentsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsPaymentsUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsNotesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsNotesDeleteResponseSuccess = (portalUniversityApplicationsNotesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsNotesDeleteResponse = (portalUniversityApplicationsNotesDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsNotesDeleteUrl = (id: string,
+    noteId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/notes/${noteId}`
+}
+
+export const portalUniversityApplicationsNotesDelete = async (id: string,
+    noteId: string, options?: RequestInit): Promise<portalUniversityApplicationsNotesDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsNotesDeleteUrl(id,noteId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsNotesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsNotesDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsNotesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsNotesUpdateResponseSuccess = (portalUniversityApplicationsNotesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsNotesUpdateResponse = (portalUniversityApplicationsNotesUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsNotesUpdateUrl = (id: string,
+    noteId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/notes/${noteId}`
+}
+
+export const portalUniversityApplicationsNotesUpdate = async (id: string,
+    noteId: string,
+    universityApplicationNoteUpdateRequestDto: UniversityApplicationNoteUpdateRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsNotesUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsNotesUpdateUrl(id,noteId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationNoteUpdateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsNotesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsNotesUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsMeetingsDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsMeetingsDeleteResponseSuccess = (portalUniversityApplicationsMeetingsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsMeetingsDeleteResponse = (portalUniversityApplicationsMeetingsDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsMeetingsDeleteUrl = (id: string,
+    meetingId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/meetings/${meetingId}`
+}
+
+export const portalUniversityApplicationsMeetingsDelete = async (id: string,
+    meetingId: string, options?: RequestInit): Promise<portalUniversityApplicationsMeetingsDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsMeetingsDeleteUrl(id,meetingId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsMeetingsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsMeetingsDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsMeetingsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsMeetingsUpdateResponseSuccess = (portalUniversityApplicationsMeetingsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsMeetingsUpdateResponse = (portalUniversityApplicationsMeetingsUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsMeetingsUpdateUrl = (id: string,
+    meetingId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/meetings/${meetingId}`
+}
+
+export const portalUniversityApplicationsMeetingsUpdate = async (id: string,
+    meetingId: string,
+    universityApplicationMeetingUpsertRequestDto: UniversityApplicationMeetingUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsMeetingsUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsMeetingsUpdateUrl(id,meetingId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationMeetingUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsMeetingsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsMeetingsUpdateResponse
+}
+
+
+
+export type portalUniversityApplicationsDocumentsDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsDocumentsDeleteResponseSuccess = (portalUniversityApplicationsDocumentsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsDocumentsDeleteResponse = (portalUniversityApplicationsDocumentsDeleteResponseSuccess)
+
+export const getPortalUniversityApplicationsDocumentsDeleteUrl = (id: string,
+    documentId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/documents/${documentId}`
+}
+
+export const portalUniversityApplicationsDocumentsDelete = async (id: string,
+    documentId: string, options?: RequestInit): Promise<portalUniversityApplicationsDocumentsDeleteResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsDocumentsDeleteUrl(id,documentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsDocumentsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsDocumentsDeleteResponse
+}
+
+
+
+export type portalUniversityApplicationsDocumentsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type portalUniversityApplicationsDocumentsUpdateResponseSuccess = (portalUniversityApplicationsDocumentsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsDocumentsUpdateResponse = (portalUniversityApplicationsDocumentsUpdateResponseSuccess)
+
+export const getPortalUniversityApplicationsDocumentsUpdateUrl = (id: string,
+    documentId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/documents/${documentId}`
+}
+
+export const portalUniversityApplicationsDocumentsUpdate = async (id: string,
+    documentId: string,
+    universityApplicationDocumentUpsertRequestDto: UniversityApplicationDocumentUpsertRequestDto, options?: RequestInit): Promise<portalUniversityApplicationsDocumentsUpdateResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsDocumentsUpdateUrl(id,documentId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationDocumentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsDocumentsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsDocumentsUpdateResponse
+}
+
+
+
 export type portalLanguageCampVisaFormsGetResponse200 = {
   data: LanguageCampVisaFormDto
   status: 200
@@ -4034,6 +6595,170 @@ export const portalLanguageCampApplicationsUpdateDraft = async (id: string,
 
 
 
+export type adminUniversityApplicationsGetResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsGetResponseSuccess = (adminUniversityApplicationsGetResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsGetResponse = (adminUniversityApplicationsGetResponseSuccess)
+
+export const getAdminUniversityApplicationsGetUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}`
+}
+
+export const adminUniversityApplicationsGet = async (id: string, options?: RequestInit): Promise<adminUniversityApplicationsGetResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsGetUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsGetResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsGetResponse
+}
+
+
+
+export type adminUniversityApplicationsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsUpdateResponseSuccess = (adminUniversityApplicationsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsUpdateResponse = (adminUniversityApplicationsUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsUpdateUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}`
+}
+
+export const adminUniversityApplicationsUpdate = async (id: string,
+    universityApplicationUpdateRequestDto: UniversityApplicationUpdateRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsUpdateUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationUpdateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsTasksDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsTasksDeleteResponseSuccess = (adminUniversityApplicationsTasksDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsTasksDeleteResponse = (adminUniversityApplicationsTasksDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsTasksDeleteUrl = (id: string,
+    taskId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/tasks/${taskId}`
+}
+
+export const adminUniversityApplicationsTasksDelete = async (id: string,
+    taskId: string, options?: RequestInit): Promise<adminUniversityApplicationsTasksDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsTasksDeleteUrl(id,taskId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsTasksDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsTasksDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsTasksUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsTasksUpdateResponseSuccess = (adminUniversityApplicationsTasksUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsTasksUpdateResponse = (adminUniversityApplicationsTasksUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsTasksUpdateUrl = (id: string,
+    taskId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/tasks/${taskId}`
+}
+
+export const adminUniversityApplicationsTasksUpdate = async (id: string,
+    taskId: string,
+    universityApplicationTaskUpsertRequestDto: UniversityApplicationTaskUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsTasksUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsTasksUpdateUrl(id,taskId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationTaskUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsTasksUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsTasksUpdateResponse
+}
+
+
+
 export type adminUniversityApplicationsChangeStatusResponse200 = {
   data: UniversityApplicationDetailDto
   status: 200
@@ -4071,6 +6796,514 @@ export const adminUniversityApplicationsChangeStatus = async (id: string,
   
   const data: adminUniversityApplicationsChangeStatusResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsChangeStatusResponse
+}
+
+
+
+export type adminUniversityApplicationsPortfolioSectionsDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPortfolioSectionsDeleteResponseSuccess = (adminUniversityApplicationsPortfolioSectionsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPortfolioSectionsDeleteResponse = (adminUniversityApplicationsPortfolioSectionsDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsPortfolioSectionsDeleteUrl = (id: string,
+    sectionId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/portfolio-sections/${sectionId}`
+}
+
+export const adminUniversityApplicationsPortfolioSectionsDelete = async (id: string,
+    sectionId: string, options?: RequestInit): Promise<adminUniversityApplicationsPortfolioSectionsDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPortfolioSectionsDeleteUrl(id,sectionId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPortfolioSectionsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPortfolioSectionsDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsPortfolioSectionsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPortfolioSectionsUpdateResponseSuccess = (adminUniversityApplicationsPortfolioSectionsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPortfolioSectionsUpdateResponse = (adminUniversityApplicationsPortfolioSectionsUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsPortfolioSectionsUpdateUrl = (id: string,
+    sectionId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/portfolio-sections/${sectionId}`
+}
+
+export const adminUniversityApplicationsPortfolioSectionsUpdate = async (id: string,
+    sectionId: string,
+    universityApplicationPortfolioSectionUpsertRequestDto: UniversityApplicationPortfolioSectionUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsPortfolioSectionsUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPortfolioSectionsUpdateUrl(id,sectionId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPortfolioSectionUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPortfolioSectionsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPortfolioSectionsUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsPortfolioFilesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPortfolioFilesDeleteResponseSuccess = (adminUniversityApplicationsPortfolioFilesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPortfolioFilesDeleteResponse = (adminUniversityApplicationsPortfolioFilesDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsPortfolioFilesDeleteUrl = (id: string,
+    sectionId: string,
+    fileId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/portfolio-sections/${sectionId}/files/${fileId}`
+}
+
+export const adminUniversityApplicationsPortfolioFilesDelete = async (id: string,
+    sectionId: string,
+    fileId: string, options?: RequestInit): Promise<adminUniversityApplicationsPortfolioFilesDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPortfolioFilesDeleteUrl(id,sectionId,fileId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPortfolioFilesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPortfolioFilesDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsPortfolioFilesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPortfolioFilesUpdateResponseSuccess = (adminUniversityApplicationsPortfolioFilesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPortfolioFilesUpdateResponse = (adminUniversityApplicationsPortfolioFilesUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsPortfolioFilesUpdateUrl = (id: string,
+    sectionId: string,
+    fileId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/portfolio-sections/${sectionId}/files/${fileId}`
+}
+
+export const adminUniversityApplicationsPortfolioFilesUpdate = async (id: string,
+    sectionId: string,
+    fileId: string,
+    universityApplicationPortfolioFileUpsertRequestDto: UniversityApplicationPortfolioFileUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsPortfolioFilesUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPortfolioFilesUpdateUrl(id,sectionId,fileId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPortfolioFileUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPortfolioFilesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPortfolioFilesUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsPaymentsDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPaymentsDeleteResponseSuccess = (adminUniversityApplicationsPaymentsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPaymentsDeleteResponse = (adminUniversityApplicationsPaymentsDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsPaymentsDeleteUrl = (id: string,
+    paymentId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/payments/${paymentId}`
+}
+
+export const adminUniversityApplicationsPaymentsDelete = async (id: string,
+    paymentId: string, options?: RequestInit): Promise<adminUniversityApplicationsPaymentsDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPaymentsDeleteUrl(id,paymentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPaymentsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPaymentsDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsPaymentsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsPaymentsUpdateResponseSuccess = (adminUniversityApplicationsPaymentsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPaymentsUpdateResponse = (adminUniversityApplicationsPaymentsUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsPaymentsUpdateUrl = (id: string,
+    paymentId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/payments/${paymentId}`
+}
+
+export const adminUniversityApplicationsPaymentsUpdate = async (id: string,
+    paymentId: string,
+    universityApplicationPaymentUpsertRequestDto: UniversityApplicationPaymentUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsPaymentsUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPaymentsUpdateUrl(id,paymentId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationPaymentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPaymentsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPaymentsUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsNotesDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsNotesDeleteResponseSuccess = (adminUniversityApplicationsNotesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsNotesDeleteResponse = (adminUniversityApplicationsNotesDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsNotesDeleteUrl = (id: string,
+    noteId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/notes/${noteId}`
+}
+
+export const adminUniversityApplicationsNotesDelete = async (id: string,
+    noteId: string, options?: RequestInit): Promise<adminUniversityApplicationsNotesDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsNotesDeleteUrl(id,noteId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsNotesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsNotesDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsNotesUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsNotesUpdateResponseSuccess = (adminUniversityApplicationsNotesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsNotesUpdateResponse = (adminUniversityApplicationsNotesUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsNotesUpdateUrl = (id: string,
+    noteId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/notes/${noteId}`
+}
+
+export const adminUniversityApplicationsNotesUpdate = async (id: string,
+    noteId: string,
+    universityApplicationNoteUpdateRequestDto: UniversityApplicationNoteUpdateRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsNotesUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsNotesUpdateUrl(id,noteId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationNoteUpdateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsNotesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsNotesUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsMeetingsDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsMeetingsDeleteResponseSuccess = (adminUniversityApplicationsMeetingsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsMeetingsDeleteResponse = (adminUniversityApplicationsMeetingsDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsMeetingsDeleteUrl = (id: string,
+    meetingId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/meetings/${meetingId}`
+}
+
+export const adminUniversityApplicationsMeetingsDelete = async (id: string,
+    meetingId: string, options?: RequestInit): Promise<adminUniversityApplicationsMeetingsDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsMeetingsDeleteUrl(id,meetingId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsMeetingsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsMeetingsDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsMeetingsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsMeetingsUpdateResponseSuccess = (adminUniversityApplicationsMeetingsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsMeetingsUpdateResponse = (adminUniversityApplicationsMeetingsUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsMeetingsUpdateUrl = (id: string,
+    meetingId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/meetings/${meetingId}`
+}
+
+export const adminUniversityApplicationsMeetingsUpdate = async (id: string,
+    meetingId: string,
+    universityApplicationMeetingUpsertRequestDto: UniversityApplicationMeetingUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsMeetingsUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsMeetingsUpdateUrl(id,meetingId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationMeetingUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsMeetingsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsMeetingsUpdateResponse
+}
+
+
+
+export type adminUniversityApplicationsDocumentsDeleteResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsDocumentsDeleteResponseSuccess = (adminUniversityApplicationsDocumentsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsDocumentsDeleteResponse = (adminUniversityApplicationsDocumentsDeleteResponseSuccess)
+
+export const getAdminUniversityApplicationsDocumentsDeleteUrl = (id: string,
+    documentId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/documents/${documentId}`
+}
+
+export const adminUniversityApplicationsDocumentsDelete = async (id: string,
+    documentId: string, options?: RequestInit): Promise<adminUniversityApplicationsDocumentsDeleteResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsDocumentsDeleteUrl(id,documentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsDocumentsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsDocumentsDeleteResponse
+}
+
+
+
+export type adminUniversityApplicationsDocumentsUpdateResponse200 = {
+  data: UniversityApplicationDetailDto
+  status: 200
+}
+    
+export type adminUniversityApplicationsDocumentsUpdateResponseSuccess = (adminUniversityApplicationsDocumentsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsDocumentsUpdateResponse = (adminUniversityApplicationsDocumentsUpdateResponseSuccess)
+
+export const getAdminUniversityApplicationsDocumentsUpdateUrl = (id: string,
+    documentId: string,) => {
+
+
+  
+
+  return `/v1/admin/university-applications/${id}/documents/${documentId}`
+}
+
+export const adminUniversityApplicationsDocumentsUpdate = async (id: string,
+    documentId: string,
+    universityApplicationDocumentUpsertRequestDto: UniversityApplicationDocumentUpsertRequestDto, options?: RequestInit): Promise<adminUniversityApplicationsDocumentsUpdateResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsDocumentsUpdateUrl(id,documentId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      universityApplicationDocumentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsDocumentsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsDocumentsUpdateResponse
 }
 
 
@@ -4844,19 +8077,19 @@ export const authMe = async ( options?: RequestInit): Promise<authMeResponse> =>
 
 
 
-export type adminUniversityApplicationsListResponse200 = {
-  data: PageDtoUniversityApplicationListItemDto
+export type adminUsersListResponse200 = {
+  data: PageDtoUserAccountAdminListItemDto
   status: 200
 }
     
-export type adminUniversityApplicationsListResponseSuccess = (adminUniversityApplicationsListResponse200) & {
+export type adminUsersListResponseSuccess = (adminUsersListResponse200) & {
   headers: Headers;
 };
 ;
 
-export type adminUniversityApplicationsListResponse = (adminUniversityApplicationsListResponseSuccess)
+export type adminUsersListResponse = (adminUsersListResponseSuccess)
 
-export const getAdminUniversityApplicationsListUrl = (params?: AdminUniversityApplicationsListParams,) => {
+export const getAdminUsersListUrl = (params?: AdminUsersListParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -4868,12 +8101,12 @@ export const getAdminUniversityApplicationsListUrl = (params?: AdminUniversityAp
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/v1/admin/university-applications?${stringifiedParams}` : `/v1/admin/university-applications`
+  return stringifiedParams.length > 0 ? `/v1/admin/users?${stringifiedParams}` : `/v1/admin/users`
 }
 
-export const adminUniversityApplicationsList = async (params?: AdminUniversityApplicationsListParams, options?: RequestInit): Promise<adminUniversityApplicationsListResponse> => {
+export const adminUsersList = async (params?: AdminUsersListParams, options?: RequestInit): Promise<adminUsersListResponse> => {
   
-  const res = await fetch(getAdminUniversityApplicationsListUrl(params),
+  const res = await fetch(getAdminUsersListUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -4884,35 +8117,35 @@ export const adminUniversityApplicationsList = async (params?: AdminUniversityAp
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: adminUniversityApplicationsListResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsListResponse
+  const data: adminUsersListResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUsersListResponse
 }
 
 
 
-export type adminUniversityApplicationsGetResponse200 = {
-  data: UniversityApplicationDetailDto
+export type adminUsersGetResponse200 = {
+  data: UserAccountAdminDetailDto
   status: 200
 }
     
-export type adminUniversityApplicationsGetResponseSuccess = (adminUniversityApplicationsGetResponse200) & {
+export type adminUsersGetResponseSuccess = (adminUsersGetResponse200) & {
   headers: Headers;
 };
 ;
 
-export type adminUniversityApplicationsGetResponse = (adminUniversityApplicationsGetResponseSuccess)
+export type adminUsersGetResponse = (adminUsersGetResponseSuccess)
 
-export const getAdminUniversityApplicationsGetUrl = (id: string,) => {
+export const getAdminUsersGetUrl = (id: string,) => {
 
 
   
 
-  return `/v1/admin/university-applications/${id}`
+  return `/v1/admin/users/${id}`
 }
 
-export const adminUniversityApplicationsGet = async (id: string, options?: RequestInit): Promise<adminUniversityApplicationsGetResponse> => {
+export const adminUsersGet = async (id: string, options?: RequestInit): Promise<adminUsersGetResponse> => {
   
-  const res = await fetch(getAdminUniversityApplicationsGetUrl(id),
+  const res = await fetch(getAdminUsersGetUrl(id),
   {      
     ...options,
     method: 'GET'
@@ -4923,8 +8156,93 @@ export const adminUniversityApplicationsGet = async (id: string, options?: Reque
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: adminUniversityApplicationsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsGetResponse
+  const data: adminUsersGetResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUsersGetResponse
+}
+
+
+
+export type adminUniversityApplicationsPendingTasksResponse200 = {
+  data: PendingTaskListItemDto[]
+  status: 200
+}
+    
+export type adminUniversityApplicationsPendingTasksResponseSuccess = (adminUniversityApplicationsPendingTasksResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsPendingTasksResponse = (adminUniversityApplicationsPendingTasksResponseSuccess)
+
+export const getAdminUniversityApplicationsPendingTasksUrl = () => {
+
+
+  
+
+  return `/v1/admin/university-applications/pending-tasks`
+}
+
+export const adminUniversityApplicationsPendingTasks = async ( options?: RequestInit): Promise<adminUniversityApplicationsPendingTasksResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsPendingTasksUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsPendingTasksResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsPendingTasksResponse
+}
+
+
+
+export type adminUniversityApplicationsByStatusResponse200 = {
+  data: UniversityApplicationByStatusListItemDto[]
+  status: 200
+}
+    
+export type adminUniversityApplicationsByStatusResponseSuccess = (adminUniversityApplicationsByStatusResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminUniversityApplicationsByStatusResponse = (adminUniversityApplicationsByStatusResponseSuccess)
+
+export const getAdminUniversityApplicationsByStatusUrl = (params: AdminUniversityApplicationsByStatusParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/admin/university-applications/by-status?${stringifiedParams}` : `/v1/admin/university-applications/by-status`
+}
+
+export const adminUniversityApplicationsByStatus = async (params: AdminUniversityApplicationsByStatusParams, options?: RequestInit): Promise<adminUniversityApplicationsByStatusResponse> => {
+  
+  const res = await fetch(getAdminUniversityApplicationsByStatusUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminUniversityApplicationsByStatusResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminUniversityApplicationsByStatusResponse
 }
 
 
@@ -5233,52 +8551,6 @@ export const adminLanguageCampApplicationsGet = async (id: string, options?: Req
   
   const data: adminLanguageCampApplicationsGetResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsGetResponse
-}
-
-
-
-export type adminFilesListResponse200 = {
-  data: PageDtoStoredFileDto
-  status: 200
-}
-    
-export type adminFilesListResponseSuccess = (adminFilesListResponse200) & {
-  headers: Headers;
-};
-;
-
-export type adminFilesListResponse = (adminFilesListResponseSuccess)
-
-export const getAdminFilesListUrl = (params?: AdminFilesListParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/v1/admin/files?${stringifiedParams}` : `/v1/admin/files`
-}
-
-export const adminFilesList = async (params?: AdminFilesListParams, options?: RequestInit): Promise<adminFilesListResponse> => {
-  
-  const res = await fetch(getAdminFilesListUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: adminFilesListResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as adminFilesListResponse
 }
 
 
