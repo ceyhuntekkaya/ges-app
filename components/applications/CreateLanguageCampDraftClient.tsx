@@ -4,7 +4,13 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { t } from "@/lib/i18n/dict";
 
-export function CreateLanguageCampDraftClient({ lang }: { lang: "tr" | "en" }) {
+export function CreateLanguageCampDraftClient({
+  lang,
+  projectId,
+}: {
+  lang: "tr" | "en";
+  projectId?: string;
+}) {
   const router = useRouter();
   const [category, setCategory] = React.useState<"INDIVIDUAL" | "CORPORATE" | "FAMILY">("INDIVIDUAL");
   const [pending, setPending] = React.useState(false);
@@ -12,13 +18,18 @@ export function CreateLanguageCampDraftClient({ lang }: { lang: "tr" | "en" }) {
 
   async function onCreate(e: React.FormEvent) {
     e.preventDefault();
+    if (!projectId) {
+      setError(lang === "tr" ? "Proje seçilmedi." : "No project selected.");
+      return;
+    }
+
     setPending(true);
     setError(null);
 
     const res = await fetch("/api/proxy/v1/portal/language-camp-applications", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ category }),
+      body: JSON.stringify({ category, languageCampProjectId: projectId }),
     });
 
     const data = (await res.json().catch(() => ({}))) as { id?: string };
@@ -29,6 +40,16 @@ export function CreateLanguageCampDraftClient({ lang }: { lang: "tr" | "en" }) {
 
     setPending(false);
     setError(`HTTP ${res.status}`);
+  }
+
+  if (!projectId) {
+    return (
+      <div className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-sm text-amber-900">
+        {lang === "tr"
+          ? "Taslak oluşturmak için önce bir dil kampı projesi seçin."
+          : "Select a language camp project before creating a draft."}
+      </div>
+    );
   }
 
   return (
@@ -59,4 +80,3 @@ export function CreateLanguageCampDraftClient({ lang }: { lang: "tr" | "en" }) {
     </form>
   );
 }
-

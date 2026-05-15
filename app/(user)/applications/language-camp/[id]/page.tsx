@@ -24,7 +24,7 @@ export default async function LanguageCampApplicationDetailsPage({
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Link href="/applications/language-camp" className="text-sm font-medium text-zinc-700 hover:text-zinc-900">
+            <Link href="/applications" className="text-sm font-medium text-zinc-700 hover:text-zinc-900">
               {t("back", lang)}
             </Link>
             <Link

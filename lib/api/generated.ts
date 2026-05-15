@@ -559,9 +559,8 @@ export interface LanguageCampApplicationDetailDto {
   id?: string;
   status?: LanguageCampApplicationDetailDtoStatus;
   category?: LanguageCampApplicationDetailDtoCategory;
-  programId?: string;
-  startDate?: string;
-  endDate?: string;
+  languageCampProjectId?: string;
+  languageCampProjectTitle?: string;
   accommodationType?: LanguageCampApplicationDetailDtoAccommodationType;
   visaNeeded?: boolean;
   visaFollowByGes?: boolean;
@@ -883,9 +882,7 @@ export const LanguageCampApplicationUpdateRequestDtoPaymentPreference = {
 
 export interface LanguageCampApplicationUpdateRequestDto {
   category?: LanguageCampApplicationUpdateRequestDtoCategory;
-  programId?: string;
-  startDate?: string;
-  endDate?: string;
+  languageCampProjectId?: string;
   accommodationType?: LanguageCampApplicationUpdateRequestDtoAccommodationType;
   visaNeeded?: boolean;
   visaFollowByGes?: boolean;

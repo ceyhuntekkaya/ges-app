@@ -3,33 +3,74 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button, Icon, Input, Select, Switch } from "@/components/ui";
+import { Button, Icon, Input, Switch } from "@/components/ui";
+import { humanizeApiError } from "@/lib/api/errors";
+import {
+  publicLanguageCampProjectsGetActive,
+  type LanguageCampProjectDetailDto,
+} from "@/lib/api/generated/index";
 
 type Category = "INDIVIDUAL" | "CORPORATE" | "FAMILY";
-type AccommodationType = "HOST_FAMILY" | "DORMITORY" | "PRIVATE";
-type PaymentPreference = "ONE_TIME" | "INSTALLMENT";
+function formatMoney(price?: number, currency?: string) {
+  if (price === undefined || price === null) return null;
+  const cur = currency?.trim() || "TRY";
+  try {
+    return new Intl.NumberFormat("tr-TR", { style: "currency", currency: cur }).format(price);
+  } catch {
+    return `${price} ${cur}`;
+  }
+}
 
-const CATEGORY_OPTIONS = [
-  { value: "INDIVIDUAL", label: "Bireysel" },
-  { value: "CORPORATE", label: "Kurumsal" },
-  { value: "FAMILY", label: "Aile" },
-] as const;
+function formatDate(iso?: string) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  try {
+    return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", year: "numeric" }).format(d);
+  } catch {
+    return d.toISOString().slice(0, 10);
+  }
+}
 
-const ACCOMMODATION_OPTIONS = [
-  { value: "HOST_FAMILY", label: "Aile Yanı" },
-  { value: "DORMITORY", label: "Yurt" },
-  { value: "PRIVATE", label: "Özel" },
-] as const;
-
-const PAYMENT_OPTIONS = [
-  { value: "ONE_TIME", label: "Tek Çekim" },
-  { value: "INSTALLMENT", label: "Taksit" },
-] as const;
+function categoryFromProject(p: LanguageCampProjectDetailDto): Category {
+  return p.individual === false ? "CORPORATE" : "INDIVIDUAL";
+}
 
 export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) {
   const router = useRouter();
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [project, setProject] = React.useState<LanguageCampProjectDetailDto | null>(null);
+  const [projectLoading, setProjectLoading] = React.useState(true);
+  const [projectError, setProjectError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    let alive = true;
+    setProjectLoading(true);
+    setProjectError(null);
+    setProject(null);
+
+    (async () => {
+      try {
+        const res = await publicLanguageCampProjectsGetActive(projectId);
+        if (!alive) return;
+        if (!res.data) {
+          setProjectError("Proje bulunamadı.");
+          return;
+        }
+        setProject(res.data);
+      } catch (e) {
+        if (!alive) return;
+        setProjectError(humanizeApiError(e));
+      } finally {
+        if (alive) setProjectLoading(false);
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, [projectId]);
 
   // Account
   const [email, setEmail] = React.useState("");
@@ -50,13 +91,9 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
   const [addrPostal, setAddrPostal] = React.useState("");
 
   // Application
-  const [category, setCategory] = React.useState<Category>("INDIVIDUAL");
-  const [startDate, setStartDate] = React.useState("");
-  const [endDate, setEndDate] = React.useState("");
-  const [accommodationType, setAccommodationType] = React.useState<AccommodationType | "">("");
+  const accommodationType = "PRIVATE" as const;
   const [visaNeeded, setVisaNeeded] = React.useState(false);
   const [visaFollowByGes, setVisaFollowByGes] = React.useState(false);
-  const [paymentPreference, setPaymentPreference] = React.useState<PaymentPreference | "">("");
   const [companyCode, setCompanyCode] = React.useState("");
   const [kvkkAccepted, setKvkkAccepted] = React.useState(false);
 
@@ -64,17 +101,17 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
   const [ecPhone, setEcPhone] = React.useState("");
   const [ecRelationship, setEcRelationship] = React.useState("");
 
-  const [invCountry, setInvCountry] = React.useState("");
-  const [invCity, setInvCity] = React.useState("");
-  const [invDistrict, setInvDistrict] = React.useState("");
-  const [invLine1, setInvLine1] = React.useState("");
-  const [invLine2, setInvLine2] = React.useState("");
-  const [invPostal, setInvPostal] = React.useState("");
-
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!project) {
+      setError(projectError || "Proje bilgileri yüklenemedi.");
+      return;
+    }
+
     setPending(true);
     setError(null);
+
+    const category = categoryFromProject(project);
 
     const payload = {
       account: { email, password },
@@ -94,10 +131,9 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
         },
       },
       application: {
+        languageCampProjectId: projectId,
         category,
-        startDate: startDate || null,
-        endDate: endDate || null,
-        accommodationType: accommodationType || null,
+        accommodationType,
         visaNeeded: visaNeeded ? true : null,
         visaFollowByGes: visaFollowByGes ? true : null,
         emergencyContact:
@@ -108,20 +144,18 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
                 relationship: ecRelationship || null,
               }
             : null,
-        paymentPreference: paymentPreference || null,
+        paymentPreference: "ONE_TIME",
         companyCode: companyCode || null,
         kvkkAccepted: kvkkAccepted ? true : null,
         invoiceAddress: {
-          country: invCountry || null,
-          city: invCity || null,
-          district: invDistrict || null,
-          line1: invLine1 || null,
-          line2: invLine2 || null,
-          postalCode: invPostal || null,
+          country: null,
+          city: null,
+          district: null,
+          line1: null,
+          line2: null,
+          postalCode: null,
         },
       },
-      // projectId is currently only used for routing context; backend doesn't map it yet.
-      projectId,
     } as const;
 
     const res = await fetch("/api/proxy/v1/public/language-camp-applications/complete", {
@@ -155,6 +189,12 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
     router.refresh();
   }
 
+  const priceLabel = project ? formatMoney(project.price, project.currency) : null;
+  const originalPriceLabel = project ? formatMoney(project.originalPrice, project.currency) : null;
+  const projWindow = project
+    ? [formatDate(project.projectStartAt), formatDate(project.projectEndAt)].filter(Boolean).join(" – ")
+    : "";
+
   return (
     <div className="mx-auto w-full max-w-3xl px-6 pb-16 pt-10">
       <div className="rounded-[var(--radius-2xl)] border border-[var(--border-default)] bg-[var(--surface-0)] p-7 shadow-[var(--shadow-xs)]">
@@ -162,7 +202,7 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
           <div>
             <div className="text-xs font-medium uppercase tracking-wider text-[var(--text-tertiary)]">Başvuru</div>
             <h1 className="mt-1 text-xl font-semibold tracking-tight text-[var(--text-primary)]">
-              Hesabın yok • Tek Seferde Başvuru
+              Hesabın yok • Başvuru
             </h1>
             <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
               Kullanıcı hesabı, profil ve dil kampı başvurusu tek adımda oluşturulur.
@@ -172,6 +212,47 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
             Geri dön
           </Link>
         </div>
+
+        {projectLoading ? (
+          <div className="mt-6 rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-1)] px-4 py-4">
+            <div className="h-5 w-2/3 max-w-sm animate-pulse rounded bg-[var(--surface-2)]" />
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <div className="h-10 animate-pulse rounded bg-[var(--surface-2)]" />
+              <div className="h-10 animate-pulse rounded bg-[var(--surface-2)]" />
+            </div>
+          </div>
+        ) : project ? (
+          <div className="mt-6 rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-1)] px-4 py-4">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--text-tertiary)]">Başvurulan Program</div>
+            <div className="mt-1 text-base font-semibold tracking-tight text-[var(--text-primary)]">{project.title ?? "Program"}</div>
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+              {projWindow ? (
+                <div className="flex items-start gap-2 text-sm">
+                  <Icon name="calendar" size={16} className="mt-0.5 shrink-0 text-[var(--text-tertiary)]" />
+                  <div>
+                    <div className="font-medium text-[var(--text-primary)]">Proje Tarihleri</div>
+                    <div className="text-[var(--text-secondary)]">{projWindow}</div>
+                  </div>
+                </div>
+              ) : null}
+              <div className="sm:text-right">
+                <div className="text-xs font-medium text-[var(--text-tertiary)]">Fiyat</div>
+                <div className="mt-0.5 flex flex-wrap items-baseline gap-2 sm:justify-end">
+                  <span className="text-base font-semibold text-[var(--text-primary)]">{priceLabel ?? "Bilgi al"}</span>
+                  {originalPriceLabel && originalPriceLabel !== priceLabel ? (
+                    <span className="text-sm text-[var(--text-tertiary)] line-through">{originalPriceLabel}</span>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {projectError ? (
+          <div className="mt-6 rounded-[var(--radius-lg)] border border-[var(--danger-100)] bg-[var(--danger-50)] px-3.5 py-3 text-sm text-[var(--danger-700)]">
+            {projectError}
+          </div>
+        ) : null}
 
         <form onSubmit={onSubmit} className="mt-6 grid gap-6">
           <section className="grid gap-4">
@@ -211,34 +292,7 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
 
           <section className="grid gap-4">
             <div className="text-sm font-semibold text-[var(--text-primary)]">Dil Kampı Başvurusu</div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Select
-                label="Kategori"
-                required
-                options={CATEGORY_OPTIONS as unknown as { value: string; label: string }[]}
-                value={category}
-                onChange={(v) => setCategory((v as Category) ?? "INDIVIDUAL")}
-              />
-              <Input label="Başlangıç Tarihi" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-              <Input label="Bitiş Tarihi" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-              <Select
-                label="Konaklama"
-                options={ACCOMMODATION_OPTIONS as unknown as { value: string; label: string }[]}
-                value={accommodationType || null}
-                onChange={(v) => setAccommodationType((v as AccommodationType) ?? "")}
-                placeholder="Seçin"
-                clearable
-              />
-              <Select
-                label="Ödeme Tercihi"
-                options={PAYMENT_OPTIONS as unknown as { value: string; label: string }[]}
-                value={paymentPreference || null}
-                onChange={(v) => setPaymentPreference((v as PaymentPreference) ?? "")}
-                placeholder="Seçin"
-                clearable
-              />
-              <Input label="Şirket Kodu (ops.)" value={companyCode} onChange={(e) => setCompanyCode(e.target.value)} />
-            </div>
+            <Input label="Şirket Kodu (ops.)" value={companyCode} onChange={(e) => setCompanyCode(e.target.value)} />
 
             <div className="grid gap-3 sm:grid-cols-2">
               <Switch checked={visaNeeded} onChange={setVisaNeeded} label="Vize gerekli" />
@@ -249,15 +303,6 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
               <Input label="Acil Kişi Ad Soyad" value={ecFullName} onChange={(e) => setEcFullName(e.target.value)} />
               <Input label="Acil Kişi Telefon" value={ecPhone} onChange={(e) => setEcPhone(e.target.value)} />
               <Input label="Yakınlık" value={ecRelationship} onChange={(e) => setEcRelationship(e.target.value)} />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Input label="Fatura Ülke" value={invCountry} onChange={(e) => setInvCountry(e.target.value)} />
-              <Input label="Fatura Şehir" value={invCity} onChange={(e) => setInvCity(e.target.value)} />
-              <Input label="Fatura İlçe" value={invDistrict} onChange={(e) => setInvDistrict(e.target.value)} />
-              <Input label="Fatura Adres 1" value={invLine1} onChange={(e) => setInvLine1(e.target.value)} containerClassName="sm:col-span-2" />
-              <Input label="Fatura Adres 2" value={invLine2} onChange={(e) => setInvLine2(e.target.value)} containerClassName="sm:col-span-2" />
-              <Input label="Fatura Posta Kodu" value={invPostal} onChange={(e) => setInvPostal(e.target.value)} />
             </div>
 
             <div className="rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-1)] px-4 py-3">
@@ -277,7 +322,12 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
                 Vazgeç
               </Button>
             </Link>
-            <Button type="submit" loading={pending} leftIcon={<Icon name="check" size={16} />}>
+            <Button
+              type="submit"
+              loading={pending}
+              disabled={projectLoading || !!projectError || !project}
+              leftIcon={<Icon name="check" size={16} />}
+            >
               {pending ? "Gönderiliyor..." : "Başvuruyu Tamamla"}
             </Button>
           </div>

@@ -88,3 +88,98 @@ export function labelUpdatedAt(lang: Lang) {
   return lang === "tr" ? "Güncellendi" : "Updated";
 }
 
+export function formatDateTime(lang: Lang, value?: string) {
+  if (!value) return "-";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  return d.toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export function formatDateOnly(lang: Lang, value?: string) {
+  if (!value) return "-";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value.slice(0, 10);
+  return d.toLocaleDateString(lang === "tr" ? "tr-TR" : "en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+export function labelUniversityAccommodation(v: string | undefined, lang: Lang) {
+  if (lang === "en") {
+    switch (v) {
+      case "CAMPUS_DORM":
+        return "Campus dorm";
+      case "PRIVATE":
+        return "Private housing";
+      case "ROOMMATE":
+        return "Roommate";
+      default:
+        return v ?? "-";
+    }
+  }
+  switch (v) {
+    case "CAMPUS_DORM":
+      return "Kampüs yurdu";
+    case "PRIVATE":
+      return "Özel konut";
+    case "ROOMMATE":
+      return "Oda arkadaşı";
+    default:
+      return v ?? "-";
+  }
+}
+
+export function labelLanguageCampAccommodation(v: string | undefined, lang: Lang) {
+  if (lang === "en") {
+    switch (v) {
+      case "HOST_FAMILY":
+        return "Host family";
+      case "DORMITORY":
+        return "Dormitory";
+      case "PRIVATE":
+        return "Private";
+      default:
+        return v ?? "-";
+    }
+  }
+  switch (v) {
+    case "HOST_FAMILY":
+      return "Aile yanı";
+    case "DORMITORY":
+      return "Yurt";
+    case "PRIVATE":
+      return "Özel";
+    default:
+      return v ?? "-";
+  }
+}
+
+export function labelPaymentPreference(v: string | undefined, lang: Lang) {
+  if (lang === "en") {
+    switch (v) {
+      case "ONE_TIME":
+        return "One-time payment";
+      case "INSTALLMENT":
+        return "Installments";
+      default:
+        return v ?? "-";
+    }
+  }
+  switch (v) {
+    case "ONE_TIME":
+      return "Tek seferde";
+    case "INSTALLMENT":
+      return "Taksitli";
+    default:
+      return v ?? "-";
+  }
+}
+

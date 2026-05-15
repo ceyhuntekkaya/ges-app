@@ -616,6 +616,7 @@ export const ApplicationPaymentPreference = {
 } as const;
 
 export interface Application {
+  languageCampProjectId: string;
   category: ApplicationCategory;
   accommodationType?: ApplicationAccommodationType;
   visaNeeded?: boolean;
@@ -794,6 +795,7 @@ export const LanguageCampApplicationCreateRequestDtoCategory = {
 } as const;
 
 export interface LanguageCampApplicationCreateRequestDto {
+  languageCampProjectId: string;
   category: LanguageCampApplicationCreateRequestDtoCategory;
   firstName?: string;
   lastName?: string;
@@ -855,7 +857,8 @@ export interface LanguageCampApplicationDetailDto {
   id?: string;
   status?: LanguageCampApplicationDetailDtoStatus;
   category?: LanguageCampApplicationDetailDtoCategory;
-  programId?: string;
+  languageCampProjectId?: string;
+  languageCampProjectTitle?: string;
   accommodationType?: LanguageCampApplicationDetailDtoAccommodationType;
   visaNeeded?: boolean;
   visaFollowByGes?: boolean;
@@ -1241,7 +1244,7 @@ export const LanguageCampApplicationUpdateRequestDtoPaymentPreference = {
 
 export interface LanguageCampApplicationUpdateRequestDto {
   category?: LanguageCampApplicationUpdateRequestDtoCategory;
-  programId?: string;
+  languageCampProjectId?: string;
   accommodationType?: LanguageCampApplicationUpdateRequestDtoAccommodationType;
   visaNeeded?: boolean;
   visaFollowByGes?: boolean;
@@ -1407,6 +1410,8 @@ export interface LanguageCampApplicationListItemDto {
   lastName?: string;
   status?: LanguageCampApplicationListItemDtoStatus;
   category?: LanguageCampApplicationListItemDtoCategory;
+  languageCampProjectId?: string;
+  languageCampProjectTitle?: string;
   createdAt?: string;
   updatedAt?: string;
 }

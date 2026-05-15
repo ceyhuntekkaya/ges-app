@@ -1,3 +1,4 @@
+import type { LanguageCampApplicationDetailDto, UniversityApplicationDetailDto } from "@/lib/api/generated/index";
 import { cookies } from "next/headers";
 import { getBackendBaseUrl } from "./baseUrl";
 
@@ -60,50 +61,20 @@ async function portalFetch<T>(path: string, init?: RequestInit): Promise<PortalR
   return { status: res.status, errorText: parsed.errorText || JSON.stringify(parsed.data ?? "") };
 }
 
-// ---- Types (kept intentionally permissive; backend schema may evolve) ----
-export type LanguageCampApplicationDto = {
-  id?: string;
-  status?: string;
-  category?: string;
-  programId?: string;
-  startDate?: string;
-  endDate?: string;
-  accommodationType?: string;
-  visaNeeded?: boolean;
-  visaFollowByGes?: boolean;
-  paymentPreference?: string;
-  notes?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  [k: string]: unknown;
-};
-
-export type UniversityApplicationDto = {
-  id?: string;
-  status?: string;
-  educationLevel?: string;
-  startTermSeason?: string;
-  startYear?: number;
-  yearlyBudgetMin?: number;
-  yearlyBudgetMax?: number;
-  scholarshipRequested?: boolean;
-  scholarshipType?: string;
-  accommodationType?: string;
-  notes?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  [k: string]: unknown;
-};
+// ---- Types (portal detail DTOs from OpenAPI) ----
+export type LanguageCampApplicationDto = LanguageCampApplicationDetailDto;
+export type UniversityApplicationDto = UniversityApplicationDetailDto;
 export type LanguageCampApplicationUpdateDraft = {
   category?: string;
-  programId?: string;
+  languageCampProjectId?: string;
+  languageCampProjectTitle?: string;
   startDate?: string;
   endDate?: string;
   accommodationType?: string;
   visaNeeded?: boolean;
   visaFollowByGes?: boolean;
   paymentPreference?: string;
-  notes?: string;
+  userNotes?: string;
   [k: string]: unknown;
 };
 

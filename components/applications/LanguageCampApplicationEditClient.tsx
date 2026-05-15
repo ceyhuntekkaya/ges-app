@@ -15,14 +15,12 @@ export function LanguageCampApplicationEditClient({
   const router = useRouter();
   const [draft, setDraft] = React.useState<LanguageCampApplicationUpdateDraft>({
     category: initial.category,
-    programId: initial.programId,
-    startDate: initial.startDate,
-    endDate: initial.endDate,
+    languageCampProjectId: initial.languageCampProjectId,
     accommodationType: initial.accommodationType,
     visaNeeded: initial.visaNeeded,
     visaFollowByGes: initial.visaFollowByGes,
     paymentPreference: initial.paymentPreference,
-    notes: initial.notes,
+    userNotes: initial.userNotes,
   });
   const [saving, setSaving] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
@@ -62,41 +60,27 @@ export function LanguageCampApplicationEditClient({
           </select>
         </label>
 
-        <label className="grid gap-1">
-          <span className="text-xs font-semibold text-zinc-600">{t("programId", lang)}</span>
+        <label className="grid gap-1 sm:col-span-2">
+          <span className="text-xs font-semibold text-zinc-600">{t("languageCampProjectId", lang)}</span>
           <input
-            className="h-10 rounded-lg border border-zinc-200 bg-white px-3 text-sm"
-            value={draft.programId ?? ""}
-            onChange={(e) => setDraft((d) => ({ ...d, programId: e.target.value || undefined }))}
+            className="h-10 rounded-lg border border-zinc-200 bg-white px-3 text-sm font-mono"
+            value={draft.languageCampProjectId ?? ""}
+            onChange={(e) =>
+              setDraft((d) => ({ ...d, languageCampProjectId: e.target.value || undefined }))
+            }
+            readOnly={!!initial.languageCampProjectId}
           />
-        </label>
-
-        <label className="grid gap-1">
-          <span className="text-xs font-semibold text-zinc-600">{t("startDate", lang)}</span>
-          <input
-            className="h-10 rounded-lg border border-zinc-200 bg-white px-3 text-sm"
-            type="date"
-            value={draft.startDate ?? ""}
-            onChange={(e) => setDraft((d) => ({ ...d, startDate: e.target.value || undefined }))}
-          />
-        </label>
-
-        <label className="grid gap-1">
-          <span className="text-xs font-semibold text-zinc-600">{t("endDate", lang)}</span>
-          <input
-            className="h-10 rounded-lg border border-zinc-200 bg-white px-3 text-sm"
-            type="date"
-            value={draft.endDate ?? ""}
-            onChange={(e) => setDraft((d) => ({ ...d, endDate: e.target.value || undefined }))}
-          />
+          {initial.languageCampProjectTitle ? (
+            <span className="text-xs text-zinc-500">{initial.languageCampProjectTitle}</span>
+          ) : null}
         </label>
 
         <label className="grid gap-1 sm:col-span-2">
           <span className="text-xs font-semibold text-zinc-600">{t("notes", lang)}</span>
           <textarea
             className="min-h-24 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm"
-            value={draft.notes ?? ""}
-            onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value || undefined }))}
+            value={draft.userNotes ?? ""}
+            onChange={(e) => setDraft((d) => ({ ...d, userNotes: e.target.value || undefined }))}
           />
         </label>
       </div>
