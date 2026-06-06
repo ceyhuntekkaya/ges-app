@@ -1,5 +1,6 @@
 import type { Lang } from "@/lib/i18n/dict";
 import { t } from "@/lib/i18n/dict";
+import { formatTrDateTime, formatTrLocalDate } from "@/lib/dates/formatTr";
 
 export function labelYesNo(v: boolean | undefined, lang: Lang) {
   if (v === true) return t("yes", lang);
@@ -52,7 +53,7 @@ export function labelApplicationStatus(v: string | undefined, lang: Lang) {
       case "DRAFT":
         return "Taslak";
       case "SUBMITTED":
-        return "Gönderildi";
+        return "Onaylı";
       case "IN_REVIEW":
         return "İnceleniyor";
       case "MISSING_DOCUMENTS":
@@ -90,9 +91,10 @@ export function labelUpdatedAt(lang: Lang) {
 
 export function formatDateTime(lang: Lang, value?: string) {
   if (!value) return "-";
+  if (lang === "tr") return formatTrDateTime(value);
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return value;
-  return d.toLocaleString(lang === "tr" ? "tr-TR" : "en-US", {
+  return d.toLocaleString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -103,9 +105,10 @@ export function formatDateTime(lang: Lang, value?: string) {
 
 export function formatDateOnly(lang: Lang, value?: string) {
   if (!value) return "-";
+  if (lang === "tr") return formatTrLocalDate(value);
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return value.slice(0, 10);
-  return d.toLocaleDateString(lang === "tr" ? "tr-TR" : "en-US", {
+  return d.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -157,6 +160,47 @@ export function labelLanguageCampAccommodation(v: string | undefined, lang: Lang
       return "Yurt";
     case "PRIVATE":
       return "Özel";
+    default:
+      return v ?? "-";
+  }
+}
+
+export function labelPassportType(v: string | undefined, lang: Lang) {
+  if (lang === "en") {
+    switch (v) {
+      case "ORDINARY":
+        return "Ordinary (maroon)";
+      case "GREEN":
+        return "Green";
+      case "GRAY":
+        return "Gray";
+      case "BLACK":
+        return "Black (diplomatic)";
+      case "SPECIAL":
+        return "Special";
+      case "DIPLOMATIC":
+        return "Diplomatic";
+      case "SERVICE":
+        return "Service";
+      default:
+        return v ?? "-";
+    }
+  }
+  switch (v) {
+    case "ORDINARY":
+      return "Umuma mahsus (bordo)";
+    case "GREEN":
+      return "Yeşil";
+    case "GRAY":
+      return "Gri";
+    case "BLACK":
+      return "Siyah (diplomatik)";
+    case "SPECIAL":
+      return "Özel";
+    case "DIPLOMATIC":
+      return "Diplomatik";
+    case "SERVICE":
+      return "Hizmet";
     default:
       return v ?? "-";
   }

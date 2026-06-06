@@ -21,7 +21,7 @@ export function LogoutButton({
     } catch {
       // ignore network errors; still force UI to login
     } finally {
-      router.replace("/login");
+      router.replace("/");
       router.refresh();
     }
   }

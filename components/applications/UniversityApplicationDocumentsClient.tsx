@@ -1,27 +1,15 @@
 "use client";
 
 import * as React from "react";
+import type { UniversityApplicationDocumentDto } from "@/lib/api/generated/index";
+import {
+  countMissingRequiredDocuments,
+  mergeChecklistWithLegacyDocuments,
+  type MergedApplicationDocumentItem,
+} from "@/lib/applications/mergeApplicationDocuments";
 import { t } from "@/lib/i18n/dict";
 import { FilePreview } from "@/components/ui";
-
-type ChecklistItem = {
-  requirement: {
-    id?: string;
-    scope?: string;
-    category?: string | null;
-    key?: string;
-    required?: boolean;
-    allowedContentTypes?: string | null;
-    maxSizeBytes?: number;
-    title?: string | null;
-    description?: string | null;
-  };
-  uploaded?: boolean;
-  applicationDocumentId?: string | null;
-  reviewNote?: string | null;
-  file?: { id?: string; originalFilename?: string; contentType?: string; sizeBytes?: number } | null;
-  downloadUrl?: string | null;
-};
+import { resolvePortalFilePreviewUrl } from "@/lib/files/previewUrl";
 
 function formatBytes(n?: number) {
   if (!n || n <= 0) return "-";
@@ -38,12 +26,15 @@ function formatBytes(n?: number) {
 export function UniversityApplicationDocumentsClient({
   applicationId,
   lang,
+  initialLegacyDocuments,
 }: {
   applicationId: string;
   lang: "tr" | "en";
+  /** SSR snapshot; refreshed on load together with checklist. */
+  initialLegacyDocuments?: UniversityApplicationDocumentDto[];
 }) {
-  const [items, setItems] = React.useState<ChecklistItem[]>([]);
-  const [missing, setMissing] = React.useState<string[]>([]);
+  const [items, setItems] = React.useState<MergedApplicationDocumentItem[]>([]);
+  const [missingCount, setMissingCount] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [busyKey, setBusyKey] = React.useState<string | null>(null);
@@ -51,16 +42,40 @@ export function UniversityApplicationDocumentsClient({
   async function load() {
     setLoading(true);
     setError(null);
-    const qs = new URLSearchParams({ scope: "UNIVERSITY_APPLICATION", applicationId }).toString();
-    const res = await fetch(`/api/proxy/v1/portal/application-document-checklist?${qs}`, { cache: "no-store" });
-    const data = (await res.json().catch(() => ({}))) as { items?: ChecklistItem[]; missingRequiredKeys?: string[] };
-    if (!res.ok) {
+
+    const checklistQs = new URLSearchParams({
+      scope: "UNIVERSITY_APPLICATION",
+      applicationId,
+    }).toString();
+
+    const [checklistRes, appRes] = await Promise.all([
+      fetch(`/api/proxy/v1/portal/application-document-checklist?${checklistQs}`, { cache: "no-store" }),
+      fetch(`/api/proxy/v1/portal/university-applications/${encodeURIComponent(applicationId)}`, {
+        cache: "no-store",
+      }),
+    ]);
+
+    const checklistData = (await checklistRes.json().catch(() => ({}))) as {
+      items?: MergedApplicationDocumentItem[];
+    };
+    const appData = (await appRes.json().catch(() => ({}))) as {
+      documents?: UniversityApplicationDocumentDto[];
+    };
+
+    if (!checklistRes.ok) {
       setLoading(false);
-      setError(`HTTP ${res.status}`);
+      setError(`HTTP ${checklistRes.status}`);
       return;
     }
-    setItems(data.items ?? []);
-    setMissing(data.missingRequiredKeys ?? []);
+
+    const legacyDocuments =
+      appRes.ok && appData.documents
+        ? appData.documents
+        : (initialLegacyDocuments ?? []);
+
+    const merged = mergeChecklistWithLegacyDocuments(checklistData.items ?? [], legacyDocuments);
+    setItems(merged);
+    setMissingCount(countMissingRequiredDocuments(merged));
     setLoading(false);
   }
 
@@ -69,14 +84,14 @@ export function UniversityApplicationDocumentsClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationId]);
 
-  async function uploadFor(item: ChecklistItem, file: File) {
+  async function uploadFor(item: MergedApplicationDocumentItem, file: File) {
+    if (item.isChecklistRequirement === false) return;
     const key = item.requirement?.key ?? "";
     if (!key) return;
 
     setBusyKey(key);
     setError(null);
     try {
-      // 1) upload file -> fileId
       const fd = new FormData();
       fd.append("file", file);
       fd.append("purpose", "OTHER");
@@ -84,7 +99,6 @@ export function UniversityApplicationDocumentsClient({
       const upData = (await upRes.json().catch(() => ({}))) as { id?: string };
       if (!upRes.ok || !upData?.id) throw new Error(`upload failed (HTTP ${upRes.status})`);
 
-      // 2) attach to requirement
       const attachRes = await fetch("/api/proxy/v1/portal/application-documents", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -123,7 +137,7 @@ export function UniversityApplicationDocumentsClient({
   }
 
   const grouped = React.useMemo(() => {
-    const m = new Map<string, ChecklistItem[]>();
+    const m = new Map<string, MergedApplicationDocumentItem[]>();
     for (const it of items) {
       const cat = (it.requirement?.category || "GENERAL").toUpperCase();
       m.set(cat, [...(m.get(cat) ?? []), it]);
@@ -133,10 +147,10 @@ export function UniversityApplicationDocumentsClient({
 
   return (
     <div className="grid gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm font-semibold text-zinc-900">
-          {t("documents", lang)} {missing.length ? <span className="text-rose-700">({missing.length})</span> : null}
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        {missingCount > 0 ? (
+          <span className="text-sm font-semibold text-rose-700">({missingCount})</span>
+        ) : null}
         <button
           type="button"
           onClick={() => load()}
@@ -164,8 +178,20 @@ export function UniversityApplicationDocumentsClient({
               <ul className="divide-y divide-zinc-100">
                 {list.map((it) => {
                   const key = it.requirement?.key ?? crypto.randomUUID();
-                  const busy = busyKey === (it.requirement?.key ?? "") || busyKey === (it.applicationDocumentId ?? "");
+                  const busy =
+                    busyKey === (it.requirement?.key ?? "") || busyKey === (it.applicationDocumentId ?? "");
                   const accept = it.requirement?.allowedContentTypes ?? undefined;
+                  const previewUrl = resolvePortalFilePreviewUrl({
+                    applicationId,
+                    applicationDocumentId: it.applicationDocumentId,
+                    downloadUrl: it.downloadUrl,
+                    documentUrl: it.legacyDocument?.documentUrl,
+                  });
+                  const displayFilename =
+                    it.file?.originalFilename ?? it.legacyDocument?.documentName ?? null;
+                  const canDeleteChecklistDoc = !!it.applicationDocumentId;
+                  const canUpload = it.isChecklistRequirement !== false;
+
                   return (
                     <li key={key} className="px-4 py-3">
                       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -187,14 +213,18 @@ export function UniversityApplicationDocumentsClient({
                             <span
                               className={[
                                 "rounded-full border px-2 py-0.5 text-xs font-semibold",
-                                it.uploaded ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-zinc-200 bg-white text-zinc-700",
+                                it.uploaded
+                                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                                  : "border-zinc-200 bg-white text-zinc-700",
                               ].join(" ")}
                             >
                               {it.uploaded ? t("uploaded", lang) : t("notUploaded", lang)}
                             </span>
                           </div>
-                          {it.requirement?.description ? (
-                            <div className="mt-1 text-xs text-zinc-600">{it.requirement.description}</div>
+                          {(it.requirement?.description ?? it.legacyDocument?.documentDescription) ? (
+                            <div className="mt-1 text-xs text-zinc-600">
+                              {it.requirement?.description ?? it.legacyDocument?.documentDescription}
+                            </div>
                           ) : null}
                           <div className="mt-2 flex flex-wrap gap-3 text-xs text-zinc-500">
                             <div>
@@ -209,22 +239,25 @@ export function UniversityApplicationDocumentsClient({
                               {it.reviewNote}
                             </div>
                           ) : null}
-                          {it.file?.originalFilename ? (
+                          {displayFilename && it.uploaded ? (
                             <div className="mt-2 text-xs text-zinc-600">
-                              {it.file.originalFilename} ({formatBytes(it.file.sizeBytes)})
+                              {displayFilename}
+                              {it.file?.sizeBytes ? ` (${formatBytes(it.file.sizeBytes)})` : ""}
                             </div>
                           ) : null}
 
-                          {it.applicationDocumentId ? (
+                          {previewUrl ? (
                             <div className="mt-3 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 p-2">
                               <div className="aspect-[16/9] w-full">
                                 <FilePreview
-                                  url={`/api/proxy/v1/portal/application-documents/${it.applicationDocumentId}/file`}
+                                  url={previewUrl}
                                   contentType={it.file?.contentType ?? null}
-                                  filename={it.file?.originalFilename ?? null}
-                                  className="rounded-md"
+                                  filename={displayFilename}
+                                  className="h-full w-full rounded-md"
                                   openInNewTabLabel={
-                                    (it.file?.contentType ?? "").toLowerCase() === "application/pdf" ? "PDF'yi yeni sekmede aç" : "Dosyayı yeni sekmede aç"
+                                    (it.file?.contentType ?? "").toLowerCase() === "application/pdf"
+                                      ? "PDF'yi yeni sekmede aç"
+                                      : "Dosyayı yeni sekmede aç"
                                   }
                                 />
                               </div>
@@ -233,41 +266,45 @@ export function UniversityApplicationDocumentsClient({
                         </div>
 
                         <div className="flex items-center gap-2">
-                          {it.applicationDocumentId ? (
+                          {previewUrl ? (
                             <>
                               <a
-                                href={`/api/proxy/v1/portal/application-documents/${it.applicationDocumentId}/file`}
+                                href={previewUrl}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
                               >
                                 {t("download", lang)}
                               </a>
-                              <button
-                                type="button"
-                                disabled={busy}
-                                onClick={() => removeDocument(it.applicationDocumentId!)}
-                                className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm font-semibold text-rose-900 hover:bg-rose-100 disabled:opacity-60"
-                              >
-                                {busy ? t("deleting", lang) : t("delete", lang)}
-                              </button>
+                              {canDeleteChecklistDoc ? (
+                                <button
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() => removeDocument(it.applicationDocumentId!)}
+                                  className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm font-semibold text-rose-900 hover:bg-rose-100 disabled:opacity-60"
+                                >
+                                  {busy ? t("deleting", lang) : t("delete", lang)}
+                                </button>
+                              ) : null}
                             </>
                           ) : null}
 
-                          <label className="cursor-pointer rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800">
-                            <input
-                              type="file"
-                              className="hidden"
-                              accept={accept || undefined}
-                              disabled={busy}
-                              onChange={(e) => {
-                                const f = e.currentTarget.files?.[0];
-                                e.currentTarget.value = "";
-                                if (f) void uploadFor(it, f);
-                              }}
-                            />
-                            {busy ? t("creating", lang) : it.uploaded ? t("replace", lang) : t("upload", lang)}
-                          </label>
+                          {canUpload ? (
+                            <label className="cursor-pointer rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800">
+                              <input
+                                type="file"
+                                className="hidden"
+                                accept={accept || undefined}
+                                disabled={busy}
+                                onChange={(e) => {
+                                  const f = e.currentTarget.files?.[0];
+                                  e.currentTarget.value = "";
+                                  if (f) void uploadFor(it, f);
+                                }}
+                              />
+                              {busy ? t("creating", lang) : it.uploaded ? t("replace", lang) : t("upload", lang)}
+                            </label>
+                          ) : null}
                         </div>
                       </div>
                     </li>
@@ -281,4 +318,3 @@ export function UniversityApplicationDocumentsClient({
     </div>
   );
 }
-

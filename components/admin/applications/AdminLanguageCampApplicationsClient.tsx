@@ -2,55 +2,19 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { AdminLanguageCampApplicationsListStatus } from "@/lib/api/generated/index";
 import {
-  adminLanguageCampApplicationsList,
-  AdminLanguageCampApplicationsListStatus,
-  type AdminLanguageCampApplicationsListParams,
-  type LanguageCampApplicationListItemDto,
-} from "@/lib/api/generated/index";
+  fetchAdminLanguageCampApplicationGroups,
+  groupMatchesQuery,
+  type LanguageCampApplicationGroupListItem,
+} from "@/lib/applications/languageCampAdminGroups";
+import { AdminLanguageCampGroupParticipantsCell } from "@/components/admin/applications/AdminLanguageCampGroupParticipantsCell";
 import { Badge, Button, Icon, IconButton, PageHeader, Select, Table, useToast } from "@/components/ui";
+import { formatTrDateTime } from "@/lib/dates/formatTr";
 
 type StatusFilter = AdminLanguageCampApplicationsListStatus;
 
-function statusLabel(status?: LanguageCampApplicationListItemDto["status"]) {
-  switch (status) {
-    case "DRAFT":
-      return "Taslak";
-    case "SUBMITTED":
-      return "Gönderildi";
-    case "IN_REVIEW":
-      return "İncelemede";
-    case "MISSING_DOCUMENTS":
-      return "Eksik Evrak";
-    case "COMPLETED":
-      return "Tamamlandı";
-    case "REJECTED":
-      return "Reddedildi";
-    default:
-      return status ?? "-";
-  }
-}
-
-function statusVariant(status?: LanguageCampApplicationListItemDto["status"]) {
-  switch (status) {
-    case "DRAFT":
-      return "neutral" as const;
-    case "SUBMITTED":
-      return "info" as const;
-    case "IN_REVIEW":
-      return "warning" as const;
-    case "MISSING_DOCUMENTS":
-      return "danger" as const;
-    case "COMPLETED":
-      return "success" as const;
-    case "REJECTED":
-      return "danger" as const;
-    default:
-      return "outline" as const;
-  }
-}
-
-function categoryLabel(cat?: LanguageCampApplicationListItemDto["category"]) {
+function categoryLabel(cat?: LanguageCampApplicationGroupListItem["category"]) {
   switch (cat) {
     case "INDIVIDUAL":
       return "Bireysel";
@@ -63,14 +27,9 @@ function categoryLabel(cat?: LanguageCampApplicationListItemDto["category"]) {
   }
 }
 
-function fullName(r: Pick<LanguageCampApplicationListItemDto, "firstName" | "lastName">) {
-  const n = `${r.firstName ?? ""} ${r.lastName ?? ""}`.trim();
-  return n || "-";
-}
-
 const STATUS_OPTIONS = [
   { value: "DRAFT", label: "Taslak" },
-  { value: "SUBMITTED", label: "Gönderildi" },
+  { value: "SUBMITTED", label: "Onaylı" },
   { value: "IN_REVIEW", label: "İncelemede" },
   { value: "MISSING_DOCUMENTS", label: "Eksik Evrak" },
   { value: "COMPLETED", label: "Tamamlandı" },
@@ -81,6 +40,14 @@ function clampInt(v: string | null, fallback: number) {
   const n = Number(v);
   if (!Number.isFinite(n)) return fallback;
   return Math.max(0, Math.floor(n));
+}
+
+function aggregateFollower(group: LanguageCampApplicationGroupListItem) {
+  const followers = (group.participants ?? [])
+    .map((p) => p.followerPerson?.trim())
+    .filter(Boolean) as string[];
+  const unique = [...new Set(followers)];
+  return unique.length ? unique.join(", ") : "-";
 }
 
 export function AdminLanguageCampApplicationsClient() {
@@ -95,7 +62,7 @@ export function AdminLanguageCampApplicationsClient() {
 
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
-  const [data, setData] = React.useState<LanguageCampApplicationListItemDto[]>([]);
+  const [data, setData] = React.useState<LanguageCampApplicationGroupListItem[]>([]);
   const [total, setTotal] = React.useState(0);
 
   const setParam = React.useCallback(
@@ -116,44 +83,29 @@ export function AdminLanguageCampApplicationsClient() {
       setLoading(true);
       setError(null);
 
-      const listParams: AdminLanguageCampApplicationsListParams = {
-        page,
-        size,
-        status: status ?? undefined,
-      };
+      try {
+        const res = await fetchAdminLanguageCampApplicationGroups({
+          page,
+          size,
+          status: status ?? undefined,
+        });
+        if (cancelled) return;
 
-      const res = await adminLanguageCampApplicationsList(listParams).catch((e: unknown) => {
-        return {
-          status: 0,
-          data: null,
-          error: e instanceof Error ? e.message : "İstek başarısız",
-        } as const;
-      });
-
-      if (cancelled) return;
-
-      if (res.status >= 200 && res.status < 300) {
-        const items = res.data?.items ?? [];
-        const filtered = q
-          ? items.filter((x) => {
-              const hay = `${x.id ?? ""} ${x.firstName ?? ""} ${x.lastName ?? ""}`.toLowerCase();
-              return hay.includes(q.toLowerCase());
-            })
-          : items;
+        const items = res.items ?? [];
+        const filtered = q ? items.filter((g) => groupMatchesQuery(g, q)) : items;
         setData(filtered);
-        setTotal(res.data?.totalItems ?? filtered.length);
-      } else {
-        setData([]);
-        setTotal(0);
-        setError(
-          (res as unknown as { error?: string })?.error ??
-            `Liste yüklenemedi (HTTP ${res.status})`,
-        );
+        setTotal(q ? filtered.length : (res.totalItems ?? filtered.length));
+      } catch (e) {
+        if (!cancelled) {
+          setData([]);
+          setTotal(0);
+          setError(e instanceof Error ? e.message : "Liste yüklenemedi");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-
-      setLoading(false);
     }
-    run();
+    void run();
     return () => {
       cancelled = true;
     };
@@ -164,7 +116,7 @@ export function AdminLanguageCampApplicationsClient() {
       <PageHeader
         eyebrow="Başvurular"
         title="Dil Kampı Başvuruları"
-        description="Tüm dil kampı başvurularını listeleyin ve filtreleyin."
+        description="Başvurular proje ve başvuran kullanıcıya göre gruplanır; her grupta birden fazla katılımcı olabilir."
         actions={
           <Button
             variant="secondary"
@@ -176,11 +128,11 @@ export function AdminLanguageCampApplicationsClient() {
         }
       />
 
-      <Table<LanguageCampApplicationListItemDto>
+      <Table<LanguageCampApplicationGroupListItem>
         title="Liste"
         searchable
         searchValue={q}
-        searchPlaceholder="Ad, soyad veya ID ile ara…"
+        searchPlaceholder="Başvuran, katılımcı, proje veya ID ile ara…"
         onSearchChange={(v) => setParam({ q: v || null, page: "0" })}
         toolbarActions={
           <div className="flex items-center gap-2">
@@ -194,22 +146,60 @@ export function AdminLanguageCampApplicationsClient() {
                 options={STATUS_OPTIONS as unknown as { value: StatusFilter; label: string }[]}
               />
             </div>
-            {error ? (
-              <span className="text-xs text-[var(--danger-600)]">{error}</span>
-            ) : null}
+            {error ? <span className="text-xs text-[var(--danger-600)]">{error}</span> : null}
           </div>
         }
         loading={loading}
         data={data}
-        rowKey={(row) => row.id ?? crypto.randomUUID()}
+        rowKey={(row) =>
+          `${row.applicantUserId ?? "na"}-${row.languageCampProjectId ?? crypto.randomUUID()}`
+        }
+        onRowClick={(r) => {
+          const targetId = r.primaryApplicationId ?? r.participants?.[0]?.id;
+          if (!targetId) return;
+          router.push(`/admin/language-camp-applications/${encodeURIComponent(targetId)}`);
+        }}
         columns={[
           {
-            key: "fullName",
-            header: "Ad Soyad",
+            key: "applicant",
+            header: "Başvuran",
             sortable: true,
-            sortAccessor: (r) => fullName(r).toLowerCase(),
-            cell: (r) => <span className="text-[var(--text-primary)]">{fullName(r)}</span>,
+            sortAccessor: (r) => (r.applicantDisplayName ?? r.applicantEmail ?? "").toLowerCase(),
+            cell: (r) => (
+              <div className="min-w-0">
+                <div className="truncate text-[var(--text-primary)]">
+                  {r.applicantDisplayName ?? "-"}
+                </div>
+                {r.applicantEmail ? (
+                  <div className="truncate text-xs text-[var(--text-tertiary)]">{r.applicantEmail}</div>
+                ) : null}
+              </div>
+            ),
             truncate: true,
+          },
+          {
+            key: "project",
+            header: "Proje",
+            sortable: true,
+            sortAccessor: (r) => r.languageCampProjectTitle ?? "",
+            cell: (r) => (
+              <span className="text-[var(--text-primary)]">{r.languageCampProjectTitle ?? "-"}</span>
+            ),
+            truncate: true,
+            hideOnMobile: true,
+          },
+          {
+            key: "participants",
+            header: "Katılımcılar",
+            sortable: true,
+            sortAccessor: (r) => r.participantCount ?? 0,
+            cell: (r) => (
+              <AdminLanguageCampGroupParticipantsCell
+                participants={r.participants}
+                participantCount={r.participantCount}
+              />
+            ),
+            width: 260,
           },
           {
             key: "category",
@@ -217,20 +207,32 @@ export function AdminLanguageCampApplicationsClient() {
             sortable: true,
             sortAccessor: (r) => r.category ?? "",
             cell: (r) => <span className="text-[var(--text-primary)]">{categoryLabel(r.category)}</span>,
-            width: 160,
+            width: 120,
             hideOnMobile: true,
           },
           {
-            key: "status",
-            header: "Durum",
+            key: "followerPerson",
+            header: "Takip Eden",
             sortable: true,
-            sortAccessor: (r) => r.status ?? "",
+            sortAccessor: (r) => aggregateFollower(r),
             cell: (r) => (
-              <Badge variant={statusVariant(r.status)} dot>
-                {statusLabel(r.status)}
+              <span className="text-[var(--text-secondary)]">{aggregateFollower(r)}</span>
+            ),
+            width: 140,
+            hideOnMobile: true,
+          },
+          {
+            key: "participantCount",
+            header: "Kişi",
+            sortable: true,
+            sortAccessor: (r) => r.participantCount ?? 0,
+            cell: (r) => (
+              <Badge variant={r.participantCount && r.participantCount > 1 ? "info" : "neutral"}>
+                {r.participantCount ?? 0}
               </Badge>
             ),
-            width: 180,
+            width: 72,
+            hideOnMobile: true,
           },
           {
             key: "updatedAt",
@@ -239,7 +241,7 @@ export function AdminLanguageCampApplicationsClient() {
             sortAccessor: (r) => r.updatedAt ?? r.createdAt ?? "",
             cell: (r) => (
               <span className="tabular-nums text-[var(--text-secondary)]">
-                {r.updatedAt ?? r.createdAt ?? "-"}
+                {formatTrDateTime(r.updatedAt ?? r.createdAt)}
               </span>
             ),
             width: 190,
@@ -249,15 +251,15 @@ export function AdminLanguageCampApplicationsClient() {
         rowActions={(r) => (
           <div className="flex items-center gap-1">
             <IconButton
-              aria-label="ID kopyala"
+              aria-label="Grup anahtarını kopyala"
               variant="ghost"
               size="sm"
               icon={<Icon name="copy" size={14} />}
               onClick={async () => {
-                const id = r.id;
-                if (!id) return;
-                await navigator.clipboard.writeText(id).catch(() => null);
-                toast.success({ title: "Kopyalandı", description: id });
+                const key = `${r.applicantUserId ?? ""}:${r.languageCampProjectId ?? ""}`;
+                if (!key || key === ":") return;
+                await navigator.clipboard.writeText(key).catch(() => null);
+                toast.success({ title: "Kopyalandı", description: key });
               }}
             />
           </div>
@@ -277,4 +279,3 @@ export function AdminLanguageCampApplicationsClient() {
     </div>
   );
 }
-

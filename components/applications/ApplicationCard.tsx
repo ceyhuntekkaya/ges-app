@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Lang } from "@/lib/i18n/dict";
 import { t } from "@/lib/i18n";
-import { labelApplicationStatus } from "@/lib/i18n/labels";
+import { labelApplicationStatus, formatDateTime } from "@/lib/i18n/labels";
 
 export type ApplicationCardKind = "university" | "language-camp";
 
@@ -28,13 +28,6 @@ function kindLabel(kind: ApplicationCardKind, lang: Lang) {
   return kind === "university" ? t("university", lang) : t("languageCamp", lang);
 }
 
-function formatDate(value?: string) {
-  if (!value) return "-";
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-}
-
 type Props = {
   lang: Lang;
   kind: ApplicationCardKind;
@@ -46,7 +39,7 @@ type Props = {
 };
 
 export function ApplicationCard({ lang, kind, title, status, updatedAt, createdAt, href }: Props) {
-  const dateLabel = formatDate(updatedAt ?? createdAt);
+  const dateLabel = formatDateTime(lang, updatedAt ?? createdAt);
 
   return (
     <Link

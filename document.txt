@@ -1,0 +1,5 @@
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  --target runner \
+  -t ctekkaya/travel-ges-app:1.0 \
+  --push .

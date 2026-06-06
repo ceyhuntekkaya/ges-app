@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { getLang, t } from "@/lib/i18n";
+import { formatDateTime } from "@/lib/i18n/labels";
 import { getMyUniversityApplication } from "@/lib/api/portalServer";
 import { UniversityApplicationDocumentsClient } from "@/components/applications/UniversityApplicationDocumentsClient";
+import { UniversityApplicationPortfolioSection } from "@/components/applications/UniversityApplicationPortfolioSection";
 
 export default async function UniversityApplicationDetailsPage({
   params,
@@ -56,19 +58,32 @@ export default async function UniversityApplicationDetailsPage({
               </div>
               <div>
                 <dt className="text-xs font-semibold text-zinc-500">{t("updated", lang)}</dt>
-                <dd className="mt-1 text-sm text-zinc-900">{res.data?.updatedAt ?? "-"}</dd>
+                <dd className="mt-1 text-sm text-zinc-900">{formatDateTime(lang, res.data?.updatedAt)}</dd>
               </div>
               <div>
                 <dt className="text-xs font-semibold text-zinc-500">{t("created", lang)}</dt>
-                <dd className="mt-1 text-sm text-zinc-900">{res.data?.createdAt ?? "-"}</dd>
+                <dd className="mt-1 text-sm text-zinc-900">{formatDateTime(lang, res.data?.createdAt)}</dd>
               </div>
             </dl>
 
             <div className="border-t border-zinc-100 pt-6">
               <div className="mb-3 text-base font-semibold tracking-tight text-zinc-900">
-                {t("digitalPortfolio", lang)}
+                {t("applicationDocuments", lang)}
               </div>
-              <UniversityApplicationDocumentsClient applicationId={res.data?.id ?? id} lang={lang} />
+              <UniversityApplicationDocumentsClient
+                applicationId={res.data?.id ?? id}
+                lang={lang}
+                initialLegacyDocuments={res.data?.documents}
+              />
+            </div>
+
+            <div className="border-t border-zinc-100 pt-6">
+              <UniversityApplicationPortfolioSection
+                applicationId={res.data?.id ?? id}
+                lang={lang}
+                initialSections={res.data?.portfolioSections}
+                initialStatus={res.data?.status}
+              />
             </div>
           </div>
         )}

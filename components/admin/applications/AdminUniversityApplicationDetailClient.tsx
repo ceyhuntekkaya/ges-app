@@ -18,6 +18,11 @@ import {
 } from "@/lib/api/generated/index";
 import { Badge, Button, FilePreview, Icon, Input, Modal, PageHeader, Select, Textarea, useToast } from "@/components/ui";
 import { FileUploadInput } from "@/components/ui/FileUploadInput";
+import Link from "next/link";
+import { catalogPortfolioSectionsList } from "@/lib/api/catalogPortfolioSections";
+import { inferPortfolioFileType, portfolioFileTypeLabelTr } from "@/lib/applications/portfolioFileType";
+import type { PortfolioSectionDto } from "@/lib/api/generated/index";
+import { formatTrDateTime } from "@/lib/dates/formatTr";
 
 type UniversityApplicationDetailWithApplicant = UniversityApplicationDetailDto & {
   applicantUserId?: string;
@@ -29,7 +34,7 @@ function statusLabel(status?: UniversityApplicationDetailDto["status"]) {
     case "DRAFT":
       return "Taslak";
     case "SUBMITTED":
-      return "Gönderildi";
+      return "Onaylı";
     case "IN_REVIEW":
       return "İncelemede";
     case "MISSING_DOCUMENTS":
@@ -41,6 +46,11 @@ function statusLabel(status?: UniversityApplicationDetailDto["status"]) {
     default:
       return status ?? "-";
   }
+}
+
+function fullName(r: Pick<UniversityApplicationDetailDto, "firstName" | "lastName">) {
+  const n = `${r.firstName ?? ""} ${r.lastName ?? ""}`.trim();
+  return n || null;
 }
 
 function statusVariant(status?: UniversityApplicationDetailDto["status"]) {
@@ -66,7 +76,7 @@ type ApplicationStatus = NonNullable<UniversityApplicationDetailDto["status"]>;
 
 const APPLICATION_STATUS_OPTIONS = [
   { value: ApplicationStatusChangeRequestDtoStatus.DRAFT, label: "Taslak" },
-  { value: ApplicationStatusChangeRequestDtoStatus.SUBMITTED, label: "Gönderildi" },
+  { value: ApplicationStatusChangeRequestDtoStatus.SUBMITTED, label: "Onaylı" },
   { value: ApplicationStatusChangeRequestDtoStatus.IN_REVIEW, label: "İncelemede" },
   { value: ApplicationStatusChangeRequestDtoStatus.MISSING_DOCUMENTS, label: "Eksik Evrak" },
   { value: ApplicationStatusChangeRequestDtoStatus.COMPLETED, label: "Tamamlandı" },
@@ -330,14 +340,6 @@ function currencyLabelTr(c?: string | null) {
   return opt?.label ?? (c && String(c).trim() ? String(c).trim() : "-");
 }
 
-const PORTFOLIO_FILE_TYPE_OPTIONS = [
-  { value: "IMAGE", label: "Resim" },
-  { value: "VIDEO", label: "Video" },
-  { value: "AUDIO", label: "Ses" },
-  { value: "PDF", label: "PDF belgesi" },
-  { value: "OTHER", label: "Diğer" },
-] as const satisfies Array<{ value: UniversityApplicationPortfolioFileUpsertRequestDtoType; label: string }>;
-
 type ScalarEducation = NonNullable<UniversityApplicationDetailDto["educationLevel"]>;
 type ScalarStartTerm = NonNullable<UniversityApplicationDetailDto["startTermSeason"]>;
 type ScalarAccommodation = NonNullable<UniversityApplicationDetailDto["accommodationType"]>;
@@ -395,7 +397,7 @@ function DetailRightAccordionItem({
       <div className="flex w-full items-center gap-2 px-4 py-3 sm:px-5 sm:py-4">
         <button
           type="button"
-          className="flex min-w-0 flex-1 items-center gap-2 rounded-[var(--radius-md)] py-1 text-left text-sm font-semibold text-[var(--text-primary)] outline-none hover:bg-[var(--surface-1)] focus-visible:shadow-[var(--ring-accent)]"
+          className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-[var(--radius-md)] py-1 text-left text-sm font-semibold text-[var(--text-primary)] outline-none hover:bg-[var(--surface-1)] focus-visible:shadow-[var(--ring-accent)]"
           onClick={() => onOpen(id)}
           aria-expanded={open}
           id={`detail-acc-${id}`}
@@ -516,6 +518,30 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
     documentUrl: "",
   });
 
+  const [catalogSections, setCatalogSections] = React.useState<PortfolioSectionDto[]>([]);
+
+  React.useEffect(() => {
+    void catalogPortfolioSectionsList({ page: 0, size: 200 }).then((res) => {
+      if (res.status >= 200 && res.status < 300) {
+        setCatalogSections(res.data.items ?? []);
+      }
+    });
+  }, []);
+
+  const catalogSectionOptions = React.useMemo(
+    () =>
+      catalogSections
+        .filter((s): s is PortfolioSectionDto & { id: string } => !!s.id && s.active !== false)
+        .map((s) => ({
+          value: s.id,
+          label: s.name ?? s.id,
+          description: s.educationLevel
+            ? `${s.educationLevel}${s.departmentKeyword ? ` • ${s.departmentKeyword}` : ""}`
+            : s.departmentKeyword ?? undefined,
+        })),
+    [catalogSections],
+  );
+
   // Portfolio section modal state
   const [sectionOpen, setSectionOpen] = React.useState(false);
   const [editingSection, setEditingSection] = React.useState<UniversityApplicationPortfolioSectionDto | null>(null);
@@ -531,6 +557,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   const [fileOpen, setFileOpen] = React.useState(false);
   const [fileCtx, setFileCtx] = React.useState<{ sectionId: string } | null>(null);
   const [editingFile, setEditingFile] = React.useState<UniversityApplicationPortfolioFileDto | null>(null);
+  const [fileAddMode, setFileAddMode] = React.useState<"file" | "link">("file");
   const [fileForm, setFileForm] = React.useState<{
     type: UniversityApplicationPortfolioFileUpsertRequestDtoType | null;
     name: string;
@@ -635,8 +662,8 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
 
   const title = isCreate
     ? "Yeni üniversite başvurusu"
-    : data?.id
-      ? `Başvuru #${data.id}`
+    : data
+      ? fullName(data) ?? "Üniversite Başvurusu"
       : "Üniversite Başvurusu";
 
   const openScalarEdit = () => {
@@ -971,6 +998,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   };
 
   const openAddPref = (kind: NonNullable<typeof prefKind>) => {
+    setOpenRightAccordion("preferences");
     setPrefKind(kind);
     setPrefEditingIndex(null);
     setPrefValue("");
@@ -1021,6 +1049,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   };
 
   const openAddNote = () => {
+    setOpenRightAccordion("notes");
     setEditingNote(null);
     setNoteText("");
     setNoteOpen(true);
@@ -1070,6 +1099,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   };
 
   const openAddMeeting = () => {
+    setOpenRightAccordion("meetings");
     setEditingMeeting(null);
     setMeetingForm({ person: "", meetingDate: "", meetingTime: "", meetingNote: "", meetingResult: "" });
     setMeetingOpen(true);
@@ -1141,6 +1171,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   };
 
   const openAddTask = () => {
+    setOpenRightAccordion("tasks");
     setEditingTask(null);
     setTaskForm({ scheduledDate: "", scheduledTime: "", withWhom: "", whatToDo: "", status: "PENDING" });
     setTaskOpen(true);
@@ -1213,6 +1244,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   };
 
   const openAddPayment = () => {
+    setOpenRightAccordion("payments");
     setEditingPayment(null);
     setPaymentForm({ paymentDate: "", amount: "", currency: "", receivedBy: "" });
     setPaymentOpen(true);
@@ -1294,6 +1326,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   };
 
   const openAddDoc = () => {
+    setOpenRightAccordion("documents");
     setEditingDoc(null);
     setDocForm({ required: false, documentName: "", documentDescription: "", documentUrl: "" });
     setDocOpen(true);
@@ -1358,6 +1391,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   };
 
   const openAddSection = () => {
+    setOpenRightAccordion("portfolio");
     setEditingSection(null);
     setSectionForm({
       required: false,
@@ -1431,8 +1465,10 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   };
 
   const openAddFile = (sectionId: string) => {
+    setOpenRightAccordion("portfolio");
     setFileCtx({ sectionId });
     setEditingFile(null);
+    setFileAddMode("file");
     setFileForm({ type: "OTHER", name: "", description: "", fileUrl: "" });
     setFileOpen(true);
   };
@@ -1440,8 +1476,10 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
   const openEditFile = (sectionId: string, f: UniversityApplicationPortfolioFileDto) => {
     setFileCtx({ sectionId });
     setEditingFile(f);
+    const type = (f.type as UniversityApplicationPortfolioFileUpsertRequestDtoType) ?? "OTHER";
+    setFileAddMode(type === "LINK" ? "link" : "file");
     setFileForm({
-      type: (f.type as UniversityApplicationPortfolioFileUpsertRequestDtoType) ?? "OTHER",
+      type,
       name: f.name ?? "",
       description: f.description ?? "",
       fileUrl: f.fileUrl ?? "",
@@ -1449,13 +1487,26 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
     setFileOpen(true);
   };
 
+  const handlePortfolioFileUploaded = (meta: { contentType: string | null; originalFilename: string | null }) => {
+    const inferred = inferPortfolioFileType({
+      contentType: meta.contentType,
+      filename: meta.originalFilename,
+    });
+    setFileForm((s) => ({
+      ...s,
+      type: inferred,
+      name: s.name.trim() ? s.name : (meta.originalFilename ?? s.name),
+    }));
+  };
+
   const submitFile = async () => {
     if (!data?.id || !fileCtx?.sectionId) return;
-    if (!fileForm.type) return;
+    const resolvedType: UniversityApplicationPortfolioFileUpsertRequestDtoType =
+      fileAddMode === "link" ? "LINK" : (fileForm.type ?? inferPortfolioFileType({ url: fileForm.fileUrl }));
     setBusy(true);
     try {
       const body = JSON.stringify({
-        type: fileForm.type,
+        type: resolvedType,
         name: fileForm.name || null,
         description: fileForm.description || null,
         fileUrl: fileForm.fileUrl || null,
@@ -1586,11 +1637,11 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field
-                  label="Portal kullanıcısı (başvuru sahibi)"
+                  label="Başvuru sahibi"
                   value={(() => {
                     const d = data as UniversityApplicationDetailWithApplicant;
                     if (d.applicantEmail) {
-                      return d.applicantUserId ? `${d.applicantEmail} (${d.applicantUserId})` : d.applicantEmail;
+                      return d.applicantUserId ? `${d.applicantEmail} ` : d.applicantEmail;
                     }
                     return "-";
                   })()}
@@ -1646,8 +1697,8 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
                 <div className="sm:col-span-2">
                   <Field label="Notlar" value={data.notes ?? "-"} />
                 </div>
-                <Field label="Oluşturma" value={data.createdAt ?? "-"} />
-                <Field label="Güncelleme" value={data.updatedAt ?? "-"} />
+                <Field label="Oluşturma" value={formatTrDateTime(data.createdAt)} />
+                <Field label="Güncelleme" value={formatTrDateTime(data.updatedAt)} />
               </div>
             </div>
           )}
@@ -1673,7 +1724,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
                       <div className="min-w-0">
                         <div className="text-sm text-[var(--text-primary)]">{n.todoText ?? "-"}</div>
                         <div className="mt-1 text-xs text-[var(--text-tertiary)]">
-                          {n.writtenBy ?? "-"} • {n.writtenAt ?? "-"}
+                          {n.writtenBy ?? "-"} • {formatTrDateTime(n.writtenAt)}
                         </div>
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
@@ -1806,7 +1857,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <div className="text-sm font-medium text-[var(--text-primary)]">{m.person ?? "-"}</div>
-                        <div className="mt-1 text-xs text-[var(--text-tertiary)]">{m.meetingAt ?? "-"}</div>
+                        <div className="mt-1 text-xs text-[var(--text-tertiary)]">{formatTrDateTime(m.meetingAt)}</div>
                         {m.meetingNote ? <div className="mt-1 text-xs text-[var(--text-tertiary)]">{m.meetingNote}</div> : null}
                         {m.meetingResult ? <div className="mt-1 text-xs text-[var(--text-tertiary)]">Sonuç: {m.meetingResult}</div> : null}
                       </div>
@@ -1848,7 +1899,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
                       <div className="min-w-0">
                         <div className="text-sm font-medium text-[var(--text-primary)]">{t.whatToDo ?? "-"}</div>
                         <div className="mt-1 text-xs text-[var(--text-tertiary)]">
-                          {t.scheduledAt ?? "-"} • {t.status ?? "-"}
+                          {formatTrDateTime(t.scheduledAt)} • {t.status ?? "-"}
                         </div>
                         {t.withWhom ? <div className="mt-1 text-xs text-[var(--text-tertiary)]">Kiminle: {t.withWhom}</div> : null}
                       </div>
@@ -1891,7 +1942,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
                         <div className="text-sm font-medium text-[var(--text-primary)]">
                           {(p.amount ?? "-").toString()} {p.currency ?? ""}
                         </div>
-                        <div className="mt-1 text-xs text-[var(--text-tertiary)]">{p.paymentAt ?? "-"}</div>
+                        <div className="mt-1 text-xs text-[var(--text-tertiary)]">{formatTrDateTime(p.paymentAt)}</div>
                         {p.receivedBy ? <div className="mt-1 text-xs text-[var(--text-tertiary)]">Alan: {p.receivedBy}</div> : null}
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
@@ -1940,7 +1991,11 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
                         {d.documentUrl ? (
                           <div className="mt-2 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-1)] p-2">
                             <div className="aspect-[16/9] w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--surface-0)]">
-                              <FilePreview url={d.documentUrl} className="h-full w-full object-cover" />
+                              <FilePreview
+                                url={d.documentUrl}
+                                filename={d.documentName ?? null}
+                                className="h-full w-full"
+                              />
                             </div>
                             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
                               <a
@@ -1986,7 +2041,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
             id="portfolio"
             openId={openRightAccordion}
             onOpen={setOpenRightAccordion}
-            title="Portfolyo"
+            title="Ek Materyaller"
             actions={
               <Button size="sm" variant="secondary" onClick={openAddSection} disabled={loading || !data}>
                 Bölüm ekle
@@ -2035,7 +2090,12 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
                             className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--surface-0)]"
                           >
                             <div className="aspect-[16/9] w-full overflow-hidden bg-[var(--surface-1)]">
-                              <FilePreview url={f.fileUrl ?? ""} className="h-full w-full object-cover" />
+                              <FilePreview
+                                url={f.fileUrl ?? ""}
+                                filename={f.name ?? null}
+                                fileType={f.type ?? null}
+                                className="h-full w-full"
+                              />
                             </div>
                             <div className="p-3">
                               <div className="truncate text-sm font-medium text-[var(--text-primary)]">
@@ -2148,7 +2208,7 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
       <Modal
         open={sectionOpen}
         onClose={() => setSectionOpen(false)}
-        title={editingSection ? "Portfolyo bölümünü güncelle" : "Portfolyo bölümü ekle"}
+        title={editingSection ? "Ek materyal bölümünü güncelle" : "Ek materyal bölümü ekle"}
         size="lg"
         footer={
           <>
@@ -2185,12 +2245,27 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
             }}
             hint="Yalnızca rakam (sıra)."
           />
-          <Input
-            label="Katalog bölüm kimliği (isteğe bağlı)"
-            value={sectionForm.portfolioSectionId}
-            onChange={(e) => setSectionForm((s) => ({ ...s, portfolioSectionId: e.target.value }))}
-            placeholder="Örn: a1b2c3d4-…"
+          <Select<string>
+            label="Katalog şablonu (isteğe bağlı)"
+            placeholder="Şablon seçin"
+            clearable
+            value={sectionForm.portfolioSectionId || null}
+            onChange={(v) => setSectionForm((s) => ({ ...s, portfolioSectionId: v ?? "" }))}
+            options={catalogSectionOptions}
+            hint={
+              catalogSectionOptions.length === 0
+                ? "Katalog boş. Şablonları Katalog → Ek Materyal Şablonları ekranından ekleyin."
+                : "Şablon seçerseniz ad/açıklama katalogdan gelir; bu başvuruya özel override yapabilirsiniz."
+            }
           />
+          {catalogSectionOptions.length === 0 ? (
+            <Link
+              href="/admin/catalog?tab=portfolio-sections"
+              className="text-sm font-medium text-[var(--accent-700)] underline underline-offset-2"
+            >
+              Ek materyal şablonlarını yönet →
+            </Link>
+          ) : null}
           <label className="flex items-center gap-2 text-sm text-[var(--text-primary)]">
             <input
               type="checkbox"
@@ -2219,13 +2294,25 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
         }
       >
         <div className="grid gap-3">
-          <Select<UniversityApplicationPortfolioFileUpsertRequestDtoType>
-            label="Dosya türü"
-            placeholder="Seçiniz"
-            value={fileForm.type ?? null}
-            onChange={(v) => setFileForm((s) => ({ ...s, type: v }))}
-            options={PORTFOLIO_FILE_TYPE_OPTIONS as unknown as { value: UniversityApplicationPortfolioFileUpsertRequestDtoType; label: string }[]}
-          />
+          <div className="flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              variant={fileAddMode === "file" ? "primary" : "secondary"}
+              onClick={() => setFileAddMode("file")}
+            >
+              Dosya yükle
+            </Button>
+            <Button
+              size="sm"
+              variant={fileAddMode === "link" ? "primary" : "secondary"}
+              onClick={() => {
+                setFileAddMode("link");
+                setFileForm((s) => ({ ...s, type: "LINK" }));
+              }}
+            >
+              Bağlantı ekle
+            </Button>
+          </div>
           <Input
             label="Ad"
             value={fileForm.name}
@@ -2239,14 +2326,31 @@ export function AdminUniversityApplicationDetailClient({ id }: { id: string }) {
             placeholder="İsteğe bağlı"
             rows={3}
           />
-          <FileUploadInput
-            label="Dosya"
-            value={fileForm.fileUrl}
-            onChange={(v) => setFileForm((s) => ({ ...s, fileUrl: v }))}
-            purpose="UNIVERSITY_APPLICATION_PORTFOLIO"
-            uploadUrl="/api/proxy/v1/admin/files"
-            getDownloadUrl={(fileId) => `/api/proxy/v1/admin/files/${encodeURIComponent(fileId)}/download`}
-          />
+          {fileAddMode === "link" ? (
+            <Input
+              label="Bağlantı URL"
+              value={fileForm.fileUrl}
+              onChange={(e) => setFileForm((s) => ({ ...s, fileUrl: e.target.value }))}
+              placeholder="https://github.com/..."
+            />
+          ) : (
+            <>
+              <FileUploadInput
+                label="Dosya"
+                value={fileForm.fileUrl}
+                onChange={(v) => setFileForm((s) => ({ ...s, fileUrl: v }))}
+                onUploaded={handlePortfolioFileUploaded}
+                purpose="UNIVERSITY_APPLICATION_PORTFOLIO"
+                uploadUrl="/api/proxy/v1/admin/files"
+                getDownloadUrl={(fileId) => `/api/proxy/v1/admin/files/${encodeURIComponent(fileId)}/download`}
+              />
+              {fileForm.fileUrl ? (
+                <p className="text-xs text-[var(--text-tertiary)]">
+                  Algılanan tür: {portfolioFileTypeLabelTr(fileForm.type)}
+                </p>
+              ) : null}
+            </>
+          )}
         </div>
       </Modal>
 

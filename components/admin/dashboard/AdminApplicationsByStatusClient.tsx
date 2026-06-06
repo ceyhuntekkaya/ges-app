@@ -20,7 +20,7 @@ function statusLabel(status: StatusFilter) {
     case AdminUniversityApplicationsByStatusStatus.DRAFT:
       return "Taslak";
     case AdminUniversityApplicationsByStatusStatus.SUBMITTED:
-      return "Gönderildi";
+      return "Onaylı";
     case AdminUniversityApplicationsByStatusStatus.IN_REVIEW:
       return "İncelemede";
     case AdminUniversityApplicationsByStatusStatus.MISSING_DOCUMENTS:
@@ -55,7 +55,7 @@ function statusVariant(status: StatusFilter) {
 
 const STATUS_OPTIONS = [
   { value: AdminUniversityApplicationsByStatusStatus.DRAFT, label: "Taslak" },
-  { value: AdminUniversityApplicationsByStatusStatus.SUBMITTED, label: "Gönderildi" },
+  { value: AdminUniversityApplicationsByStatusStatus.SUBMITTED, label: "Onaylı" },
   { value: AdminUniversityApplicationsByStatusStatus.IN_REVIEW, label: "İncelemede" },
   { value: AdminUniversityApplicationsByStatusStatus.MISSING_DOCUMENTS, label: "Eksik Evrak" },
   { value: AdminUniversityApplicationsByStatusStatus.COMPLETED, label: "Tamamlandı" },

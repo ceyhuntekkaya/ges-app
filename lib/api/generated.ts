@@ -960,6 +960,16 @@ export interface UniversityApplicationListItemDto {
   lastName?: string;
   status?: UniversityApplicationListItemDtoStatus;
   educationLevel?: UniversityApplicationListItemDtoEducationLevel;
+  followerPerson?: string;
+  priceAmount?: number;
+  priceCurrency?: string;
+  totalPaidAmount?: number;
+  pendingTaskCount?: number;
+  completedTaskCount?: number;
+  pendingTaskScheduledAts?: string[];
+  meetingCount?: number;
+  documentCount?: number;
+  documentsWithFileCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -1151,6 +1161,8 @@ export interface LanguageCampProjectListItemDto {
   individual?: boolean;
   projectStatus?: LanguageCampProjectListItemDtoProjectStatus;
   projectType?: LanguageCampProjectListItemDtoProjectType;
+  quota?: number;
+  applicationCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -1434,6 +1446,8 @@ export type AdminLanguageCampApplicationsListParams = {
 page?: number;
 size?: number;
 status?: AdminLanguageCampApplicationsListStatus;
+paymentCompleted?: boolean;
+languageCampProjectId?: string;
 };
 
 export type AdminLanguageCampApplicationsListStatus = typeof AdminLanguageCampApplicationsListStatus[keyof typeof AdminLanguageCampApplicationsListStatus];

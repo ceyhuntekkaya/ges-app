@@ -3,6 +3,7 @@ import { getMyUniversityApplication } from "@/lib/api/portalServer";
 import { getLang, t } from "@/lib/i18n";
 import { UniversityApplicationEditClient } from "@/components/applications/UniversityApplicationEditClient";
 import { UniversityApplicationDocumentsClient } from "@/components/applications/UniversityApplicationDocumentsClient";
+import { UniversityApplicationPortfolioSection } from "@/components/applications/UniversityApplicationPortfolioSection";
 
 export default async function UniversityApplicationEditPage({
   params,
@@ -50,9 +51,22 @@ export default async function UniversityApplicationEditPage({
 
             <div className="border-t border-zinc-100 pt-6">
               <div className="mb-3 text-base font-semibold tracking-tight text-zinc-900">
-                {t("digitalPortfolio", lang)}
+                {t("applicationDocuments", lang)}
               </div>
-              <UniversityApplicationDocumentsClient applicationId={res.data?.id ?? id} lang={lang} />
+              <UniversityApplicationDocumentsClient
+                applicationId={res.data?.id ?? id}
+                lang={lang}
+                initialLegacyDocuments={res.data?.documents}
+              />
+            </div>
+
+            <div className="border-t border-zinc-100 pt-6">
+              <UniversityApplicationPortfolioSection
+                applicationId={res.data?.id ?? id}
+                lang={lang}
+                initialSections={res.data?.portfolioSections}
+                initialStatus={res.data?.status}
+              />
             </div>
           </div>
         )}

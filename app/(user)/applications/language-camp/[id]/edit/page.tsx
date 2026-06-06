@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { applicationsUrlForProject } from "@/lib/applications/languageCampUrls";
 import { getMyLanguageCampApplication } from "@/lib/api/portalServer";
 import { getLang, t } from "@/lib/i18n";
 import { LanguageCampApplicationEditClient } from "@/components/applications/LanguageCampApplicationEditClient";
@@ -11,6 +12,10 @@ export default async function LanguageCampApplicationEditPage({
   const lang = await getLang();
   const { id } = await params;
   const res = await getMyLanguageCampApplication(id);
+  const backHref =
+    res.status === 200 && res.data?.languageCampProjectId
+      ? applicationsUrlForProject(res.data.languageCampProjectId, id)
+      : "/applications";
 
   return (
     <div className="grid gap-4">
@@ -25,16 +30,7 @@ export default async function LanguageCampApplicationEditPage({
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Link
-              href={`/applications/language-camp/${id}`}
-              className="text-sm font-medium text-zinc-700 hover:text-zinc-900"
-            >
-              {t("details", lang)}
-            </Link>
-            <Link
-              href="/applications/language-camp"
-              className="text-sm font-medium text-zinc-700 hover:text-zinc-900"
-            >
+            <Link href={backHref} className="text-sm font-medium text-zinc-700 hover:text-zinc-900">
               {t("back", lang)}
             </Link>
           </div>

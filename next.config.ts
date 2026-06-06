@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   turbopack: {
     // Monorepo/çoklu lockfile durumunda Next yanlış root seçebiliyor.
     // Bu ayar, PostCSS/Tailwind gibi pipeline'ların doğru klasörden çalışmasını sağlar.

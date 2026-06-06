@@ -7,20 +7,10 @@ import {
   type PendingTaskListItemDto,
 } from "@/lib/api/generated/index";
 import { Badge, Button, Card, CardDescription, CardTitle, Icon, Skeleton, Table } from "@/components/ui";
+import { formatTrDateTime } from "@/lib/dates/formatTr";
 
 function formatDate(iso?: string) {
-  if (!iso) return "-";
-  try {
-    return new Intl.DateTimeFormat("tr-TR", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
+  return formatTrDateTime(iso);
 }
 
 function fullName(item: Pick<PendingTaskListItemDto, "applicantFirstName" | "applicantLastName">) {

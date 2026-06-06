@@ -30,6 +30,8 @@ type LanguageCampProjectDto = {
   individual?: boolean;
   projectStatus?: EProjectStatus;
   projectType?: EProjectType;
+  quota?: number;
+  applicationCount?: number;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -149,6 +151,37 @@ export function AdminLanguageCampProjectsClient() {
       cell: (r) => <span className="text-[var(--text-secondary)]">{r.companyId ?? "-"}</span>,
       width: 220,
       hideOnMobile: true,
+    },
+    {
+      key: "applications",
+      header: "Başvurular",
+      sortable: true,
+      sortAccessor: (r) => r.applicationCount ?? 0,
+      cell: (r) => {
+        const count = r.applicationCount ?? 0;
+        const quota = r.quota;
+        const label =
+          quota !== undefined && quota !== null
+            ? `${count} / ${quota}`
+            : String(count);
+        if (!r.id) {
+          return <span className="tabular-nums text-[var(--text-secondary)]">{label}</span>;
+        }
+        return (
+          <button
+            type="button"
+            className="block w-full rounded-md px-1 py-0.5 text-left tabular-nums text-[var(--accent-700)] underline-offset-2 transition-colors hover:bg-[var(--surface-2)] hover:underline"
+            onClick={() => {
+              router.push(
+                `/admin/language-camp-projects/${encodeURIComponent(r.id!)}/applications`,
+              );
+            }}
+          >
+            {label}
+          </button>
+        );
+      },
+      width: 120,
     },
   ];
 

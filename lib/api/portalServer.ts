@@ -1,4 +1,10 @@
-import type { LanguageCampApplicationDetailDto, UniversityApplicationDetailDto } from "@/lib/api/generated/index";
+import type {
+  LanguageCampApplicationDetailDto,
+  LanguageCampApplicationListItemDto,
+  LanguageCampProjectDetailDto,
+  UniversityApplicationDetailDto,
+} from "@/lib/api/generated/index";
+import type { LanguageCampApplicationDetailWithCrm } from "@/lib/applications/languageCampCrmTypes";
 import { cookies } from "next/headers";
 import { getBackendBaseUrl } from "./baseUrl";
 
@@ -93,13 +99,38 @@ export type UniversityApplicationUpdateDraft = {
 
 export type PageDto<T> = { items?: T[]; page?: number; size?: number; totalItems?: number; totalPages?: number };
 
+export type LanguageCampApplicationGroupDto = {
+  projectId?: string;
+  project?: LanguageCampProjectDetailDto;
+  participants?: LanguageCampApplicationDetailWithCrm[];
+};
+
+export type LanguageCampParticipantCreateRequest = {
+  firstName?: string;
+  lastName?: string;
+  birthDate?: string;
+  phone?: string;
+  isItSelf?: boolean;
+  under18?: boolean;
+  parentFullName?: string;
+  parentPhoneNumber?: string;
+  parentEmailAddress?: string;
+  parentRelationship?: string;
+  userNotes?: string;
+  accommodationType?: string;
+  visaNeeded?: boolean;
+  visaFollowByGes?: boolean;
+  paymentPreference?: string;
+  emergencyContact?: { fullName?: string; phone?: string; relationship?: string };
+};
+
 // ---- Read endpoints ----
 export async function listMyLanguageCampApplications(params?: {
   page?: number;
   size?: number;
   q?: string;
   status?: string;
-}): Promise<PortalResult<PageDto<{ id?: string; status?: string; category?: string; createdAt?: string; updatedAt?: string }>>> {
+}): Promise<PortalResult<PageDto<LanguageCampApplicationListItemDto>>> {
   return portalFetch(`/v1/portal/language-camp-applications${toQuery(params as Record<string, unknown> | undefined)}`, {
     method: "GET",
   });
@@ -132,6 +163,26 @@ export async function getMyLanguageCampApplication(id: string): Promise<PortalRe
 
 export async function getMyUniversityApplication(id: string): Promise<PortalResult<UniversityApplicationDto>> {
   return portalFetch(`/v1/portal/university-applications/${encodeURIComponent(id)}`, { method: "GET" });
+}
+
+export async function listMyLanguageCampApplicationGroups(): Promise<
+  PortalResult<LanguageCampApplicationGroupDto[]>
+> {
+  return portalFetch("/v1/portal/language-camp-application-groups", { method: "GET" });
+}
+
+export async function addLanguageCampParticipant(
+  projectId: string,
+  body?: LanguageCampParticipantCreateRequest,
+): Promise<PortalResult<LanguageCampApplicationDto>> {
+  return portalFetch(
+    `/v1/portal/language-camp-application-groups/${encodeURIComponent(projectId)}/participants`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body ?? {}),
+    },
+  );
 }
 
 // ---- Update draft endpoints (used by Next route handlers) ----

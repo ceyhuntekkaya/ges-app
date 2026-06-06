@@ -2,7 +2,7 @@ import Link from "next/link";
 import { listMyUniversityApplications } from "@/lib/api/portalServer";
 import { getLang, t } from "@/lib/i18n";
 import { tf } from "@/lib/i18n/dict";
-import { labelApplicationStatus, labelEducationLevel, labelUpdatedAt } from "@/lib/i18n/labels";
+import { labelApplicationStatus, labelEducationLevel, labelUpdatedAt, formatDateTime } from "@/lib/i18n/labels";
 
 export default async function UniversityApplicationsPage() {
   const lang = await getLang();
@@ -19,17 +19,9 @@ export default async function UniversityApplicationsPage() {
             </h1>
             <p className="mt-2 text-sm leading-6 text-zinc-600">{t("allUniversityApplicationsDesc", lang)}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/applications/university/new"
-              className="rounded-lg bg-zinc-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
-            >
-              {t("new", lang)}
-            </Link>
-            <Link href="/applications" className="text-sm font-medium text-zinc-700 hover:text-zinc-900">
-              {t("back", lang)}
-            </Link>
-          </div>
+          <Link href="/applications" className="text-sm font-medium text-zinc-700 hover:text-zinc-900">
+            {t("back", lang)}
+          </Link>
         </div>
       </div>
 
@@ -54,7 +46,7 @@ export default async function UniversityApplicationsPage() {
                     </div>
                     <div className="mt-1 text-xs text-zinc-500">
                       {t("status", lang)}: {labelApplicationStatus(it.status, lang)} • {labelUpdatedAt(lang)}:{" "}
-                      {it.updatedAt ?? it.createdAt ?? "-"}
+                      {formatDateTime(lang, it.updatedAt ?? it.createdAt)}
                     </div>
                   </div>
                 </Link>

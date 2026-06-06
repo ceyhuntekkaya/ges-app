@@ -3,8 +3,12 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Badge, Button, EmptyState, Icon, Modal, Skeleton } from "@/components/ui";
-import { humanizeApiError } from "@/lib/api/errors";
+import { humanizeApiError, humanizeStatus } from "@/lib/api/errors";
 import { publicLanguageCampProjectsGetActive, type LanguageCampProjectDetailDto } from "@/lib/api/generated/index";
+import {
+  applicationsUrlForProject,
+  useMyAppliedLanguageCampProjectIds,
+} from "@/lib/applications/useMyAppliedLanguageCampProjectIds";
 import { LoginForm } from "@/components/login/LoginForm";
 
 function formatMoney(price?: number, currency?: string) {
@@ -37,6 +41,10 @@ function firstImage(p?: LanguageCampProjectDetailDto) {
   return p?.banner || p?.smallBanner || (p?.images && p.images[0]) || undefined;
 }
 
+function categoryFromProject(p: LanguageCampProjectDetailDto): "INDIVIDUAL" | "CORPORATE" {
+  return p.individual === false ? "CORPORATE" : "INDIVIDUAL";
+}
+
 function kvList(xs?: string[] | null) {
   const items = (xs ?? []).filter(Boolean);
   if (items.length === 0) return null;
@@ -52,8 +60,16 @@ function kvList(xs?: string[] | null) {
   );
 }
 
-export function ApplyProjectDetailClient({ id }: { id: string }) {
+export function ApplyProjectDetailClient({
+  id,
+  isAuthenticated,
+}: {
+  id: string;
+  isAuthenticated: boolean;
+}) {
   const router = useRouter();
+  const { appliedProjectIds, loading: appliedLoading } = useMyAppliedLanguageCampProjectIds();
+  const hasApplied = appliedProjectIds.has(id);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [p, setP] = React.useState<LanguageCampProjectDetailDto | null>(null);
@@ -61,6 +77,44 @@ export function ApplyProjectDetailClient({ id }: { id: string }) {
   const [startOpen, setStartOpen] = React.useState(false);
   const [startStep, setStartStep] = React.useState<"choice" | "login">("choice");
   const [soonMessage, setSoonMessage] = React.useState<string | null>(null);
+  const [starting, setStarting] = React.useState(false);
+  const [startError, setStartError] = React.useState<string | null>(null);
+
+  const startLoggedInApplication = React.useCallback(async () => {
+    if (!p) return;
+    setStarting(true);
+    setStartError(null);
+    try {
+      const res = await fetch("/api/proxy/v1/portal/language-camp-applications", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          category: categoryFromProject(p),
+          languageCampProjectId: id,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { id?: string };
+      if (res.ok && data?.id) {
+        router.push(`/applications/language-camp/${data.id}/edit`);
+        return;
+      }
+      setStartError(humanizeStatus(res.status));
+    } catch (e) {
+      setStartError(humanizeApiError(e));
+    } finally {
+      setStarting(false);
+    }
+  }, [id, p, router]);
+
+  const onStartApplication = React.useCallback(() => {
+    setStartError(null);
+    if (isAuthenticated) {
+      void startLoggedInApplication();
+      return;
+    }
+    setStartStep("choice");
+    setStartOpen(true);
+  }, [isAuthenticated, startLoggedInApplication]);
 
   React.useEffect(() => {
     let alive = true;
@@ -172,21 +226,38 @@ export function ApplyProjectDetailClient({ id }: { id: string }) {
             <Button variant="secondary" onClick={() => router.push("/apply")} leftIcon={<Icon name="arrow-left" size={16} />}>
               Liste
             </Button>
-            <button
-              type="button"
-              onClick={() => {
-                setStartStep("choice");
-                setStartOpen(true);
-              }}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--accent-600)] px-4 text-sm font-medium text-white shadow-[var(--shadow-xs)] transition-[background,color,box-shadow,transform] duration-150 hover:bg-[var(--accent-700)] active:bg-[var(--accent-800)] focus-visible:shadow-[var(--ring-accent)]"
-            >
-              Başvuruyu Başlat
-              <span aria-hidden className="text-white/90">
-                →
-              </span>
-            </button>
+            {hasApplied ? (
+              <button
+                type="button"
+                onClick={() => router.push(applicationsUrlForProject(id))}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--accent-600)] px-4 text-sm font-medium text-white shadow-[var(--shadow-xs)] transition-[background,color,box-shadow,transform] duration-150 hover:bg-[var(--accent-700)] active:bg-[var(--accent-800)] focus-visible:shadow-[var(--ring-accent)]"
+              >
+                Başvuruyu Görüntüle
+                <span aria-hidden className="text-white/90">
+                  →
+                </span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={appliedLoading || starting}
+                onClick={onStartApplication}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--accent-600)] px-4 text-sm font-medium text-white shadow-[var(--shadow-xs)] transition-[background,color,box-shadow,transform] duration-150 hover:bg-[var(--accent-700)] active:bg-[var(--accent-800)] focus-visible:shadow-[var(--ring-accent)] disabled:cursor-wait disabled:opacity-70"
+              >
+                {starting ? "Başlatılıyor..." : "Başvuruyu Başlat"}
+                <span aria-hidden className="text-white/90">
+                  →
+                </span>
+              </button>
+            )}
           </div>
         </div>
+
+        {startError ? (
+          <div className="mt-4 rounded-[var(--radius-lg)] border border-[var(--danger-100)] bg-[var(--danger-50)] px-3.5 py-3 text-sm text-[var(--danger-700)]">
+            {startError}
+          </div>
+        ) : null}
 
         <Modal
           open={startOpen}
@@ -243,8 +314,12 @@ export function ApplyProjectDetailClient({ id }: { id: string }) {
           ) : (
             <div className="space-y-4">
               <LoginForm
-                nextPath="/applications/language-camp/new"
-                onSuccess={() => setStartOpen(false)}
+                nextPath={`/apply/${id}`}
+                onSuccess={() => {
+                  setStartOpen(false);
+                  setStartStep("choice");
+                  void startLoggedInApplication();
+                }}
                 title={null}
                 description={null}
               />

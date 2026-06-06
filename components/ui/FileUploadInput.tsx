@@ -15,6 +15,7 @@ export interface FileUploadInputProps {
 
   value: string;
   onChange: (next: string) => void;
+  onUploaded?: (meta: { contentType: string | null; originalFilename: string | null }) => void;
 
   accept?: string;
   purpose?: string;
@@ -65,6 +66,7 @@ export function FileUploadInput({
   containerClassName,
   value,
   onChange,
+  onUploaded,
   accept,
   purpose = "OTHER",
   uploadUrl = "/api/proxy/v1/portal/files",
@@ -92,13 +94,14 @@ export function FileUploadInput({
         const url = getDownloadUrl(up.id);
         setMeta({ contentType: up.contentType, filename: up.originalFilename });
         onChange(url);
+        onUploaded?.({ contentType: up.contentType, originalFilename: up.originalFilename });
       } catch (err) {
         setLocalError(err instanceof Error ? err.message : "Upload failed");
       } finally {
         setBusy(false);
       }
     },
-    [getDownloadUrl, onChange, purpose, uploadUrl],
+    [getDownloadUrl, onChange, onUploaded, purpose, uploadUrl],
   );
 
   React.useEffect(() => {

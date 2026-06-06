@@ -3,13 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Tabs, EmptyState, Skeleton, Icon, Badge, Button } from "@/components/ui";
+import { Tabs, EmptyState, Skeleton, Icon, Badge, Button, Input } from "@/components/ui";
 import { humanizeApiError } from "@/lib/api/errors";
 import {
   publicLanguageCampProjectsListActive,
   type LanguageCampProjectPublicListItemDto,
   type PageDtoLanguageCampProjectPublicListItemDto,
 } from "@/lib/api/generated/index";
+import { useMyAppliedLanguageCampProjectIds } from "@/lib/applications/useMyAppliedLanguageCampProjectIds";
 
 type TabKey = "individual" | "corporate";
 
@@ -71,7 +72,13 @@ function CardImage({ src, alt }: { src?: string; alt: string }) {
   );
 }
 
-function ProjectCard({ p }: { p: LanguageCampProjectPublicListItemDto }) {
+function ProjectCard({
+  p,
+  alreadyApplied,
+}: {
+  p: LanguageCampProjectPublicListItemDto;
+  alreadyApplied?: boolean;
+}) {
   const price = formatMoney(p.price, p.currency);
   const original = formatMoney(p.originalPrice, p.currency);
 
@@ -80,6 +87,11 @@ function ProjectCard({ p }: { p: LanguageCampProjectPublicListItemDto }) {
       <Link href={`/apply/${encodeURIComponent(p.id ?? "")}`} className="block p-3">
         <CardImage src={p.smallBanner} alt={p.title ?? "Program"} />
         <div className="mt-3 space-y-2 px-1 pb-1">
+          {alreadyApplied ? (
+            <div className="rounded-[var(--radius-lg)] border border-[var(--accent-200)] bg-[var(--accent-50)] px-2.5 py-1.5 text-xs font-medium text-[var(--accent-800)]">
+              Daha önce bu programa başvuru yapıldı
+            </div>
+          ) : null}
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <div className="truncate text-sm font-semibold tracking-tight text-[var(--text-primary)]">
@@ -131,11 +143,16 @@ function ProjectCard({ p }: { p: LanguageCampProjectPublicListItemDto }) {
 
 export function ApplyProjectsClient() {
   const router = useRouter();
+  const { appliedProjectIds } = useMyAppliedLanguageCampProjectIds();
   const sp = useSearchParams();
   const type = (sp.get("type") || "individual") as TabKey;
   const activeTab: TabKey = type === "corporate" ? "corporate" : "individual";
+  const companyCodeFromUrl = (sp.get("companyCode") || "").trim();
+  const isCorporate = activeTab === "corporate";
+  const corporateReady = !isCorporate || companyCodeFromUrl.length > 0;
 
-  const [loading, setLoading] = React.useState(true);
+  const [companyCodeInput, setCompanyCodeInput] = React.useState(companyCodeFromUrl);
+  const [loading, setLoading] = React.useState(corporateReady);
   const [error, setError] = React.useState<string | null>(null);
   const [page, setPage] = React.useState(0);
   const [data, setData] = React.useState<PageDtoLanguageCampProjectPublicListItemDto | null>(null);
@@ -143,8 +160,20 @@ export function ApplyProjectsClient() {
   const items = data?.items ?? [];
   const totalPages = data?.totalPages ?? 0;
 
+  React.useEffect(() => {
+    setCompanyCodeInput(companyCodeFromUrl);
+  }, [companyCodeFromUrl]);
+
   const load = React.useCallback(
     async (nextPage: number, mode: "replace" | "append") => {
+      if (!corporateReady) {
+        setLoading(false);
+        setError(null);
+        setData(null);
+        setPage(0);
+        return;
+      }
+
       setLoading(true);
       setError(null);
       try {
@@ -152,6 +181,7 @@ export function ApplyProjectsClient() {
           page: nextPage,
           size: 24,
           individual: tabToIndividual(activeTab),
+          companyCode: isCorporate ? companyCodeFromUrl : undefined,
         });
         const payload = res.data ?? {};
         setData((prev) => {
@@ -168,13 +198,33 @@ export function ApplyProjectsClient() {
         setLoading(false);
       }
     },
-    [activeTab, data],
+    [activeTab, companyCodeFromUrl, corporateReady, data, isCorporate],
   );
 
   React.useEffect(() => {
     void load(0, "replace");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]);
+  }, [activeTab, companyCodeFromUrl]);
+
+  const submitCompanyCode = React.useCallback(
+    (e?: React.FormEvent) => {
+      e?.preventDefault();
+      const code = companyCodeInput.trim();
+      if (!code) return;
+      const next = new URLSearchParams(sp.toString());
+      next.set("type", "corporate");
+      next.set("companyCode", code);
+      router.push(`/apply?${next.toString()}`);
+    },
+    [companyCodeInput, router, sp],
+  );
+
+  const clearCompanyCode = React.useCallback(() => {
+    const next = new URLSearchParams(sp.toString());
+    next.set("type", "corporate");
+    next.delete("companyCode");
+    router.push(`/apply?${next.toString()}`);
+  }, [router, sp]);
 
   const tabs = React.useMemo(
     () => [
@@ -211,6 +261,9 @@ export function ApplyProjectsClient() {
             onChange={(v) => {
               const next = new URLSearchParams(sp.toString());
               next.set("type", v);
+              if (v !== "corporate") {
+                next.delete("companyCode");
+              }
               router.push(`/apply?${next.toString()}`);
             }}
             variant="pill"
@@ -220,6 +273,45 @@ export function ApplyProjectsClient() {
       </div>
 
       <div className="mt-6">
+        {isCorporate && !corporateReady ? (
+          <div className="rounded-[var(--radius-2xl)] border border-[var(--border-default)] bg-[var(--surface-0)] p-7 shadow-[var(--shadow-xs)]">
+            <div className="mx-auto max-w-md">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--text-tertiary)]">
+                Kurumsal erişim
+              </div>
+              <h2 className="mt-1 text-lg font-semibold tracking-tight text-[var(--text-primary)]">
+                Şirket kodunuzu girin
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-[var(--text-tertiary)]">
+                Kurumsal organizasyonları görmek için okul veya kurumunuzun size verdiği şirket kodunu girin.
+              </p>
+              <form className="mt-5 space-y-4" onSubmit={submitCompanyCode}>
+                <Input
+                  label="Şirket kodu"
+                  value={companyCodeInput}
+                  onChange={(e) => setCompanyCodeInput(e.target.value)}
+                  placeholder="Örn. OKUL2026"
+                  autoComplete="off"
+                />
+                <Button type="submit" disabled={!companyCodeInput.trim()} leftIcon={<Icon name="chevron-right" size={16} />}>
+                  Organizasyonları göster
+                </Button>
+              </form>
+            </div>
+          </div>
+        ) : null}
+
+        {corporateReady && isCorporate ? (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-1)] px-4 py-3">
+            <div className="text-sm text-[var(--text-secondary)]">
+              Şirket kodu: <span className="font-semibold text-[var(--text-primary)]">{companyCodeFromUrl}</span>
+            </div>
+            <Button variant="secondary" size="sm" onClick={clearCompanyCode}>
+              Kodu değiştir
+            </Button>
+          </div>
+        ) : null}
+
         {error ? (
           <EmptyState
             icon={<Icon name="warning" size={18} />}
@@ -233,7 +325,7 @@ export function ApplyProjectsClient() {
           />
         ) : null}
 
-        {!error && loading && items.length === 0 ? (
+        {!error && loading && items.length === 0 && corporateReady ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
@@ -251,11 +343,15 @@ export function ApplyProjectsClient() {
           </div>
         ) : null}
 
-        {!error && !loading && items.length === 0 ? (
+        {!error && !loading && items.length === 0 && corporateReady ? (
           <EmptyState
             icon={<Icon name="globe" size={18} />}
-            title="Aktif proje bulunamadı"
-            description="Yeni projeler eklendiğinde burada görünecek."
+            title={isCorporate ? "Bu şirket için organizasyon bulunamadı" : "Aktif proje bulunamadı"}
+            description={
+              isCorporate
+                ? "Girdiğiniz şirket koduna bağlı aktif bir kurumsal organizasyon bulunamadı."
+                : "Başvuruya açık bireysel proje bulunamadı. Yeni projeler eklendiğinde burada görünecek."
+            }
           />
         ) : null}
 
@@ -263,7 +359,11 @@ export function ApplyProjectsClient() {
           <>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {items.map((p) => (
-                <ProjectCard key={p.id ?? crypto.randomUUID()} p={p} />
+                <ProjectCard
+                  key={p.id ?? crypto.randomUUID()}
+                  p={p}
+                  alreadyApplied={p.id ? appliedProjectIds.has(p.id) : false}
+                />
               ))}
             </div>
 

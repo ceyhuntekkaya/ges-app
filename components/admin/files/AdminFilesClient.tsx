@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Badge, Button, Icon, IconButton, PageHeader, Select, Table, useToast } from "@/components/ui";
+import { formatTrDateTime } from "@/lib/dates/formatTr";
 
 type StoredFilePurpose =
   | "OTHER"
@@ -235,7 +236,7 @@ export function AdminFilesClient() {
             header: "Yüklendi",
             sortable: true,
             sortAccessor: (r) => r.createdAt ?? "",
-            cell: (r) => <span className="tabular-nums text-[var(--text-secondary)]">{r.createdAt ?? "-"}</span>,
+            cell: (r) => <span className="tabular-nums text-[var(--text-secondary)]">{formatTrDateTime(r.createdAt)}</span>,
             width: 190,
             hideOnMobile: true,
           },

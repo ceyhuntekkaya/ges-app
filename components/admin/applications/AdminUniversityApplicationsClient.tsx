@@ -8,7 +8,8 @@ import {
   type AdminUniversityApplicationsListParams,
   type UniversityApplicationListItemDto,
 } from "@/lib/api/generated/index";
-import { Badge, Button, Icon, IconButton, PageHeader, Select, Table, useToast } from "@/components/ui";
+import { Badge, Button, Icon, PageHeader, Select, Table } from "@/components/ui";
+import { formatTrDateTime } from "@/lib/dates/formatTr";
 
 type StatusFilter = AdminUniversityApplicationsListStatus;
 
@@ -17,7 +18,7 @@ function statusLabel(status?: UniversityApplicationListItemDto["status"]) {
     case "DRAFT":
       return "Taslak";
     case "SUBMITTED":
-      return "Gönderildi";
+      return "Onaylı";
     case "IN_REVIEW":
       return "İncelemede";
     case "MISSING_DOCUMENTS":
@@ -68,9 +69,40 @@ function fullName(r: Pick<UniversityApplicationListItemDto, "firstName" | "lastN
   return n || "-";
 }
 
+function formatDate(iso?: string) {
+  return formatTrDateTime(iso);
+}
+
+function numberToTrMoney(n: number): string {
+  const [intRaw, frac] = n.toFixed(2).split(".");
+  const intWithSep = intRaw.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return `${intWithSep},${frac}`;
+}
+
+function formatMoney(amount?: number) {
+  if (amount == null || !Number.isFinite(Number(amount))) return "-";
+  return numberToTrMoney(Number(amount));
+}
+
+function formatFeePaid(r: UniversityApplicationListItemDto) {
+  const fee = formatMoney(r.priceAmount);
+  const paid = formatMoney(r.totalPaidAmount);
+  const currency = r.priceCurrency ? ` ${r.priceCurrency}` : "";
+  if (fee === "-" && paid === "-") return "-";
+  return (
+    <span className="tabular-nums text-[var(--text-secondary)]">
+      {fee}
+      {currency}
+      <span className="text-[var(--text-tertiary)]"> / </span>
+      {paid}
+      {currency}
+    </span>
+  );
+}
+
 const STATUS_OPTIONS = [
   { value: "DRAFT", label: "Taslak" },
-  { value: "SUBMITTED", label: "Gönderildi" },
+  { value: "SUBMITTED", label: "Onaylı" },
   { value: "IN_REVIEW", label: "İncelemede" },
   { value: "MISSING_DOCUMENTS", label: "Eksik Evrak" },
   { value: "COMPLETED", label: "Tamamlandı" },
@@ -86,7 +118,6 @@ function clampInt(v: string | null, fallback: number) {
 export function AdminUniversityApplicationsClient() {
   const router = useRouter();
   const params = useSearchParams();
-  const toast = useToast();
 
   const page = clampInt(params.get("page"), 0);
   const size = Math.min(100, Math.max(5, clampInt(params.get("size"), 25)));
@@ -221,12 +252,23 @@ export function AdminUniversityApplicationsClient() {
             truncate: true,
           },
           {
+            key: "followerPerson",
+            header: "Takip Eden",
+            sortable: true,
+            sortAccessor: (r) => r.followerPerson ?? "",
+            cell: (r) => (
+              <span className="text-[var(--text-secondary)]">{r.followerPerson ?? "-"}</span>
+            ),
+            width: 140,
+            hideOnMobile: true,
+          },
+          {
             key: "educationLevel",
             header: "Seviye",
             sortable: true,
             sortAccessor: (r) => r.educationLevel ?? "",
             cell: (r) => <span className="text-[var(--text-primary)]">{educationLabel(r.educationLevel)}</span>,
-            width: 160,
+            width: 120,
             hideOnMobile: true,
           },
           {
@@ -239,38 +281,72 @@ export function AdminUniversityApplicationsClient() {
                 {statusLabel(r.status)}
               </Badge>
             ),
-            width: 180,
+            width: 150,
           },
           {
-            key: "updatedAt",
-            header: "Güncellendi",
+            key: "feePaid",
+            header: "Ücret / Ödenen",
             sortable: true,
-            sortAccessor: (r) => r.updatedAt ?? r.createdAt ?? "",
+            sortAccessor: (r) => r.priceAmount ?? 0,
+            cell: (r) => formatFeePaid(r),
+            width: 170,
+            hideOnMobile: true,
+          },
+          {
+            key: "tasks",
+            header: "Görevler",
+            sortable: true,
+            sortAccessor: (r) => (r.pendingTaskCount ?? 0) + (r.completedTaskCount ?? 0),
+            cell: (r) => {
+              const pendingDates = r.pendingTaskScheduledAts ?? [];
+              const hasTasks = (r.pendingTaskCount ?? 0) + (r.completedTaskCount ?? 0) > 0;
+              if (!hasTasks) return <span className="text-[var(--text-tertiary)]">-</span>;
+              return (
+                <div className="flex flex-col gap-0.5 text-xs tabular-nums">
+                  <span className="text-[var(--text-secondary)]">
+                    Beklemede {r.pendingTaskCount ?? 0}
+                  </span>
+                  {pendingDates.map((d, i) => (
+                    <span key={`${d}-${i}`} className="text-[var(--text-tertiary)]">
+                      {formatDate(d)}
+                    </span>
+                  ))}
+                  <span className="text-[var(--text-secondary)]">
+                    Tamamlandı {r.completedTaskCount ?? 0}
+                  </span>
+                </div>
+              );
+            },
+            width: 160,
+            hideOnMobile: true,
+          },
+          {
+            key: "meetingCount",
+            header: "Görüşme",
+            sortable: true,
+            sortAccessor: (r) => r.meetingCount ?? 0,
+            cell: (r) => (
+              <span className="tabular-nums text-[var(--text-secondary)]">{r.meetingCount ?? 0}</span>
+            ),
+            width: 90,
+            hideOnMobile: true,
+          },
+          {
+            key: "documentCount",
+            header: "Doküman",
+            sortable: true,
+            sortAccessor: (r) => r.documentCount ?? 0,
             cell: (r) => (
               <span className="tabular-nums text-[var(--text-secondary)]">
-                {r.updatedAt ?? r.createdAt ?? "-"}
+                {r.documentCount ?? 0}
+                <span className="text-[var(--text-tertiary)]"> / </span>
+                {r.documentsWithFileCount ?? 0}
               </span>
             ),
-            width: 190,
+            width: 100,
             hideOnMobile: true,
           },
         ]}
-        rowActions={(r) => (
-          <div className="flex items-center gap-1">
-            <IconButton
-              aria-label="ID kopyala"
-              variant="ghost"
-              size="sm"
-              icon={<Icon name="copy" size={14} />}
-              onClick={async () => {
-                const id = r.id;
-                if (!id) return;
-                await navigator.clipboard.writeText(id).catch(() => null);
-                toast.success({ title: "Kopyalandı", description: id });
-              }}
-            />
-          </div>
-        )}
         pagination={{
           page,
           pageSize: size,

@@ -9,10 +9,25 @@ export interface UniversityApplicationStringListItemUpsertRequestDto {
   value: string;
 }
 
+export type PortfolioSectionDtoEducationLevel = typeof PortfolioSectionDtoEducationLevel[keyof typeof PortfolioSectionDtoEducationLevel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PortfolioSectionDtoEducationLevel = {
+  BACHELOR: 'BACHELOR',
+  MASTER: 'MASTER',
+  PHD: 'PHD',
+} as const;
+
 export interface PortfolioSectionDto {
   id?: string;
   name?: string;
   description?: string;
+  educationLevel?: PortfolioSectionDtoEducationLevel;
+  departmentKeyword?: string;
+  sortOrder?: number;
+  defaultRequired?: boolean;
+  active?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -150,6 +165,7 @@ export const UniversityApplicationPortfolioFileDtoType = {
   VIDEO: 'VIDEO',
   AUDIO: 'AUDIO',
   PDF: 'PDF',
+  LINK: 'LINK',
   OTHER: 'OTHER',
 } as const;
 
@@ -394,6 +410,248 @@ export interface LanguageCampProjectDetailDto {
   updatedAt?: string;
 }
 
+export interface PortalHomePageContentUpdateRequestDto {
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
+  badgeText: string;
+  /**
+   * @minLength 0
+   * @maxLength 512
+   */
+  heroTitle: string;
+  /** @minLength 1 */
+  heroDescription: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  heroPrimaryCtaText: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  heroSecondaryCtaText: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  feature1Title: string;
+  /** @minLength 1 */
+  feature1Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  feature2Title: string;
+  /** @minLength 1 */
+  feature2Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  feature3Title: string;
+  /** @minLength 1 */
+  feature3Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  heroImageUrl?: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  sidebarImage1Url?: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  sidebarImage2Url?: string;
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
+  sidebarCardTitle: string;
+  /** @minLength 1 */
+  sidebarCardDescription: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  sidebarCardPrimaryCtaText: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  sidebarCardSecondaryCtaText: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  aboutSectionLabel: string;
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
+  aboutSectionTitle: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  aboutSectionCtaText: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  aboutFeature1Title: string;
+  /** @minLength 1 */
+  aboutFeature1Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  aboutFeature2Title: string;
+  /** @minLength 1 */
+  aboutFeature2Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  aboutFeature3Title: string;
+  /** @minLength 1 */
+  aboutFeature3Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
+  processSectionTitle: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  processStep1Title: string;
+  /** @minLength 1 */
+  processStep1Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  processStep2Title: string;
+  /** @minLength 1 */
+  processStep2Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  processStep3Title: string;
+  /** @minLength 1 */
+  processStep3Description: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  processImageUrl?: string;
+  processImageCaption?: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  gallerySectionLabel: string;
+  /**
+   * @minLength 0
+   * @maxLength 255
+   */
+  gallerySectionTitle: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  gallerySectionCtaText: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  galleryImage1Url?: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  galleryImage2Url?: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  galleryImage3Url?: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  galleryImage4Url?: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  galleryImage5Url?: string;
+  /**
+   * @minLength 0
+   * @maxLength 1024
+   */
+  galleryImage6Url?: string;
+}
+
+export interface PortalHomePageContentDto {
+  id?: string;
+  badgeText?: string;
+  heroTitle?: string;
+  heroDescription?: string;
+  heroPrimaryCtaText?: string;
+  heroSecondaryCtaText?: string;
+  feature1Title?: string;
+  feature1Description?: string;
+  feature2Title?: string;
+  feature2Description?: string;
+  feature3Title?: string;
+  feature3Description?: string;
+  heroImageUrl?: string;
+  sidebarImage1Url?: string;
+  sidebarImage2Url?: string;
+  sidebarCardTitle?: string;
+  sidebarCardDescription?: string;
+  sidebarCardPrimaryCtaText?: string;
+  sidebarCardSecondaryCtaText?: string;
+  aboutSectionLabel?: string;
+  aboutSectionTitle?: string;
+  aboutSectionCtaText?: string;
+  aboutFeature1Title?: string;
+  aboutFeature1Description?: string;
+  aboutFeature2Title?: string;
+  aboutFeature2Description?: string;
+  aboutFeature3Title?: string;
+  aboutFeature3Description?: string;
+  processSectionTitle?: string;
+  processStep1Title?: string;
+  processStep1Description?: string;
+  processStep2Title?: string;
+  processStep2Description?: string;
+  processStep3Title?: string;
+  processStep3Description?: string;
+  processImageUrl?: string;
+  processImageCaption?: string;
+  gallerySectionLabel?: string;
+  gallerySectionTitle?: string;
+  gallerySectionCtaText?: string;
+  galleryImage1Url?: string;
+  galleryImage2Url?: string;
+  galleryImage3Url?: string;
+  galleryImage4Url?: string;
+  galleryImage5Url?: string;
+  galleryImage6Url?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export type DocumentRequirementUpsertRequestDtoScope = typeof DocumentRequirementUpsertRequestDtoScope[keyof typeof DocumentRequirementUpsertRequestDtoScope];
 
 
@@ -528,6 +786,27 @@ export interface UniversityDto {
   name?: string;
   active?: boolean;
   country?: CountryDto;
+}
+
+export type PortfolioSectionUpsertRequestDtoEducationLevel = typeof PortfolioSectionUpsertRequestDtoEducationLevel[keyof typeof PortfolioSectionUpsertRequestDtoEducationLevel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PortfolioSectionUpsertRequestDtoEducationLevel = {
+  BACHELOR: 'BACHELOR',
+  MASTER: 'MASTER',
+  PHD: 'PHD',
+} as const;
+
+export interface PortfolioSectionUpsertRequestDto {
+  /** @minLength 1 */
+  name: string;
+  description?: string;
+  educationLevel?: PortfolioSectionUpsertRequestDtoEducationLevel;
+  departmentKeyword?: string;
+  sortOrder: number;
+  defaultRequired: boolean;
+  active?: boolean;
 }
 
 export interface DepartmentUpsertRequestDto {
@@ -701,6 +980,7 @@ export const UniversityApplicationPortfolioFileUpsertRequestDtoType = {
   VIDEO: 'VIDEO',
   AUDIO: 'AUDIO',
   PDF: 'PDF',
+  LINK: 'LINK',
   OTHER: 'OTHER',
 } as const;
 
@@ -742,46 +1022,70 @@ export interface UniversityApplicationDocumentUpsertRequestDto {
   documentUrl?: string;
 }
 
-export interface LanguageCampVisaFormUpsertRequestDto {
-  participantId?: string;
-  /**
-   * @minLength 0
-   * @maxLength 128
-   */
-  birthPlace?: string;
-  /**
-   * @minLength 0
-   * @maxLength 128
-   */
-  birthCountry?: string;
-  residenceAddress?: Address;
-  visaRejectedBefore?: boolean;
-  visaRejectionDetails?: string;
-  visitedCountries?: string[];
-  bankStatementFileId?: string;
-  biometricPhotoFileId?: string;
-  /**
-   * @minLength 0
-   * @maxLength 128
-   */
-  appointmentCityPreference?: string;
+export interface LanguageCampVisaFormDocumentAttachRequestDto {
+  fileId: string;
 }
+
+export interface LanguageCampVisaFormDocumentDto {
+  id?: string;
+  file?: StoredFileDto;
+}
+
+export type LanguageCampVisaFormDtoPassportType = typeof LanguageCampVisaFormDtoPassportType[keyof typeof LanguageCampVisaFormDtoPassportType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampVisaFormDtoPassportType = {
+  ORDINARY: 'ORDINARY',
+  GREEN: 'GREEN',
+  GRAY: 'GRAY',
+  BLACK: 'BLACK',
+  SPECIAL: 'SPECIAL',
+  DIPLOMATIC: 'DIPLOMATIC',
+  SERVICE: 'SERVICE',
+} as const;
 
 export interface LanguageCampVisaFormDto {
   id?: string;
-  participantId?: string;
   applicationId?: string;
-  birthPlace?: string;
-  birthCountry?: string;
-  residenceAddress?: Address;
-  visaRejectedBefore?: boolean;
-  visaRejectionDetails?: string;
-  visitedCountries?: string[];
-  bankStatementFileId?: string;
-  biometricPhotoFileId?: string;
-  appointmentCityPreference?: string;
+  passportNumber?: string;
+  passportValidUntil?: string;
+  passportType?: LanguageCampVisaFormDtoPassportType;
+  visaValidFrom?: string;
+  visaValidUntil?: string;
+  visaIssuingCountry?: string;
+  visaType?: string;
+  documents?: LanguageCampVisaFormDocumentDto[];
   createdAt?: string;
   updatedAt?: string;
+}
+
+export type StoredFileDtoPurpose = typeof StoredFileDtoPurpose[keyof typeof StoredFileDtoPurpose];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StoredFileDtoPurpose = {
+  HOME_PAGE_MEDIA: 'HOME_PAGE_MEDIA',
+  PROJECT_MEDIA: 'PROJECT_MEDIA',
+  LANGUAGE_CAMP_GUARDIAN_CONSENT: 'LANGUAGE_CAMP_GUARDIAN_CONSENT',
+  VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
+  VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
+  LANGUAGE_CAMP_VISA_DOCUMENT: 'LANGUAGE_CAMP_VISA_DOCUMENT',
+  UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
+  UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
+  UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
+  OTHER: 'OTHER',
+} as const;
+
+export interface StoredFileDto {
+  id?: string;
+  purpose?: StoredFileDtoPurpose;
+  originalFilename?: string;
+  contentType?: string;
+  sizeBytes?: number;
+  sha256?: string;
+  uploadedByUserId?: string;
+  createdAt?: string;
 }
 
 export type LanguageCampApplicationCreateRequestDtoCategory = typeof LanguageCampApplicationCreateRequestDtoCategory[keyof typeof LanguageCampApplicationCreateRequestDtoCategory];
@@ -864,6 +1168,10 @@ export interface LanguageCampApplicationDetailDto {
   visaFollowByGes?: boolean;
   emergencyContact?: EmergencyContact;
   paymentPreference?: LanguageCampApplicationDetailDtoPaymentPreference;
+  paymentCompleted?: boolean;
+  payments?: LanguageCampApplicationPaymentDto[];
+  priceAmount?: number;
+  priceCurrency?: string;
   kvkkAcceptedAt?: string;
   companyId?: string;
   company?: CompanyDto;
@@ -879,34 +1187,147 @@ export interface LanguageCampApplicationDetailDto {
   parentEmailAddress?: string;
   parentRelationship?: string;
   userNotes?: string;
+  followerPerson?: string;
+  notes?: string;
+  applicationNotes?: LanguageCampApplicationNoteDto[];
+  meetings?: LanguageCampApplicationMeetingDto[];
+  tasks?: LanguageCampApplicationTaskDto[];
+  documents?: LanguageCampApplicationDocumentDto[];
+  visaForm?: LanguageCampVisaFormDto;
+  applicantUserId?: string;
+  applicantEmail?: string;
+  applicantDisplayName?: string;
+  participantIndex?: number;
+  participantCount?: number;
+  groupParticipants?: LanguageCampApplicationGroupParticipantSummaryDto[];
   createdAt?: string;
   updatedAt?: string;
 }
 
-export type StoredFileDtoPurpose = typeof StoredFileDtoPurpose[keyof typeof StoredFileDtoPurpose];
+export interface LanguageCampApplicationDocumentDto {
+  id?: string;
+  required?: boolean;
+  documentName?: string;
+  documentDescription?: string;
+  documentUrl?: string;
+  uploadedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type LanguageCampApplicationGroupParticipantSummaryDtoStatus = typeof LanguageCampApplicationGroupParticipantSummaryDtoStatus[keyof typeof LanguageCampApplicationGroupParticipantSummaryDtoStatus];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const StoredFileDtoPurpose = {
-  PROJECT_MEDIA: 'PROJECT_MEDIA',
-  LANGUAGE_CAMP_GUARDIAN_CONSENT: 'LANGUAGE_CAMP_GUARDIAN_CONSENT',
-  VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
-  VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
-  UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
-  UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
-  UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
-  OTHER: 'OTHER',
+export const LanguageCampApplicationGroupParticipantSummaryDtoStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  IN_REVIEW: 'IN_REVIEW',
+  MISSING_DOCUMENTS: 'MISSING_DOCUMENTS',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
 } as const;
 
-export interface StoredFileDto {
+export interface LanguageCampApplicationGroupParticipantSummaryDto {
   id?: string;
-  purpose?: StoredFileDtoPurpose;
-  originalFilename?: string;
-  contentType?: string;
-  sizeBytes?: number;
-  sha256?: string;
-  uploadedByUserId?: string;
+  firstName?: string;
+  lastName?: string;
+  status?: LanguageCampApplicationGroupParticipantSummaryDtoStatus;
+  isItSelf?: boolean;
+  participantIndex?: number;
+  paymentCompleted?: boolean;
+  priceAmount?: number;
+  priceCurrency?: string;
+  totalPaidAmount?: number;
   createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface LanguageCampApplicationMeetingDto {
+  id?: string;
+  person?: string;
+  meetingAt?: string;
+  meetingNote?: string;
+  meetingResult?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface LanguageCampApplicationNoteDto {
+  id?: string;
+  writtenBy?: string;
+  writtenAt?: string;
+  todoText?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface LanguageCampApplicationPaymentDto {
+  id?: string;
+  paymentAt?: string;
+  amount?: number;
+  currency?: string;
+  receivedBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type LanguageCampApplicationTaskDtoStatus = typeof LanguageCampApplicationTaskDtoStatus[keyof typeof LanguageCampApplicationTaskDtoStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampApplicationTaskDtoStatus = {
+  PENDING: 'PENDING',
+  DONE: 'DONE',
+} as const;
+
+export interface LanguageCampApplicationTaskDto {
+  id?: string;
+  scheduledAt?: string;
+  withWhom?: string;
+  whatToDo?: string;
+  status?: LanguageCampApplicationTaskDtoStatus;
+  performedByUser?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export type LanguageCampParticipantCreateRequestDtoAccommodationType = typeof LanguageCampParticipantCreateRequestDtoAccommodationType[keyof typeof LanguageCampParticipantCreateRequestDtoAccommodationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampParticipantCreateRequestDtoAccommodationType = {
+  HOST_FAMILY: 'HOST_FAMILY',
+  DORMITORY: 'DORMITORY',
+  PRIVATE: 'PRIVATE',
+} as const;
+
+export type LanguageCampParticipantCreateRequestDtoPaymentPreference = typeof LanguageCampParticipantCreateRequestDtoPaymentPreference[keyof typeof LanguageCampParticipantCreateRequestDtoPaymentPreference];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampParticipantCreateRequestDtoPaymentPreference = {
+  ONE_TIME: 'ONE_TIME',
+  INSTALLMENT: 'INSTALLMENT',
+} as const;
+
+export interface LanguageCampParticipantCreateRequestDto {
+  firstName?: string;
+  lastName?: string;
+  birthDate?: string;
+  phone?: string;
+  isItSelf?: boolean;
+  under18?: boolean;
+  parentFullName?: string;
+  parentPhoneNumber?: string;
+  parentEmailAddress?: string;
+  parentRelationship?: string;
+  userNotes?: string;
+  accommodationType?: LanguageCampParticipantCreateRequestDtoAccommodationType;
+  visaNeeded?: boolean;
+  visaFollowByGes?: boolean;
+  paymentPreference?: LanguageCampParticipantCreateRequestDtoPaymentPreference;
+  emergencyContact?: EmergencyContact;
 }
 
 export interface ConsentAcceptanceRequestDto {
@@ -1208,9 +1629,92 @@ export interface LanguageCampProjectCreateRequestDto {
   individual?: boolean;
 }
 
+export type LanguageCampApplicationTaskUpsertRequestDtoStatus = typeof LanguageCampApplicationTaskUpsertRequestDtoStatus[keyof typeof LanguageCampApplicationTaskUpsertRequestDtoStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampApplicationTaskUpsertRequestDtoStatus = {
+  PENDING: 'PENDING',
+  DONE: 'DONE',
+} as const;
+
+export interface LanguageCampApplicationTaskUpsertRequestDto {
+  scheduledAt: string;
+  /** @minLength 1 */
+  withWhom: string;
+  /** @minLength 1 */
+  whatToDo: string;
+  status?: LanguageCampApplicationTaskUpsertRequestDtoStatus;
+}
+
+export interface LanguageCampApplicationPaymentUpsertRequestDto {
+  paymentAt: string;
+  amount: number;
+  /** @minLength 1 */
+  currency: string;
+  receivedBy?: string;
+}
+
+export interface LanguageCampApplicationNoteCreateRequestDto {
+  /** @minLength 1 */
+  todoText: string;
+}
+
+export interface LanguageCampApplicationMeetingUpsertRequestDto {
+  /** @minLength 1 */
+  person: string;
+  meetingAt: string;
+  meetingNote?: string;
+  meetingResult?: string;
+}
+
+export interface LanguageCampApplicationDocumentUpsertRequestDto {
+  required?: boolean;
+  /** @minLength 1 */
+  documentName: string;
+  documentDescription?: string;
+  documentUrl?: string;
+}
+
 export interface UniversityApplicationNoteUpdateRequestDto {
   /** @minLength 1 */
   todoText: string;
+}
+
+export type LanguageCampVisaFormUpsertRequestDtoPassportType = typeof LanguageCampVisaFormUpsertRequestDtoPassportType[keyof typeof LanguageCampVisaFormUpsertRequestDtoPassportType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampVisaFormUpsertRequestDtoPassportType = {
+  ORDINARY: 'ORDINARY',
+  GREEN: 'GREEN',
+  GRAY: 'GRAY',
+  BLACK: 'BLACK',
+  SPECIAL: 'SPECIAL',
+  DIPLOMATIC: 'DIPLOMATIC',
+  SERVICE: 'SERVICE',
+} as const;
+
+export interface LanguageCampVisaFormUpsertRequestDto {
+  /**
+   * @minLength 0
+   * @maxLength 64
+   */
+  passportNumber?: string;
+  passportValidUntil?: string;
+  passportType?: LanguageCampVisaFormUpsertRequestDtoPassportType;
+  visaValidFrom?: string;
+  visaValidUntil?: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  visaIssuingCountry?: string;
+  /**
+   * @minLength 0
+   * @maxLength 128
+   */
+  visaType?: string;
 }
 
 export type LanguageCampApplicationUpdateRequestDtoCategory = typeof LanguageCampApplicationUpdateRequestDtoCategory[keyof typeof LanguageCampApplicationUpdateRequestDtoCategory];
@@ -1280,6 +1784,58 @@ export const ApplicationStatusChangeRequestDtoStatus = {
 
 export interface ApplicationStatusChangeRequestDto {
   status: ApplicationStatusChangeRequestDtoStatus;
+}
+
+export type LanguageCampApplicationAdminUpdateRequestDtoAccommodationType = typeof LanguageCampApplicationAdminUpdateRequestDtoAccommodationType[keyof typeof LanguageCampApplicationAdminUpdateRequestDtoAccommodationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampApplicationAdminUpdateRequestDtoAccommodationType = {
+  HOST_FAMILY: 'HOST_FAMILY',
+  DORMITORY: 'DORMITORY',
+  PRIVATE: 'PRIVATE',
+} as const;
+
+export type LanguageCampApplicationAdminUpdateRequestDtoPaymentPreference = typeof LanguageCampApplicationAdminUpdateRequestDtoPaymentPreference[keyof typeof LanguageCampApplicationAdminUpdateRequestDtoPaymentPreference];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampApplicationAdminUpdateRequestDtoPaymentPreference = {
+  ONE_TIME: 'ONE_TIME',
+  INSTALLMENT: 'INSTALLMENT',
+} as const;
+
+export interface LanguageCampApplicationAdminUpdateRequestDto {
+  firstName?: string;
+  lastName?: string;
+  birthDate?: string;
+  phone?: string;
+  isItSelf?: boolean;
+  numberOfApplicant?: number;
+  accommodationType?: LanguageCampApplicationAdminUpdateRequestDtoAccommodationType;
+  visaNeeded?: boolean;
+  visaFollowByGes?: boolean;
+  emergencyContact?: EmergencyContact;
+  paymentPreference?: LanguageCampApplicationAdminUpdateRequestDtoPaymentPreference;
+  under18?: boolean;
+  parentFullName?: string;
+  parentPhoneNumber?: string;
+  parentEmailAddress?: string;
+  parentRelationship?: string;
+  userNotes?: string;
+  followerPerson?: string;
+  notes?: string;
+  priceAmount?: number;
+  priceCurrency?: string;
+}
+
+export interface LanguageCampPaymentCompletedRequestDto {
+  paymentCompleted: boolean;
+}
+
+export interface LanguageCampApplicationNoteUpdateRequestDto {
+  /** @minLength 1 */
+  todoText: string;
 }
 
 export type ApplicationDocumentReviewRequestDtoStatus = typeof ApplicationDocumentReviewRequestDtoStatus[keyof typeof ApplicationDocumentReviewRequestDtoStatus];
@@ -1369,6 +1925,16 @@ export interface UniversityApplicationListItemDto {
   lastName?: string;
   status?: UniversityApplicationListItemDtoStatus;
   educationLevel?: UniversityApplicationListItemDtoEducationLevel;
+  followerPerson?: string;
+  priceAmount?: number;
+  priceCurrency?: string;
+  totalPaidAmount?: number;
+  pendingTaskCount?: number;
+  completedTaskCount?: number;
+  pendingTaskScheduledAts?: string[];
+  meetingCount?: number;
+  documentCount?: number;
+  documentsWithFileCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -1408,10 +1974,22 @@ export interface LanguageCampApplicationListItemDto {
   id?: string;
   firstName?: string;
   lastName?: string;
+  isItSelf?: boolean;
   status?: LanguageCampApplicationListItemDtoStatus;
   category?: LanguageCampApplicationListItemDtoCategory;
   languageCampProjectId?: string;
   languageCampProjectTitle?: string;
+  paymentCompleted?: boolean;
+  followerPerson?: string;
+  priceAmount?: number;
+  priceCurrency?: string;
+  totalPaidAmount?: number;
+  pendingTaskCount?: number;
+  completedTaskCount?: number;
+  pendingTaskScheduledAts?: string[];
+  meetingCount?: number;
+  documentCount?: number;
+  documentsWithFileCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -1422,6 +2000,12 @@ export interface PageDtoLanguageCampApplicationListItemDto {
   size?: number;
   totalItems?: number;
   totalPages?: number;
+}
+
+export interface LanguageCampApplicationGroupDto {
+  projectId?: string;
+  project?: LanguageCampProjectDetailDto;
+  participants?: LanguageCampApplicationDetailDto[];
 }
 
 export interface PageDtoDocumentRequirementDto {
@@ -1527,6 +2111,7 @@ export const MeDtoStatus = {
 export interface MeDto {
   id?: string;
   email?: string;
+  displayName?: string;
   role?: MeDtoRole;
   status?: MeDtoStatus;
 }
@@ -1666,12 +2251,46 @@ export interface LanguageCampProjectListItemDto {
   individual?: boolean;
   projectStatus?: LanguageCampProjectListItemDtoProjectStatus;
   projectType?: LanguageCampProjectListItemDtoProjectType;
+  quota?: number;
+  applicationCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }
 
 export interface PageDtoLanguageCampProjectListItemDto {
   items?: LanguageCampProjectListItemDto[];
+  page?: number;
+  size?: number;
+  totalItems?: number;
+  totalPages?: number;
+}
+
+export type LanguageCampApplicationGroupListItemDtoCategory = typeof LanguageCampApplicationGroupListItemDtoCategory[keyof typeof LanguageCampApplicationGroupListItemDtoCategory];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LanguageCampApplicationGroupListItemDtoCategory = {
+  INDIVIDUAL: 'INDIVIDUAL',
+  CORPORATE: 'CORPORATE',
+  FAMILY: 'FAMILY',
+} as const;
+
+export interface LanguageCampApplicationGroupListItemDto {
+  applicantUserId?: string;
+  applicantEmail?: string;
+  applicantDisplayName?: string;
+  languageCampProjectId?: string;
+  languageCampProjectTitle?: string;
+  category?: LanguageCampApplicationGroupListItemDtoCategory;
+  participantCount?: number;
+  primaryApplicationId?: string;
+  participants?: LanguageCampApplicationListItemDto[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PageDtoLanguageCampApplicationGroupListItemDto {
+  items?: LanguageCampApplicationGroupListItemDto[];
   page?: number;
   size?: number;
   totalItems?: number;
@@ -1686,15 +2305,21 @@ export interface PageDtoStoredFileDto {
   totalPages?: number;
 }
 
+export interface PageDtoPortfolioSectionDto {
+  items?: PortfolioSectionDto[];
+  page?: number;
+  size?: number;
+  totalItems?: number;
+  totalPages?: number;
+}
+
 export type PortalUniversityApplicationsListMineParams = {
 page?: number;
 size?: number;
 };
 
-export type PortalLanguageCampVisaFormsListByApplicationParams = {
+export type PortalLanguageCampVisaFormsEnsureParams = {
 applicationId: string;
-page?: number;
-size?: number;
 };
 
 export type PortalLanguageCampApplicationsListMineParams = {
@@ -1711,10 +2336,12 @@ export type PortalFilesUploadPurpose = typeof PortalFilesUploadPurpose[keyof typ
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PortalFilesUploadPurpose = {
+  HOME_PAGE_MEDIA: 'HOME_PAGE_MEDIA',
   PROJECT_MEDIA: 'PROJECT_MEDIA',
   LANGUAGE_CAMP_GUARDIAN_CONSENT: 'LANGUAGE_CAMP_GUARDIAN_CONSENT',
   VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
   VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
+  LANGUAGE_CAMP_VISA_DOCUMENT: 'LANGUAGE_CAMP_VISA_DOCUMENT',
   UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
   UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
   UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
@@ -1767,10 +2394,12 @@ export type AdminFilesListPurpose = typeof AdminFilesListPurpose[keyof typeof Ad
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AdminFilesListPurpose = {
+  HOME_PAGE_MEDIA: 'HOME_PAGE_MEDIA',
   PROJECT_MEDIA: 'PROJECT_MEDIA',
   LANGUAGE_CAMP_GUARDIAN_CONSENT: 'LANGUAGE_CAMP_GUARDIAN_CONSENT',
   VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
   VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
+  LANGUAGE_CAMP_VISA_DOCUMENT: 'LANGUAGE_CAMP_VISA_DOCUMENT',
   UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
   UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
   UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
@@ -1786,10 +2415,12 @@ export type AdminFilesUploadPurpose = typeof AdminFilesUploadPurpose[keyof typeo
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AdminFilesUploadPurpose = {
+  HOME_PAGE_MEDIA: 'HOME_PAGE_MEDIA',
   PROJECT_MEDIA: 'PROJECT_MEDIA',
   LANGUAGE_CAMP_GUARDIAN_CONSENT: 'LANGUAGE_CAMP_GUARDIAN_CONSENT',
   VISA_BANK_STATEMENT: 'VISA_BANK_STATEMENT',
   VISA_BIOMETRIC_PHOTO: 'VISA_BIOMETRIC_PHOTO',
+  LANGUAGE_CAMP_VISA_DOCUMENT: 'LANGUAGE_CAMP_VISA_DOCUMENT',
   UNIVERSITY_PORTFOLIO_DOCUMENT: 'UNIVERSITY_PORTFOLIO_DOCUMENT',
   UNIVERSITY_APPLICATION_DOCUMENT: 'UNIVERSITY_APPLICATION_DOCUMENT',
   UNIVERSITY_APPLICATION_PORTFOLIO: 'UNIVERSITY_APPLICATION_PORTFOLIO',
@@ -1849,6 +2480,12 @@ page?: number;
 size?: number;
 };
 
+export type AdminCatalogPortfolioSectionsListParams = {
+q?: string;
+page?: number;
+size?: number;
+};
+
 export type AdminCatalogDepartmentsListParams = {
 q?: string;
 page?: number;
@@ -1865,6 +2502,13 @@ export type PublicLanguageCampProjectsListActiveParams = {
 page?: number;
 size?: number;
 individual?: boolean;
+companyCode?: string;
+};
+
+export type PortalLanguageCampVisaFormsListByApplicationParams = {
+applicationId: string;
+page?: number;
+size?: number;
 };
 
 export type PortalDocumentRequirementsListParams = {
@@ -2036,6 +2680,8 @@ export type AdminLanguageCampApplicationsListParams = {
 page?: number;
 size?: number;
 status?: AdminLanguageCampApplicationsListStatus;
+paymentCompleted?: boolean;
+languageCampProjectId?: string;
 };
 
 export type AdminLanguageCampApplicationsListStatus = typeof AdminLanguageCampApplicationsListStatus[keyof typeof AdminLanguageCampApplicationsListStatus];
@@ -2043,6 +2689,44 @@ export type AdminLanguageCampApplicationsListStatus = typeof AdminLanguageCampAp
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AdminLanguageCampApplicationsListStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  IN_REVIEW: 'IN_REVIEW',
+  MISSING_DOCUMENTS: 'MISSING_DOCUMENTS',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export type AdminLanguageCampApplicationsByStatusParams = {
+status: AdminLanguageCampApplicationsByStatusStatus;
+};
+
+export type AdminLanguageCampApplicationsByStatusStatus = typeof AdminLanguageCampApplicationsByStatusStatus[keyof typeof AdminLanguageCampApplicationsByStatusStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const AdminLanguageCampApplicationsByStatusStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  IN_REVIEW: 'IN_REVIEW',
+  MISSING_DOCUMENTS: 'MISSING_DOCUMENTS',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
+} as const;
+
+export type AdminLanguageCampApplicationGroupsListParams = {
+page?: number;
+size?: number;
+status?: AdminLanguageCampApplicationGroupsListStatus;
+paymentCompleted?: boolean;
+languageCampProjectId?: string;
+};
+
+export type AdminLanguageCampApplicationGroupsListStatus = typeof AdminLanguageCampApplicationGroupsListStatus[keyof typeof AdminLanguageCampApplicationGroupsListStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const AdminLanguageCampApplicationGroupsListStatus = {
   DRAFT: 'DRAFT',
   SUBMITTED: 'SUBMITTED',
   IN_REVIEW: 'IN_REVIEW',
@@ -2811,6 +3495,85 @@ export const adminLanguageCampProjectsDelete = async (id: string, options?: Requ
 
 
 
+export type adminHomePageGetResponse200 = {
+  data: PortalHomePageContentDto
+  status: 200
+}
+    
+export type adminHomePageGetResponseSuccess = (adminHomePageGetResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminHomePageGetResponse = (adminHomePageGetResponseSuccess)
+
+export const getAdminHomePageGetUrl = () => {
+
+
+  
+
+  return `/v1/admin/home-page`
+}
+
+export const adminHomePageGet = async ( options?: RequestInit): Promise<adminHomePageGetResponse> => {
+  
+  const res = await fetch(getAdminHomePageGetUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminHomePageGetResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminHomePageGetResponse
+}
+
+
+
+export type adminHomePageUpdateResponse200 = {
+  data: PortalHomePageContentDto
+  status: 200
+}
+    
+export type adminHomePageUpdateResponseSuccess = (adminHomePageUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminHomePageUpdateResponse = (adminHomePageUpdateResponseSuccess)
+
+export const getAdminHomePageUpdateUrl = () => {
+
+
+  
+
+  return `/v1/admin/home-page`
+}
+
+export const adminHomePageUpdate = async (portalHomePageContentUpdateRequestDto: PortalHomePageContentUpdateRequestDto, options?: RequestInit): Promise<adminHomePageUpdateResponse> => {
+  
+  const res = await fetch(getAdminHomePageUpdateUrl(),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      portalHomePageContentUpdateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminHomePageUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminHomePageUpdateResponse
+}
+
+
+
 export type adminDocumentRequirementsGetResponse200 = {
   data: DocumentRequirementDto
   status: 200
@@ -3244,6 +4007,86 @@ export const adminCatalogUniversitiesDelete = async (id: string, options?: Reque
   
   const data: adminCatalogUniversitiesDeleteResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as adminCatalogUniversitiesDeleteResponse
+}
+
+
+
+export type adminCatalogPortfolioSectionsUpdateResponse200 = {
+  data: PortfolioSectionDto
+  status: 200
+}
+    
+export type adminCatalogPortfolioSectionsUpdateResponseSuccess = (adminCatalogPortfolioSectionsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminCatalogPortfolioSectionsUpdateResponse = (adminCatalogPortfolioSectionsUpdateResponseSuccess)
+
+export const getAdminCatalogPortfolioSectionsUpdateUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/catalog/portfolio-sections/${id}`
+}
+
+export const adminCatalogPortfolioSectionsUpdate = async (id: string,
+    portfolioSectionUpsertRequestDto: PortfolioSectionUpsertRequestDto, options?: RequestInit): Promise<adminCatalogPortfolioSectionsUpdateResponse> => {
+  
+  const res = await fetch(getAdminCatalogPortfolioSectionsUpdateUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      portfolioSectionUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminCatalogPortfolioSectionsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminCatalogPortfolioSectionsUpdateResponse
+}
+
+
+
+export type adminCatalogPortfolioSectionsDeleteResponse200 = {
+  data: void
+  status: 200
+}
+    
+export type adminCatalogPortfolioSectionsDeleteResponseSuccess = (adminCatalogPortfolioSectionsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminCatalogPortfolioSectionsDeleteResponse = (adminCatalogPortfolioSectionsDeleteResponseSuccess)
+
+export const getAdminCatalogPortfolioSectionsDeleteUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/catalog/portfolio-sections/${id}`
+}
+
+export const adminCatalogPortfolioSectionsDelete = async (id: string, options?: RequestInit): Promise<adminCatalogPortfolioSectionsDeleteResponse> => {
+  
+  const res = await fetch(getAdminCatalogPortfolioSectionsDeleteUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminCatalogPortfolioSectionsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminCatalogPortfolioSectionsDeleteResponse
 }
 
 
@@ -3985,19 +4828,60 @@ export const portalUniversityApplicationsCountryPreferencesAdd = async (id: stri
 
 
 
-export type portalLanguageCampVisaFormsListByApplicationResponse200 = {
-  data: PageDtoLanguageCampVisaFormDto
+export type portalLanguageCampVisaFormsDocumentsAddResponse200 = {
+  data: LanguageCampVisaFormDto
   status: 200
 }
     
-export type portalLanguageCampVisaFormsListByApplicationResponseSuccess = (portalLanguageCampVisaFormsListByApplicationResponse200) & {
+export type portalLanguageCampVisaFormsDocumentsAddResponseSuccess = (portalLanguageCampVisaFormsDocumentsAddResponse200) & {
   headers: Headers;
 };
 ;
 
-export type portalLanguageCampVisaFormsListByApplicationResponse = (portalLanguageCampVisaFormsListByApplicationResponseSuccess)
+export type portalLanguageCampVisaFormsDocumentsAddResponse = (portalLanguageCampVisaFormsDocumentsAddResponseSuccess)
 
-export const getPortalLanguageCampVisaFormsListByApplicationUrl = (params: PortalLanguageCampVisaFormsListByApplicationParams,) => {
+export const getPortalLanguageCampVisaFormsDocumentsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/portal/language-camp-visa-forms/${id}/documents`
+}
+
+export const portalLanguageCampVisaFormsDocumentsAdd = async (id: string,
+    languageCampVisaFormDocumentAttachRequestDto: LanguageCampVisaFormDocumentAttachRequestDto, options?: RequestInit): Promise<portalLanguageCampVisaFormsDocumentsAddResponse> => {
+  
+  const res = await fetch(getPortalLanguageCampVisaFormsDocumentsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampVisaFormDocumentAttachRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalLanguageCampVisaFormsDocumentsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalLanguageCampVisaFormsDocumentsAddResponse
+}
+
+
+
+export type portalLanguageCampVisaFormsEnsureResponse200 = {
+  data: LanguageCampVisaFormDto
+  status: 200
+}
+    
+export type portalLanguageCampVisaFormsEnsureResponseSuccess = (portalLanguageCampVisaFormsEnsureResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalLanguageCampVisaFormsEnsureResponse = (portalLanguageCampVisaFormsEnsureResponseSuccess)
+
+export const getPortalLanguageCampVisaFormsEnsureUrl = (params: PortalLanguageCampVisaFormsEnsureParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -4009,15 +4893,15 @@ export const getPortalLanguageCampVisaFormsListByApplicationUrl = (params: Porta
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/v1/portal/language-camp-visa-forms?${stringifiedParams}` : `/v1/portal/language-camp-visa-forms`
+  return stringifiedParams.length > 0 ? `/v1/portal/language-camp-visa-forms/ensure?${stringifiedParams}` : `/v1/portal/language-camp-visa-forms/ensure`
 }
 
-export const portalLanguageCampVisaFormsListByApplication = async (params: PortalLanguageCampVisaFormsListByApplicationParams, options?: RequestInit): Promise<portalLanguageCampVisaFormsListByApplicationResponse> => {
+export const portalLanguageCampVisaFormsEnsure = async (params: PortalLanguageCampVisaFormsEnsureParams, options?: RequestInit): Promise<portalLanguageCampVisaFormsEnsureResponse> => {
   
-  const res = await fetch(getPortalLanguageCampVisaFormsListByApplicationUrl(params),
+  const res = await fetch(getPortalLanguageCampVisaFormsEnsureUrl(params),
   {      
     ...options,
-    method: 'GET'
+    method: 'POST'
     
     
   }
@@ -4025,48 +4909,8 @@ export const portalLanguageCampVisaFormsListByApplication = async (params: Porta
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: portalLanguageCampVisaFormsListByApplicationResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as portalLanguageCampVisaFormsListByApplicationResponse
-}
-
-
-
-export type portalLanguageCampVisaFormsCreateResponse200 = {
-  data: LanguageCampVisaFormDto
-  status: 200
-}
-    
-export type portalLanguageCampVisaFormsCreateResponseSuccess = (portalLanguageCampVisaFormsCreateResponse200) & {
-  headers: Headers;
-};
-;
-
-export type portalLanguageCampVisaFormsCreateResponse = (portalLanguageCampVisaFormsCreateResponseSuccess)
-
-export const getPortalLanguageCampVisaFormsCreateUrl = () => {
-
-
-  
-
-  return `/v1/portal/language-camp-visa-forms`
-}
-
-export const portalLanguageCampVisaFormsCreate = async (languageCampVisaFormUpsertRequestDto: LanguageCampVisaFormUpsertRequestDto, options?: RequestInit): Promise<portalLanguageCampVisaFormsCreateResponse> => {
-  
-  const res = await fetch(getPortalLanguageCampVisaFormsCreateUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      languageCampVisaFormUpsertRequestDto,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: portalLanguageCampVisaFormsCreateResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as portalLanguageCampVisaFormsCreateResponse
+  const data: portalLanguageCampVisaFormsEnsureResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalLanguageCampVisaFormsEnsureResponse
 }
 
 
@@ -4192,6 +5036,47 @@ export const portalLanguageCampApplicationsSubmit = async (id: string, options?:
   
   const data: portalLanguageCampApplicationsSubmitResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as portalLanguageCampApplicationsSubmitResponse
+}
+
+
+
+export type portalLanguageCampApplicationGroupsAddParticipantResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type portalLanguageCampApplicationGroupsAddParticipantResponseSuccess = (portalLanguageCampApplicationGroupsAddParticipantResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalLanguageCampApplicationGroupsAddParticipantResponse = (portalLanguageCampApplicationGroupsAddParticipantResponseSuccess)
+
+export const getPortalLanguageCampApplicationGroupsAddParticipantUrl = (projectId: string,) => {
+
+
+  
+
+  return `/v1/portal/language-camp-application-groups/${projectId}/participants`
+}
+
+export const portalLanguageCampApplicationGroupsAddParticipant = async (projectId: string,
+    languageCampParticipantCreateRequestDto: LanguageCampParticipantCreateRequestDto, options?: RequestInit): Promise<portalLanguageCampApplicationGroupsAddParticipantResponse> => {
+  
+  const res = await fetch(getPortalLanguageCampApplicationGroupsAddParticipantUrl(projectId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampParticipantCreateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalLanguageCampApplicationGroupsAddParticipantResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalLanguageCampApplicationGroupsAddParticipantResponse
 }
 
 
@@ -5070,6 +5955,47 @@ export const adminUniversityApplicationsCountryPreferencesAdd = async (id: strin
 
 
 
+export type adminLanguageCampVisaFormsDocumentsAddResponse200 = {
+  data: LanguageCampVisaFormDto
+  status: 200
+}
+    
+export type adminLanguageCampVisaFormsDocumentsAddResponseSuccess = (adminLanguageCampVisaFormsDocumentsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampVisaFormsDocumentsAddResponse = (adminLanguageCampVisaFormsDocumentsAddResponseSuccess)
+
+export const getAdminLanguageCampVisaFormsDocumentsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-visa-forms/${id}/documents`
+}
+
+export const adminLanguageCampVisaFormsDocumentsAdd = async (id: string,
+    languageCampVisaFormDocumentAttachRequestDto: LanguageCampVisaFormDocumentAttachRequestDto, options?: RequestInit): Promise<adminLanguageCampVisaFormsDocumentsAddResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampVisaFormsDocumentsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampVisaFormDocumentAttachRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampVisaFormsDocumentsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampVisaFormsDocumentsAddResponse
+}
+
+
+
 export type adminLanguageCampProjectsListResponse200 = {
   data: PageDtoLanguageCampProjectListItemDto
   status: 200
@@ -5152,6 +6078,211 @@ export const adminLanguageCampProjectsCreate = async (languageCampProjectCreateR
   
   const data: adminLanguageCampProjectsCreateResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as adminLanguageCampProjectsCreateResponse
+}
+
+
+
+export type adminLanguageCampApplicationsTasksAddResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsTasksAddResponseSuccess = (adminLanguageCampApplicationsTasksAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsTasksAddResponse = (adminLanguageCampApplicationsTasksAddResponseSuccess)
+
+export const getAdminLanguageCampApplicationsTasksAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/tasks`
+}
+
+export const adminLanguageCampApplicationsTasksAdd = async (id: string,
+    languageCampApplicationTaskUpsertRequestDto: LanguageCampApplicationTaskUpsertRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsTasksAddResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsTasksAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationTaskUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsTasksAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsTasksAddResponse
+}
+
+
+
+export type adminLanguageCampApplicationsPaymentsAddResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsPaymentsAddResponseSuccess = (adminLanguageCampApplicationsPaymentsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsPaymentsAddResponse = (adminLanguageCampApplicationsPaymentsAddResponseSuccess)
+
+export const getAdminLanguageCampApplicationsPaymentsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/payments`
+}
+
+export const adminLanguageCampApplicationsPaymentsAdd = async (id: string,
+    languageCampApplicationPaymentUpsertRequestDto: LanguageCampApplicationPaymentUpsertRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsPaymentsAddResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsPaymentsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationPaymentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsPaymentsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsPaymentsAddResponse
+}
+
+
+
+export type adminLanguageCampApplicationsNotesAddResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsNotesAddResponseSuccess = (adminLanguageCampApplicationsNotesAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsNotesAddResponse = (adminLanguageCampApplicationsNotesAddResponseSuccess)
+
+export const getAdminLanguageCampApplicationsNotesAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/notes`
+}
+
+export const adminLanguageCampApplicationsNotesAdd = async (id: string,
+    languageCampApplicationNoteCreateRequestDto: LanguageCampApplicationNoteCreateRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsNotesAddResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsNotesAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationNoteCreateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsNotesAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsNotesAddResponse
+}
+
+
+
+export type adminLanguageCampApplicationsMeetingsAddResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsMeetingsAddResponseSuccess = (adminLanguageCampApplicationsMeetingsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsMeetingsAddResponse = (adminLanguageCampApplicationsMeetingsAddResponseSuccess)
+
+export const getAdminLanguageCampApplicationsMeetingsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/meetings`
+}
+
+export const adminLanguageCampApplicationsMeetingsAdd = async (id: string,
+    languageCampApplicationMeetingUpsertRequestDto: LanguageCampApplicationMeetingUpsertRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsMeetingsAddResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsMeetingsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationMeetingUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsMeetingsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsMeetingsAddResponse
+}
+
+
+
+export type adminLanguageCampApplicationsDocumentsAddResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsDocumentsAddResponseSuccess = (adminLanguageCampApplicationsDocumentsAddResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsDocumentsAddResponse = (adminLanguageCampApplicationsDocumentsAddResponseSuccess)
+
+export const getAdminLanguageCampApplicationsDocumentsAddUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/documents`
+}
+
+export const adminLanguageCampApplicationsDocumentsAdd = async (id: string,
+    languageCampApplicationDocumentUpsertRequestDto: LanguageCampApplicationDocumentUpsertRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsDocumentsAddResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsDocumentsAddUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationDocumentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsDocumentsAddResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsDocumentsAddResponse
 }
 
 
@@ -5592,6 +6723,92 @@ export const adminCatalogUniversitiesCreate = async (universityUpsertRequestDto:
   
   const data: adminCatalogUniversitiesCreateResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as adminCatalogUniversitiesCreateResponse
+}
+
+
+
+export type adminCatalogPortfolioSectionsListResponse200 = {
+  data: PageDtoPortfolioSectionDto
+  status: 200
+}
+    
+export type adminCatalogPortfolioSectionsListResponseSuccess = (adminCatalogPortfolioSectionsListResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminCatalogPortfolioSectionsListResponse = (adminCatalogPortfolioSectionsListResponseSuccess)
+
+export const getAdminCatalogPortfolioSectionsListUrl = (params?: AdminCatalogPortfolioSectionsListParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/admin/catalog/portfolio-sections?${stringifiedParams}` : `/v1/admin/catalog/portfolio-sections`
+}
+
+export const adminCatalogPortfolioSectionsList = async (params?: AdminCatalogPortfolioSectionsListParams, options?: RequestInit): Promise<adminCatalogPortfolioSectionsListResponse> => {
+  
+  const res = await fetch(getAdminCatalogPortfolioSectionsListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminCatalogPortfolioSectionsListResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminCatalogPortfolioSectionsListResponse
+}
+
+
+
+export type adminCatalogPortfolioSectionsCreateResponse200 = {
+  data: PortfolioSectionDto
+  status: 200
+}
+    
+export type adminCatalogPortfolioSectionsCreateResponseSuccess = (adminCatalogPortfolioSectionsCreateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminCatalogPortfolioSectionsCreateResponse = (adminCatalogPortfolioSectionsCreateResponseSuccess)
+
+export const getAdminCatalogPortfolioSectionsCreateUrl = () => {
+
+
+  
+
+  return `/v1/admin/catalog/portfolio-sections`
+}
+
+export const adminCatalogPortfolioSectionsCreate = async (portfolioSectionUpsertRequestDto: PortfolioSectionUpsertRequestDto, options?: RequestInit): Promise<adminCatalogPortfolioSectionsCreateResponse> => {
+  
+  const res = await fetch(getAdminCatalogPortfolioSectionsCreateUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      portfolioSectionUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminCatalogPortfolioSectionsCreateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminCatalogPortfolioSectionsCreateResponse
 }
 
 
@@ -7313,6 +8530,170 @@ export const adminUniversityApplicationsDocumentsUpdate = async (id: string,
 
 
 
+export type adminLanguageCampApplicationsGetResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsGetResponseSuccess = (adminLanguageCampApplicationsGetResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsGetResponse = (adminLanguageCampApplicationsGetResponseSuccess)
+
+export const getAdminLanguageCampApplicationsGetUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}`
+}
+
+export const adminLanguageCampApplicationsGet = async (id: string, options?: RequestInit): Promise<adminLanguageCampApplicationsGetResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsGetUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsGetResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsGetResponse
+}
+
+
+
+export type adminLanguageCampApplicationsUpdateResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsUpdateResponseSuccess = (adminLanguageCampApplicationsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsUpdateResponse = (adminLanguageCampApplicationsUpdateResponseSuccess)
+
+export const getAdminLanguageCampApplicationsUpdateUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}`
+}
+
+export const adminLanguageCampApplicationsUpdate = async (id: string,
+    languageCampApplicationAdminUpdateRequestDto: LanguageCampApplicationAdminUpdateRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsUpdateResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsUpdateUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationAdminUpdateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsUpdateResponse
+}
+
+
+
+export type adminLanguageCampApplicationsTasksDeleteResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsTasksDeleteResponseSuccess = (adminLanguageCampApplicationsTasksDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsTasksDeleteResponse = (adminLanguageCampApplicationsTasksDeleteResponseSuccess)
+
+export const getAdminLanguageCampApplicationsTasksDeleteUrl = (id: string,
+    taskId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/tasks/${taskId}`
+}
+
+export const adminLanguageCampApplicationsTasksDelete = async (id: string,
+    taskId: string, options?: RequestInit): Promise<adminLanguageCampApplicationsTasksDeleteResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsTasksDeleteUrl(id,taskId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsTasksDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsTasksDeleteResponse
+}
+
+
+
+export type adminLanguageCampApplicationsTasksUpdateResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsTasksUpdateResponseSuccess = (adminLanguageCampApplicationsTasksUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsTasksUpdateResponse = (adminLanguageCampApplicationsTasksUpdateResponseSuccess)
+
+export const getAdminLanguageCampApplicationsTasksUpdateUrl = (id: string,
+    taskId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/tasks/${taskId}`
+}
+
+export const adminLanguageCampApplicationsTasksUpdate = async (id: string,
+    taskId: string,
+    languageCampApplicationTaskUpsertRequestDto: LanguageCampApplicationTaskUpsertRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsTasksUpdateResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsTasksUpdateUrl(id,taskId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationTaskUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsTasksUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsTasksUpdateResponse
+}
+
+
+
 export type adminLanguageCampApplicationsChangeStatusResponse200 = {
   data: LanguageCampApplicationDetailDto
   status: 200
@@ -7350,6 +8731,383 @@ export const adminLanguageCampApplicationsChangeStatus = async (id: string,
   
   const data: adminLanguageCampApplicationsChangeStatusResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsChangeStatusResponse
+}
+
+
+
+export type adminLanguageCampApplicationsPaymentsDeleteResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsPaymentsDeleteResponseSuccess = (adminLanguageCampApplicationsPaymentsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsPaymentsDeleteResponse = (adminLanguageCampApplicationsPaymentsDeleteResponseSuccess)
+
+export const getAdminLanguageCampApplicationsPaymentsDeleteUrl = (id: string,
+    paymentId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/payments/${paymentId}`
+}
+
+export const adminLanguageCampApplicationsPaymentsDelete = async (id: string,
+    paymentId: string, options?: RequestInit): Promise<adminLanguageCampApplicationsPaymentsDeleteResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsPaymentsDeleteUrl(id,paymentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsPaymentsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsPaymentsDeleteResponse
+}
+
+
+
+export type adminLanguageCampApplicationsPaymentsUpdateResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsPaymentsUpdateResponseSuccess = (adminLanguageCampApplicationsPaymentsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsPaymentsUpdateResponse = (adminLanguageCampApplicationsPaymentsUpdateResponseSuccess)
+
+export const getAdminLanguageCampApplicationsPaymentsUpdateUrl = (id: string,
+    paymentId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/payments/${paymentId}`
+}
+
+export const adminLanguageCampApplicationsPaymentsUpdate = async (id: string,
+    paymentId: string,
+    languageCampApplicationPaymentUpsertRequestDto: LanguageCampApplicationPaymentUpsertRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsPaymentsUpdateResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsPaymentsUpdateUrl(id,paymentId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationPaymentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsPaymentsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsPaymentsUpdateResponse
+}
+
+
+
+export type adminLanguageCampApplicationsSetPaymentCompletedResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsSetPaymentCompletedResponseSuccess = (adminLanguageCampApplicationsSetPaymentCompletedResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsSetPaymentCompletedResponse = (adminLanguageCampApplicationsSetPaymentCompletedResponseSuccess)
+
+export const getAdminLanguageCampApplicationsSetPaymentCompletedUrl = (id: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/payment-completed`
+}
+
+export const adminLanguageCampApplicationsSetPaymentCompleted = async (id: string,
+    languageCampPaymentCompletedRequestDto: LanguageCampPaymentCompletedRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsSetPaymentCompletedResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsSetPaymentCompletedUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampPaymentCompletedRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsSetPaymentCompletedResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsSetPaymentCompletedResponse
+}
+
+
+
+export type adminLanguageCampApplicationsNotesDeleteResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsNotesDeleteResponseSuccess = (adminLanguageCampApplicationsNotesDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsNotesDeleteResponse = (adminLanguageCampApplicationsNotesDeleteResponseSuccess)
+
+export const getAdminLanguageCampApplicationsNotesDeleteUrl = (id: string,
+    noteId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/notes/${noteId}`
+}
+
+export const adminLanguageCampApplicationsNotesDelete = async (id: string,
+    noteId: string, options?: RequestInit): Promise<adminLanguageCampApplicationsNotesDeleteResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsNotesDeleteUrl(id,noteId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsNotesDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsNotesDeleteResponse
+}
+
+
+
+export type adminLanguageCampApplicationsNotesUpdateResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsNotesUpdateResponseSuccess = (adminLanguageCampApplicationsNotesUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsNotesUpdateResponse = (adminLanguageCampApplicationsNotesUpdateResponseSuccess)
+
+export const getAdminLanguageCampApplicationsNotesUpdateUrl = (id: string,
+    noteId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/notes/${noteId}`
+}
+
+export const adminLanguageCampApplicationsNotesUpdate = async (id: string,
+    noteId: string,
+    languageCampApplicationNoteUpdateRequestDto: LanguageCampApplicationNoteUpdateRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsNotesUpdateResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsNotesUpdateUrl(id,noteId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationNoteUpdateRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsNotesUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsNotesUpdateResponse
+}
+
+
+
+export type adminLanguageCampApplicationsMeetingsDeleteResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsMeetingsDeleteResponseSuccess = (adminLanguageCampApplicationsMeetingsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsMeetingsDeleteResponse = (adminLanguageCampApplicationsMeetingsDeleteResponseSuccess)
+
+export const getAdminLanguageCampApplicationsMeetingsDeleteUrl = (id: string,
+    meetingId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/meetings/${meetingId}`
+}
+
+export const adminLanguageCampApplicationsMeetingsDelete = async (id: string,
+    meetingId: string, options?: RequestInit): Promise<adminLanguageCampApplicationsMeetingsDeleteResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsMeetingsDeleteUrl(id,meetingId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsMeetingsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsMeetingsDeleteResponse
+}
+
+
+
+export type adminLanguageCampApplicationsMeetingsUpdateResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsMeetingsUpdateResponseSuccess = (adminLanguageCampApplicationsMeetingsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsMeetingsUpdateResponse = (adminLanguageCampApplicationsMeetingsUpdateResponseSuccess)
+
+export const getAdminLanguageCampApplicationsMeetingsUpdateUrl = (id: string,
+    meetingId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/meetings/${meetingId}`
+}
+
+export const adminLanguageCampApplicationsMeetingsUpdate = async (id: string,
+    meetingId: string,
+    languageCampApplicationMeetingUpsertRequestDto: LanguageCampApplicationMeetingUpsertRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsMeetingsUpdateResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsMeetingsUpdateUrl(id,meetingId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationMeetingUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsMeetingsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsMeetingsUpdateResponse
+}
+
+
+
+export type adminLanguageCampApplicationsDocumentsDeleteResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsDocumentsDeleteResponseSuccess = (adminLanguageCampApplicationsDocumentsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsDocumentsDeleteResponse = (adminLanguageCampApplicationsDocumentsDeleteResponseSuccess)
+
+export const getAdminLanguageCampApplicationsDocumentsDeleteUrl = (id: string,
+    documentId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/documents/${documentId}`
+}
+
+export const adminLanguageCampApplicationsDocumentsDelete = async (id: string,
+    documentId: string, options?: RequestInit): Promise<adminLanguageCampApplicationsDocumentsDeleteResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsDocumentsDeleteUrl(id,documentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsDocumentsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsDocumentsDeleteResponse
+}
+
+
+
+export type adminLanguageCampApplicationsDocumentsUpdateResponse200 = {
+  data: LanguageCampApplicationDetailDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsDocumentsUpdateResponseSuccess = (adminLanguageCampApplicationsDocumentsUpdateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsDocumentsUpdateResponse = (adminLanguageCampApplicationsDocumentsUpdateResponseSuccess)
+
+export const getAdminLanguageCampApplicationsDocumentsUpdateUrl = (id: string,
+    documentId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-applications/${id}/documents/${documentId}`
+}
+
+export const adminLanguageCampApplicationsDocumentsUpdate = async (id: string,
+    documentId: string,
+    languageCampApplicationDocumentUpsertRequestDto: LanguageCampApplicationDocumentUpsertRequestDto, options?: RequestInit): Promise<adminLanguageCampApplicationsDocumentsUpdateResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsDocumentsUpdateUrl(id,documentId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      languageCampApplicationDocumentUpsertRequestDto,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsDocumentsUpdateResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsDocumentsUpdateResponse
 }
 
 
@@ -7480,6 +9238,45 @@ export const publicLanguageCampProjectsGetActive = async (id: string, options?: 
 
 
 
+export type publicHomePageGetResponse200 = {
+  data: PortalHomePageContentDto
+  status: 200
+}
+    
+export type publicHomePageGetResponseSuccess = (publicHomePageGetResponse200) & {
+  headers: Headers;
+};
+;
+
+export type publicHomePageGetResponse = (publicHomePageGetResponseSuccess)
+
+export const getPublicHomePageGetUrl = () => {
+
+
+  
+
+  return `/v1/public/home-page`
+}
+
+export const publicHomePageGet = async ( options?: RequestInit): Promise<publicHomePageGetResponse> => {
+  
+  const res = await fetch(getPublicHomePageGetUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: publicHomePageGetResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as publicHomePageGetResponse
+}
+
+
+
 export type publicFilesDownloadResponse200 = {
   data: Blob
   status: 200
@@ -7515,6 +9312,132 @@ export const publicFilesDownload = async (id: string, options?: RequestInit): Pr
   
   const data: publicFilesDownloadResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as publicFilesDownloadResponse
+}
+
+
+
+export type portalUniversityApplicationsDownloadFileResponse200 = {
+  data: Blob
+  status: 200
+}
+    
+export type portalUniversityApplicationsDownloadFileResponseSuccess = (portalUniversityApplicationsDownloadFileResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalUniversityApplicationsDownloadFileResponse = (portalUniversityApplicationsDownloadFileResponseSuccess)
+
+export const getPortalUniversityApplicationsDownloadFileUrl = (id: string,
+    storedFileId: string,) => {
+
+
+  
+
+  return `/v1/portal/university-applications/${id}/files/${storedFileId}/download`
+}
+
+export const portalUniversityApplicationsDownloadFile = async (id: string,
+    storedFileId: string, options?: RequestInit): Promise<portalUniversityApplicationsDownloadFileResponse> => {
+  
+  const res = await fetch(getPortalUniversityApplicationsDownloadFileUrl(id,storedFileId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalUniversityApplicationsDownloadFileResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalUniversityApplicationsDownloadFileResponse
+}
+
+
+
+export type portalLanguageCampVisaFormsListByApplicationResponse200 = {
+  data: PageDtoLanguageCampVisaFormDto
+  status: 200
+}
+    
+export type portalLanguageCampVisaFormsListByApplicationResponseSuccess = (portalLanguageCampVisaFormsListByApplicationResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalLanguageCampVisaFormsListByApplicationResponse = (portalLanguageCampVisaFormsListByApplicationResponseSuccess)
+
+export const getPortalLanguageCampVisaFormsListByApplicationUrl = (params: PortalLanguageCampVisaFormsListByApplicationParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/portal/language-camp-visa-forms?${stringifiedParams}` : `/v1/portal/language-camp-visa-forms`
+}
+
+export const portalLanguageCampVisaFormsListByApplication = async (params: PortalLanguageCampVisaFormsListByApplicationParams, options?: RequestInit): Promise<portalLanguageCampVisaFormsListByApplicationResponse> => {
+  
+  const res = await fetch(getPortalLanguageCampVisaFormsListByApplicationUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalLanguageCampVisaFormsListByApplicationResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalLanguageCampVisaFormsListByApplicationResponse
+}
+
+
+
+export type portalLanguageCampApplicationGroupsListMineResponse200 = {
+  data: LanguageCampApplicationGroupDto[]
+  status: 200
+}
+    
+export type portalLanguageCampApplicationGroupsListMineResponseSuccess = (portalLanguageCampApplicationGroupsListMineResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalLanguageCampApplicationGroupsListMineResponse = (portalLanguageCampApplicationGroupsListMineResponseSuccess)
+
+export const getPortalLanguageCampApplicationGroupsListMineUrl = () => {
+
+
+  
+
+  return `/v1/portal/language-camp-application-groups`
+}
+
+export const portalLanguageCampApplicationGroupsListMine = async ( options?: RequestInit): Promise<portalLanguageCampApplicationGroupsListMineResponse> => {
+  
+  const res = await fetch(getPortalLanguageCampApplicationGroupsListMineUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalLanguageCampApplicationGroupsListMineResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalLanguageCampApplicationGroupsListMineResponse
 }
 
 
@@ -8521,29 +10444,29 @@ export const adminLanguageCampApplicationsList = async (params?: AdminLanguageCa
 
 
 
-export type adminLanguageCampApplicationsGetResponse200 = {
-  data: LanguageCampApplicationDetailDto
+export type adminLanguageCampApplicationsPendingTasksResponse200 = {
+  data: PendingTaskListItemDto[]
   status: 200
 }
     
-export type adminLanguageCampApplicationsGetResponseSuccess = (adminLanguageCampApplicationsGetResponse200) & {
+export type adminLanguageCampApplicationsPendingTasksResponseSuccess = (adminLanguageCampApplicationsPendingTasksResponse200) & {
   headers: Headers;
 };
 ;
 
-export type adminLanguageCampApplicationsGetResponse = (adminLanguageCampApplicationsGetResponseSuccess)
+export type adminLanguageCampApplicationsPendingTasksResponse = (adminLanguageCampApplicationsPendingTasksResponseSuccess)
 
-export const getAdminLanguageCampApplicationsGetUrl = (id: string,) => {
+export const getAdminLanguageCampApplicationsPendingTasksUrl = () => {
 
 
   
 
-  return `/v1/admin/language-camp-applications/${id}`
+  return `/v1/admin/language-camp-applications/pending-tasks`
 }
 
-export const adminLanguageCampApplicationsGet = async (id: string, options?: RequestInit): Promise<adminLanguageCampApplicationsGetResponse> => {
+export const adminLanguageCampApplicationsPendingTasks = async ( options?: RequestInit): Promise<adminLanguageCampApplicationsPendingTasksResponse> => {
   
-  const res = await fetch(getAdminLanguageCampApplicationsGetUrl(id),
+  const res = await fetch(getAdminLanguageCampApplicationsPendingTasksUrl(),
   {      
     ...options,
     method: 'GET'
@@ -8554,8 +10477,100 @@ export const adminLanguageCampApplicationsGet = async (id: string, options?: Req
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: adminLanguageCampApplicationsGetResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsGetResponse
+  const data: adminLanguageCampApplicationsPendingTasksResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsPendingTasksResponse
+}
+
+
+
+export type adminLanguageCampApplicationsByStatusResponse200 = {
+  data: UniversityApplicationByStatusListItemDto[]
+  status: 200
+}
+    
+export type adminLanguageCampApplicationsByStatusResponseSuccess = (adminLanguageCampApplicationsByStatusResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationsByStatusResponse = (adminLanguageCampApplicationsByStatusResponseSuccess)
+
+export const getAdminLanguageCampApplicationsByStatusUrl = (params: AdminLanguageCampApplicationsByStatusParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/admin/language-camp-applications/by-status?${stringifiedParams}` : `/v1/admin/language-camp-applications/by-status`
+}
+
+export const adminLanguageCampApplicationsByStatus = async (params: AdminLanguageCampApplicationsByStatusParams, options?: RequestInit): Promise<adminLanguageCampApplicationsByStatusResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationsByStatusUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationsByStatusResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationsByStatusResponse
+}
+
+
+
+export type adminLanguageCampApplicationGroupsListResponse200 = {
+  data: PageDtoLanguageCampApplicationGroupListItemDto
+  status: 200
+}
+    
+export type adminLanguageCampApplicationGroupsListResponseSuccess = (adminLanguageCampApplicationGroupsListResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampApplicationGroupsListResponse = (adminLanguageCampApplicationGroupsListResponseSuccess)
+
+export const getAdminLanguageCampApplicationGroupsListUrl = (params?: AdminLanguageCampApplicationGroupsListParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/admin/language-camp-application-groups?${stringifiedParams}` : `/v1/admin/language-camp-application-groups`
+}
+
+export const adminLanguageCampApplicationGroupsList = async (params?: AdminLanguageCampApplicationGroupsListParams, options?: RequestInit): Promise<adminLanguageCampApplicationGroupsListResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampApplicationGroupsListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampApplicationGroupsListResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampApplicationGroupsListResponse
 }
 
 
@@ -8719,4 +10734,86 @@ export const adminApplicationDocumentsDownloadFile = async (id: string, options?
   
   const data: adminApplicationDocumentsDownloadFileResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as adminApplicationDocumentsDownloadFileResponse
+}
+
+
+
+export type portalLanguageCampVisaFormsDocumentsDeleteResponse200 = {
+  data: LanguageCampVisaFormDto
+  status: 200
+}
+    
+export type portalLanguageCampVisaFormsDocumentsDeleteResponseSuccess = (portalLanguageCampVisaFormsDocumentsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type portalLanguageCampVisaFormsDocumentsDeleteResponse = (portalLanguageCampVisaFormsDocumentsDeleteResponseSuccess)
+
+export const getPortalLanguageCampVisaFormsDocumentsDeleteUrl = (id: string,
+    documentId: string,) => {
+
+
+  
+
+  return `/v1/portal/language-camp-visa-forms/${id}/documents/${documentId}`
+}
+
+export const portalLanguageCampVisaFormsDocumentsDelete = async (id: string,
+    documentId: string, options?: RequestInit): Promise<portalLanguageCampVisaFormsDocumentsDeleteResponse> => {
+  
+  const res = await fetch(getPortalLanguageCampVisaFormsDocumentsDeleteUrl(id,documentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: portalLanguageCampVisaFormsDocumentsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as portalLanguageCampVisaFormsDocumentsDeleteResponse
+}
+
+
+
+export type adminLanguageCampVisaFormsDocumentsDeleteResponse200 = {
+  data: LanguageCampVisaFormDto
+  status: 200
+}
+    
+export type adminLanguageCampVisaFormsDocumentsDeleteResponseSuccess = (adminLanguageCampVisaFormsDocumentsDeleteResponse200) & {
+  headers: Headers;
+};
+;
+
+export type adminLanguageCampVisaFormsDocumentsDeleteResponse = (adminLanguageCampVisaFormsDocumentsDeleteResponseSuccess)
+
+export const getAdminLanguageCampVisaFormsDocumentsDeleteUrl = (id: string,
+    documentId: string,) => {
+
+
+  
+
+  return `/v1/admin/language-camp-visa-forms/${id}/documents/${documentId}`
+}
+
+export const adminLanguageCampVisaFormsDocumentsDelete = async (id: string,
+    documentId: string, options?: RequestInit): Promise<adminLanguageCampVisaFormsDocumentsDeleteResponse> => {
+  
+  const res = await fetch(getAdminLanguageCampVisaFormsDocumentsDeleteUrl(id,documentId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: adminLanguageCampVisaFormsDocumentsDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as adminLanguageCampVisaFormsDocumentsDeleteResponse
 }

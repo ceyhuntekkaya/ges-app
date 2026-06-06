@@ -6,14 +6,16 @@ import { Icon, PageHeader, Tabs } from "@/components/ui";
 import { UniversitiesPanel } from "./UniversitiesPanel";
 import { DepartmentsPanel } from "./DepartmentsPanel";
 import { CountriesPanel } from "./CountriesPanel";
+import { PortfolioSectionsPanel } from "./PortfolioSectionsPanel";
 
-type CatalogTab = "universities" | "departments" | "countries";
-const VALID_TABS: CatalogTab[] = ["universities", "departments", "countries"];
+type CatalogTab = "universities" | "departments" | "countries" | "portfolio-sections";
+const VALID_TABS: CatalogTab[] = ["universities", "departments", "countries", "portfolio-sections"];
 
 const TAB_LABELS: Record<CatalogTab, string> = {
   universities: "Üniversiteler",
   departments: "Bölümler",
   countries: "Ülkeler",
+  "portfolio-sections": "Ek Materyal Şablonları",
 };
 
 export function CatalogClient() {
@@ -41,7 +43,7 @@ export function CatalogClient() {
       <PageHeader
         eyebrow="Katalog"
         title="Katalog Yönetimi"
-        description="Üniversite, bölüm ve ülke verilerini bu ekrandan yönetin. Liste içinde satıra tıklayarak hızlıca düzenleyebilirsiniz."
+        description="Üniversite, bölüm, ülke ve ek materyal şablonlarını bu ekrandan yönetin."
       />
 
       <Tabs<CatalogTab>
@@ -64,6 +66,11 @@ export function CatalogClient() {
             label: TAB_LABELS.countries,
             icon: <Icon name="globe" size={14} />,
           },
+          {
+            value: "portfolio-sections",
+            label: TAB_LABELS["portfolio-sections"],
+            icon: <Icon name="book" size={14} />,
+          },
         ]}
       />
 
@@ -71,6 +78,7 @@ export function CatalogClient() {
         {tab === "universities" ? <UniversitiesPanel /> : null}
         {tab === "departments" ? <DepartmentsPanel /> : null}
         {tab === "countries" ? <CountriesPanel /> : null}
+        {tab === "portfolio-sections" ? <PortfolioSectionsPanel /> : null}
       </div>
     </div>
   );

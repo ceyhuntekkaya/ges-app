@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { applicationsUrlForProject } from "@/lib/applications/languageCampUrls";
 import { listMyLanguageCampApplications } from "@/lib/api/portalServer";
 import { getLang, t } from "@/lib/i18n";
 import { tf } from "@/lib/i18n/dict";
-import { labelApplicationStatus, labelLanguageCampCategory, labelUpdatedAt } from "@/lib/i18n/labels";
+import { labelApplicationStatus, labelLanguageCampCategory, labelUpdatedAt, formatDateTime } from "@/lib/i18n/labels";
 
 export default async function LanguageCampApplicationsPage() {
   const lang = await getLang();
@@ -23,7 +24,7 @@ export default async function LanguageCampApplicationsPage() {
           </div>
           <div className="flex items-center gap-2">
             <Link
-              href="/applications/language-camp/new"
+              href="/apply"
               className="rounded-lg bg-zinc-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
             >
               {t("new", lang)}
@@ -52,7 +53,11 @@ export default async function LanguageCampApplicationsPage() {
             {items.map((it) => (
               <li key={it.id ?? crypto.randomUUID()} className="py-3">
                 <Link
-                  href={it.id ? `/applications/language-camp/${it.id}` : "/applications/language-camp"}
+                  href={
+                    it.languageCampProjectId && it.id
+                      ? applicationsUrlForProject(it.languageCampProjectId, it.id)
+                      : "/applications"
+                  }
                   className="flex items-center justify-between gap-3 rounded-lg px-1 py-1 hover:bg-zinc-50"
                 >
                   <div className="min-w-0">
@@ -61,7 +66,7 @@ export default async function LanguageCampApplicationsPage() {
                     </div>
                     <div className="mt-1 text-xs text-zinc-500">
                       {t("status", lang)}: {labelApplicationStatus(it.status, lang)} • {labelUpdatedAt(lang)}:{" "}
-                      {it.updatedAt ?? it.createdAt ?? "-"}
+                      {formatDateTime(lang, it.updatedAt ?? it.createdAt)}
                     </div>
                   </div>
                 </Link>

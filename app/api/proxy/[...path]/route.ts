@@ -53,7 +53,12 @@ async function forward(req: NextRequest, segments: string[]) {
   // Generated ORVAL client does JSON.parse() unconditionally for non-empty bodies.
   // Some backends may content-negotiate to HTML (or redirect to an HTML login page)
   // when Accept is missing or prefers text/html. Force JSON to avoid "<!doctype" bodies.
-  headers.set("accept", "application/json");
+  // File download/stream routes must keep the browser's Accept header so media previews work.
+  const subPath = segments.join("/");
+  const isBinaryRoute = /\/(?:download|file)$/.test(subPath);
+  if (!isBinaryRoute) {
+    headers.set("accept", "application/json");
+  }
   headers.set("x-requested-with", "XMLHttpRequest");
 
   const init: RequestInit = {

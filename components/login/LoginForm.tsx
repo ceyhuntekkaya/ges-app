@@ -69,12 +69,16 @@ export function LoginForm({
 
   return (
     <div className={className}>
-      <div className="mb-5">
-        <h2 className="text-lg font-semibold tracking-tight text-[var(--text-primary)]">{title}</h2>
-        {description ? (
-          <p className="mt-1 text-sm leading-6 text-[var(--text-tertiary)]">{description}</p>
-        ) : null}
-      </div>
+      {title || description ? (
+        <div className="mb-5">
+          {title ? (
+            <h2 className="text-lg font-semibold tracking-tight text-[var(--text-primary)]">{title}</h2>
+          ) : null}
+          {description ? (
+            <p className="mt-1 text-sm leading-6 text-[var(--text-tertiary)]">{description}</p>
+          ) : null}
+        </div>
+      ) : null}
 
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-1.5">

@@ -1,5 +1,7 @@
 import type { UniversityApplicationDetailDto } from "@/lib/api/generated/index";
 import { UniversityApplicationDocumentsClient } from "@/components/applications/UniversityApplicationDocumentsClient";
+import { FilePreview } from "@/components/ui";
+import { resolvePortalFilePreviewUrl } from "@/lib/files/previewUrl";
 import {
   DetailField,
   DetailGrid,
@@ -153,32 +155,17 @@ export function UniversityApplicationDetailView({
         </div>
       </DetailSection>
 
-      <DetailSection title={t("sectionDocuments", lang)}>
-        <DetailTable
-          lang={lang}
-          columns={["Belge", "Zorunlu", "Yüklendi", "URL"]}
-          rows={(data.documents ?? []).map((d) => [
-            d.documentName ?? "-",
-            labelYesNo(d.required, lang),
-            formatDateTime(lang, d.uploadedAt),
-            d.documentUrl ? (
-              <a href={d.documentUrl} className="text-sky-700 underline" target="_blank" rel="noreferrer">
-                {t("view", lang)}
-              </a>
-            ) : (
-              "-"
-            ),
-          ])}
-        />
-      </DetailSection>
-
       {id ? (
-        <DetailSection title={t("digitalPortfolio", lang)}>
-          <UniversityApplicationDocumentsClient applicationId={id} lang={lang} />
+        <DetailSection title={t("sectionDocuments", lang)}>
+          <UniversityApplicationDocumentsClient
+            applicationId={id}
+            lang={lang}
+            initialLegacyDocuments={data.documents}
+          />
         </DetailSection>
       ) : null}
 
-      <DetailSection title={t("sectionPortfolio", lang)}>
+      <DetailSection title={t("supplementaryMaterials", lang)}>
         <div className="grid gap-4">
           {(data.portfolioSections ?? []).length === 0 ? (
             <p className="text-sm text-zinc-500">{t("noItems", lang)}</p>
@@ -197,19 +184,37 @@ export function UniversityApplicationDetailView({
                   {(s.files ?? []).length === 0 ? (
                     <p className="text-xs text-zinc-500">{t("notUploaded", lang)}</p>
                   ) : (
-                    (s.files ?? []).map((f) => (
-                      <div key={f.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
-                        <span>
-                          {f.name ?? f.type ?? "-"}
-                          {f.description ? ` — ${f.description}` : ""}
-                        </span>
-                        {f.fileUrl ? (
-                          <a href={f.fileUrl} className="text-sky-700 underline" target="_blank" rel="noreferrer">
-                            {t("view", lang)}
-                          </a>
-                        ) : null}
-                      </div>
-                    ))
+                    (s.files ?? []).map((f) => {
+                      const previewUrl = resolvePortalFilePreviewUrl({
+                        applicationId: id,
+                        fileUrl: f.fileUrl,
+                      });
+                      return (
+                        <div key={f.id} className="rounded-lg border border-zinc-200 p-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                            <span>
+                              {f.name ?? f.type ?? "-"}
+                              {f.description ? ` — ${f.description}` : ""}
+                            </span>
+                            {previewUrl ? (
+                              <a href={previewUrl} className="text-sky-700 underline" target="_blank" rel="noreferrer">
+                                {t("view", lang)}
+                              </a>
+                            ) : null}
+                          </div>
+                          {previewUrl && f.type !== "LINK" ? (
+                            <div className="mt-3 aspect-[16/9] w-full overflow-hidden rounded-md bg-zinc-100">
+                              <FilePreview
+                                url={previewUrl}
+                                filename={f.name ?? null}
+                                fileType={f.type ?? null}
+                                className="h-full w-full"
+                              />
+                            </div>
+                          ) : null}
+                        </div>
+                      );
+                    })
                   )}
                 </div>
               </div>

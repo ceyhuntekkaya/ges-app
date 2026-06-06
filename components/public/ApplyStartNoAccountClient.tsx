@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Icon, Input, Switch } from "@/components/ui";
+import { applicationsUrlForProject } from "@/lib/applications/languageCampUrls";
 import { humanizeApiError } from "@/lib/api/errors";
 import {
   publicLanguageCampProjectsGetActive,
@@ -34,6 +35,10 @@ function formatDate(iso?: string) {
 
 function categoryFromProject(p: LanguageCampProjectDetailDto): Category {
   return p.individual === false ? "CORPORATE" : "INDIVIDUAL";
+}
+
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
 export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) {
@@ -101,8 +106,20 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
   const [ecPhone, setEcPhone] = React.useState("");
   const [ecRelationship, setEcRelationship] = React.useState("");
 
+  const isCorporate = project?.individual === false;
+
+  const canSubmit = React.useMemo(() => {
+    if (projectLoading || !!projectError || !project) return false;
+    if (!kvkkAccepted) return false;
+    if (!firstName.trim() || !lastName.trim()) return false;
+    if (!isValidEmail(email)) return false;
+    if (password.length < 8) return false;
+    return true;
+  }, [projectLoading, projectError, project, kvkkAccepted, firstName, lastName, email, password]);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!canSubmit) return;
     if (!project) {
       setError(projectError || "Proje bilgileri yüklenemedi.");
       return;
@@ -145,7 +162,7 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
               }
             : null,
         paymentPreference: "ONE_TIME",
-        companyCode: companyCode || null,
+        companyCode: isCorporate && companyCode.trim() ? companyCode.trim() : null,
         kvkkAccepted: kvkkAccepted ? true : null,
         invoiceAddress: {
           country: null,
@@ -181,11 +198,11 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
     if (!loginRes.ok) {
       setPending(false);
       setError("Başvuru alındı ama giriş yapılamadı. Lütfen giriş yapın.");
-      router.push(`/login?next=/applications/language-camp/${data.applicationId}`);
+      router.push(`/login?next=${encodeURIComponent(applicationsUrlForProject(projectId, data.applicationId))}`);
       return;
     }
 
-    router.replace(`/applications/language-camp/${data.applicationId}`);
+    router.replace(applicationsUrlForProject(projectId, data.applicationId));
     router.refresh();
   }
 
@@ -292,7 +309,9 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
 
           <section className="grid gap-4">
             <div className="text-sm font-semibold text-[var(--text-primary)]">Dil Kampı Başvurusu</div>
-            <Input label="Şirket Kodu (ops.)" value={companyCode} onChange={(e) => setCompanyCode(e.target.value)} />
+            {isCorporate ? (
+              <Input label="Şirket Kodu (ops.)" value={companyCode} onChange={(e) => setCompanyCode(e.target.value)} />
+            ) : null}
 
             <div className="grid gap-3 sm:grid-cols-2">
               <Switch checked={visaNeeded} onChange={setVisaNeeded} label="Vize gerekli" />
@@ -325,7 +344,7 @@ export function ApplyStartNoAccountClient({ projectId }: { projectId: string }) 
             <Button
               type="submit"
               loading={pending}
-              disabled={projectLoading || !!projectError || !project}
+              disabled={!canSubmit || pending}
               leftIcon={<Icon name="check" size={16} />}
             >
               {pending ? "Gönderiliyor..." : "Başvuruyu Tamamla"}

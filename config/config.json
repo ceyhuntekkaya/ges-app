@@ -1,7 +1,6 @@
 {
-    "api": {
-      "invokeUrl": "http://localhost:8080/api"
-    }
+  "api": {
+    "invokeUrlLocal": "http://localhost:8080/api",
+     "invokeUrl": "https://api.gesacademy.uk/api"
   }
-  
-   
+}

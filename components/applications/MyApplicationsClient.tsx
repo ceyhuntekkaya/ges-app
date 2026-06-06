@@ -3,8 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { LanguageCampApplicationDetailDto, UniversityApplicationDetailDto } from "@/lib/api/generated/index";
-import { LanguageCampApplicationDetailView } from "@/components/applications/LanguageCampApplicationDetailView";
+import type { UniversityApplicationDetailDto } from "@/lib/api/generated/index";
+import type { LanguageCampApplicationGroupDto } from "@/lib/api/portalServer";
+import { LanguageCampProjectGroupView } from "@/components/applications/LanguageCampProjectGroupView";
 import { UniversityApplicationDetailView } from "@/components/applications/UniversityApplicationDetailView";
 import { Badge, Tabs } from "@/components/ui";
 import type { BadgeVariant } from "@/components/ui/Badge";
@@ -12,16 +13,26 @@ import type { Lang } from "@/lib/i18n/dict";
 import { t, tf } from "@/lib/i18n/dict";
 import { labelApplicationStatus } from "@/lib/i18n/labels";
 
-export type MyApplicationTab = {
+export type UniversityApplicationTab = {
   key: string;
-  kind: "university" | "language-camp";
+  kind: "university";
   id: string;
   title: string;
   status?: string;
   university?: UniversityApplicationDetailDto;
-  languageCamp?: LanguageCampApplicationDetailDto;
   loadError?: number;
 };
+
+export type LanguageCampGroupTab = {
+  key: string;
+  kind: "language-camp-group";
+  projectId: string;
+  title: string;
+  group?: LanguageCampApplicationGroupDto;
+  loadError?: number;
+};
+
+export type MyApplicationTab = UniversityApplicationTab | LanguageCampGroupTab;
 
 function statusBadgeVariant(status?: string): BadgeVariant {
   switch (status) {
@@ -38,8 +49,8 @@ function statusBadgeVariant(status?: string): BadgeVariant {
   }
 }
 
-function tabKindPrefix(kind: MyApplicationTab["kind"], lang: Lang) {
-  return kind === "university" ? t("university", lang) : t("languageCamp", lang);
+function tabKindPrefix(tab: MyApplicationTab, lang: Lang) {
+  return tab.kind === "university" ? t("university", lang) : t("languageCamp", lang);
 }
 
 export function MyApplicationsClient({
@@ -70,27 +81,25 @@ export function MyApplicationsClient({
       initialTabs.map((tab) => ({
         value: tab.key,
         label: (
-          <span className="flex flex-col items-start gap-0.5 text-left sm:flex-row sm:items-center sm:gap-2">
-            <span className="truncate">
-              {tabKindPrefix(tab.kind, lang)} · {tab.title}
-            </span>
+          <span className="truncate">
+            {tabKindPrefix(tab, lang)} · {tab.title}
           </span>
         ),
-        badge: tab.status ? (
-          <Badge size="sm" variant={statusBadgeVariant(tab.status)}>
-            {labelApplicationStatus(tab.status, lang)}
-          </Badge>
-        ) : undefined,
+        badge:
+          tab.kind === "university" && tab.status ? (
+            <Badge size="sm" variant={statusBadgeVariant(tab.status)}>
+              {labelApplicationStatus(tab.status, lang)}
+            </Badge>
+          ) : tab.kind === "language-camp-group" ? (
+            <Badge size="sm" variant="neutral">
+              {(tab.group?.participants?.length ?? 0) + (lang === "tr" ? " kişi" : "")}
+            </Badge>
+          ) : undefined,
       })),
     [initialTabs, lang],
   );
 
   if (!active) return null;
-
-  const editHref =
-    active.kind === "university"
-      ? `/applications/university/${active.id}/edit`
-      : `/applications/language-camp/${active.id}/edit`;
 
   return (
     <div className="grid gap-4">
@@ -101,6 +110,7 @@ export function MyApplicationsClient({
           onChange={(key) => {
             const next = new URLSearchParams(searchParams.toString());
             next.set("tab", key);
+            if (!key.startsWith("camp-proj-")) next.delete("participant");
             router.push(`/applications?${next.toString()}`, { scroll: false });
           }}
           variant="underline"
@@ -108,43 +118,46 @@ export function MyApplicationsClient({
         />
       </div>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
-        <div className="mb-6 flex flex-wrap items-start justify-between gap-3 border-b border-zinc-100 pb-5">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
-              {tabKindPrefix(active.kind, lang)}
-            </div>
-            <h2 className="mt-1 text-lg font-semibold tracking-tight text-zinc-900">{active.title}</h2>
-            {active.status ? (
-              <div className="mt-2">
-                <Badge variant={statusBadgeVariant(active.status)}>
-                  {labelApplicationStatus(active.status, lang)}
-                </Badge>
-              </div>
-            ) : null}
-          </div>
-          {active.status === "DRAFT" ? (
-            <Link
-              href={editHref}
-              className="rounded-lg bg-zinc-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
-            >
-              {t("editApplication", lang)}
-            </Link>
-          ) : null}
+      {active.loadError ? (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-3 text-sm text-rose-900">
+          {tf("failedToLoadHttp", lang, { status: active.loadError })}
         </div>
-
-        {active.loadError ? (
-          <div className="rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-3 text-sm text-rose-900">
-            {tf("failedToLoadHttp", lang, { status: active.loadError })}
+      ) : active.kind === "language-camp-group" && active.group ? (
+        <LanguageCampProjectGroupView group={active.group} lang={lang} tabKey={active.key} />
+      ) : active.kind === "university" && active.university ? (
+        <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+          <div className="border-b border-zinc-100 bg-gradient-to-r from-zinc-50 to-white px-5 py-5 sm:px-6">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                  {t("university", lang)}
+                </div>
+                <h2 className="mt-1 text-lg font-semibold tracking-tight text-zinc-900">{active.title}</h2>
+                {active.status ? (
+                  <div className="mt-2">
+                    <Badge variant={statusBadgeVariant(active.status)}>
+                      {labelApplicationStatus(active.status, lang)}
+                    </Badge>
+                  </div>
+                ) : null}
+              </div>
+              {active.status === "DRAFT" ? (
+                <Link
+                  href={`/applications/university/${active.id}/edit`}
+                  className="rounded-lg bg-zinc-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+                >
+                  {t("editApplication", lang)}
+                </Link>
+              ) : null}
+            </div>
           </div>
-        ) : active.kind === "university" && active.university ? (
-          <UniversityApplicationDetailView data={active.university} lang={lang} />
-        ) : active.kind === "language-camp" && active.languageCamp ? (
-          <LanguageCampApplicationDetailView data={active.languageCamp} lang={lang} />
-        ) : (
-          <p className="text-sm text-zinc-500">{t("loading", lang)}</p>
-        )}
-      </div>
+          <div className="p-5 sm:p-6">
+            <UniversityApplicationDetailView data={active.university} lang={lang} />
+          </div>
+        </div>
+      ) : (
+        <p className="text-sm text-zinc-500">{t("loading", lang)}</p>
+      )}
     </div>
   );
 }
